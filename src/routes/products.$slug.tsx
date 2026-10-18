@@ -126,21 +126,21 @@ function ProductPage() {
                 className="flex-1 h-11 shadow-[0_0_15px_-3px_var(--electric)] cursor-pointer"
                 onClick={() => {
                   add({ slug: p.slug, name: p.name, variant, qty, image: detailImage });
-                  toast.success(`${p.name} added to cart`);
+                  toast.success(`${p.name} added to wholesale quote list`);
                 }}
               >
-                Add to Cart
+                Add to Quote List
               </Button>
             </div>
 
             <Button asChild variant="line" size="xl" className="mt-3 h-11 cursor-pointer">
               <a
-                href={whatsappUrl(`Hello AutoUp,\n\nI'd like a quotation for ${p.name} (${variant}) × ${qty}.\n\nThank you.`)}
+                href={whatsappUrl(`Hello AutoUp,\n\nI am inquiring about commercial wholesale supply for ${p.name} (${variant}) × ${qty} containers.\n\nPlease share availability and wholesale pricing.\n\nThank you.`)}
                 target="_blank"
                 rel="noreferrer"
               >
                 <MessageCircle className="size-4 mr-2" />
-                Ask for a quote on WhatsApp
+                Request Wholesale Quote on WhatsApp
               </a>
             </Button>
 

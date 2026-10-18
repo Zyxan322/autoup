@@ -2,10 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CartProvider, useCart } from "@/lib/cart";
-import { HomeServices } from "@/components/HomeServices";
-import { ServiceCard } from "@/components/ServiceCard";
 import { ProductCard } from "@/components/ProductCard";
-import { BeforeAfter } from "@/components/BeforeAfter";
+import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { Footer } from "@/components/Footer";
 
 // Mock @tanstack/react-router Link
@@ -34,82 +32,12 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe("Components Functionality Verification", () => {
-  it("renders HomeServices with exactly 5 compact cards and both action buttons", () => {
-    render(
-      <Wrapper>
-        <HomeServices />
-      </Wrapper>
-    );
-
-    // Verify 5 service titles
-    expect(screen.getByRole("heading", { name: "Car Shampoo" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Cleaning Chemicals" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Car Wax & Polish" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Interior Care" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Exterior Care" })).toBeInTheDocument();
-
-    // Verify 5 Add to Cart buttons
-    const addButtons = screen.getAllByRole("button", { name: /add to cart/i });
-    expect(addButtons).toHaveLength(5);
-
-    // Verify 5 View Details buttons
-    const viewButtons = screen.getAllByRole("button", { name: /view details/i });
-    expect(viewButtons).toHaveLength(5);
-  });
-
-  it("adds service product to cart when Add to Cart is clicked", () => {
-    let currentCartCount = 0;
-    function CartInspector() {
-      const { count } = useCart();
-      currentCartCount = count;
-      return <div data-testid="cart-count">{count}</div>;
-    }
-
-    render(
-      <Wrapper>
-        <CartInspector />
-        <HomeServices />
-      </Wrapper>
-    );
-
-    const initialCount = currentCartCount;
-    const addButtons = screen.getAllByRole("button", { name: /add to cart/i });
-    fireEvent.click(addButtons[0]);
-
-    expect(screen.getByTestId("cart-count").textContent).toBe(String(initialCount + 1));
-  });
-
-  it("renders BeforeAfter comparison slider with accessible inputs and labels", () => {
-    render(<BeforeAfter />);
-
-    expect(screen.getByText("BEFORE")).toBeInTheDocument();
-    expect(screen.getByText("AFTER")).toBeInTheDocument();
-
-    const rangeInput = screen.getByRole("slider", { name: /interactive before and after comparison slider/i });
-    expect(rangeInput).toBeInTheDocument();
-    expect(rangeInput).toHaveAttribute("min", "0");
-    expect(rangeInput).toHaveAttribute("max", "100");
-
-    // Slider position can be adjusted
-    fireEvent.change(rangeInput, { target: { value: "75" } });
-    expect(rangeInput).toHaveValue("75");
-  });
-
-  it("renders enhanced Footer with brand tagline, WhatsApp button, and contact info", () => {
-    render(<Footer />);
-
-    expect(screen.getByText(/care in every mile/i)).toBeInTheDocument();
-    expect(screen.getByText(/chat on whatsapp/i)).toBeInTheDocument();
-    expect(screen.getByText("Clear-Coat Safe")).toBeInTheDocument();
-    expect(screen.getByText("Ceramic Friendly")).toBeInTheDocument();
-  });
-
-  it("renders compact ProductCard with quantity stepper and working Add to Cart", () => {
+describe("B2B Components Functionality Verification", () => {
+  it("renders compact ProductCard with quantity stepper, View Details link, and Inquire button", () => {
     const testProduct = {
       slug: "lifelines-colour-wax-shampoo",
       name: "Colour Wax Shampoo",
-      code: undefined,
+      code: "CWS-1",
       category: "Car Shampoo" as const,
       short: "Advanced formula that preserves paint and delivers a long-lasting attractive luster.",
       description: "LifeLines Colour Wax Shampoo is a new and advanced formula.",
@@ -119,46 +47,65 @@ describe("Components Functionality Verification", () => {
       featured: 1,
     };
 
+    let cartCount = 0;
+    function CartInspector() {
+      const { count } = useCart();
+      cartCount = count;
+      return <div data-testid="cart-count">{count}</div>;
+    }
+
     render(
       <Wrapper>
+        <CartInspector />
         <ProductCard p={testProduct} />
       </Wrapper>
     );
 
+    // Product name and code badge
     expect(screen.getByRole("link", { name: "Colour Wax Shampoo" })).toBeInTheDocument();
+    expect(screen.getByText("CWS-1")).toBeInTheDocument();
     expect(screen.getByText("20 L")).toBeInTheDocument();
+    expect(screen.getByText("Wholesale Pricing")).toBeInTheDocument();
 
+    // View Details button
+    const viewDetails = screen.getByRole("link", { name: "View Details" });
+    expect(viewDetails).toBeInTheDocument();
+
+    // Stepper buttons
     const increaseBtn = screen.getByRole("button", { name: /increase quantity/i });
-    expect(increaseBtn).toBeInTheDocument();
     fireEvent.click(increaseBtn);
     expect(screen.getByText("2")).toBeInTheDocument();
 
-    const addToCartBtn = screen.getByRole("button", { name: /add to cart/i });
-    expect(addToCartBtn).toBeInTheDocument();
-    fireEvent.click(addToCartBtn);
+    // Inquire button
+    const initialCount = cartCount;
+    const inquireBtn = screen.getByRole("button", { name: /inquire/i });
+    expect(inquireBtn).toBeInTheDocument();
+    fireEvent.click(inquireBtn);
+    expect(screen.getByTestId("cart-count").textContent).toBe(String(initialCount + 2));
   });
 
-  it("opens details modal dialog when View Details is clicked on ServiceCard", () => {
-    const testService = {
-      slug: "car-shampoo",
-      title: "Premium Car Shampoo",
-      description: "Rich foaming shampoos that lift dirt while being gentle on paint.",
-      image: "test-service.jpg",
-    };
+  it("renders StickyWhatsApp button with prefilled B2B inquiry message and accessible label", () => {
+    render(<StickyWhatsApp />);
 
-    render(
-      <Wrapper>
-        <ServiceCard s={testService} index={0} />
-      </Wrapper>
-    );
+    const button = screen.getByRole("link", { name: /contact autoup on whatsapp/i });
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute("target", "_blank");
+    expect(button).toHaveAttribute("rel", "noopener noreferrer");
 
-    const viewDetailsBtn = screen.getByRole("button", { name: /view details/i });
-    fireEvent.click(viewDetailsBtn);
+    const href = button.getAttribute("href") || "";
+    expect(href).toContain("https://wa.me/971558604161");
+    expect(href).toContain(encodeURIComponent("automotive cleaning products for business use"));
+  });
 
-    // Modal dialog content should now be visible
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText(/Key Advantages & Benefits/i)).toBeInTheDocument();
-    expect(screen.getByText(/High-lubricity foam prevents swirl marks/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /request category quote/i })).toBeInTheDocument();
+  it("renders B2B Footer with commercial attributes, WhatsApp link, and product categories", () => {
+    render(<Footer />);
+
+    expect(screen.getByText(/care in every mile/i)).toBeInTheDocument();
+    expect(screen.getByText(/commercial bulk supply/i)).toBeInTheDocument();
+    expect(screen.getByText(/professional formulations/i)).toBeInTheDocument();
+    expect(screen.getByText(/chat on whatsapp/i)).toBeInTheDocument();
+    expect(screen.getByText("Car Shampoo")).toBeInTheDocument();
+    expect(screen.getByText("Cleaning Chemicals")).toBeInTheDocument();
+    expect(screen.getByText("Car Wax & Polish")).toBeInTheDocument();
   });
 });

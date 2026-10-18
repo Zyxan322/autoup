@@ -1,37 +1,67 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { ArrowLeft, MessageCircle, Minus, Plus, X } from "lucide-react";
+import { ArrowLeft, Building2, Check, Copy, MessageCircle, Minus, Plus, ShoppingBag, X } from "lucide-react";
 import quoteImg from "@/assets/quote.jpg";
 import { Button } from "@/components/ui/button";
-import { SERVICES } from "@/lib/catalog";
+import { PRODUCTS } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/quote")({
-  validateSearch: z.object({ service: z.string().optional(), from: z.string().optional() }),
+  validateSearch: z.object({ from: z.string().optional(), product: z.string().optional() }),
   head: () => ({
     meta: [
-      { title: "Request a Quotation — AutoUp" },
-      { name: "description", content: "Request a quotation for AutoUp car-care products and services, sent straight to us on WhatsApp." },
-      { property: "og:title", content: "Request a Quotation — AutoUp" },
-      { property: "og:description", content: "Choose products and services, then send your quotation request on WhatsApp." },
+      { title: "Request Wholesale Quote — AutoUp B2B Supply" },
+      {
+        name: "description",
+        content:
+          "Request a wholesale quotation for commercial automotive cleaning products, concentrated shampoos, waxes, and chemicals.",
+      },
+      { property: "og:title", content: "Request Wholesale Quote — AutoUp B2B Supply" },
+      {
+        property: "og:description",
+        content:
+          "Submit your business details and required product volumes for bulk pricing and supply confirmation.",
+      },
     ],
   }),
   component: QuotePage,
 });
 
-const field = "h-12 w-full rounded-xl border border-input bg-card px-4 focus:border-primary focus:outline-none";
-const DRAFT = "autoup-quote-draft";
+const field =
+  "h-12 w-full rounded-xl border border-input bg-card px-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
+const DRAFT = "autoup-b2b-quote-draft";
 
 function QuotePage() {
-  const { service } = Route.useSearch();
-  const { items, setQty, remove } = useCart();
-  const [f, setF] = useState({ name: "", phone: "", city: "", email: "", requestType: "Products", notes: "", delivery: "" });
-  const [services, setServices] = useState<string[]>([]);
-  const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "city" | "email" | "items", string>>>({});
+  const { product } = Route.useSearch();
+  const { items, setQty, remove, add } = useCart();
+  const [f, setF] = useState({
+    name: "",
+    companyName: "",
+    phone: "",
+    email: "",
+    city: "",
+    country: "",
+    orderVolume: "",
+    notes: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<"name" | "companyName" | "phone" | "city" | "email" | "items", string>>
+  >({});
   const [review, setReview] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Auto-add selected product from URL if passed
+  useEffect(() => {
+    if (product) {
+      const p = PRODUCTS.find((x) => x.slug === product);
+      if (p && !items.some((i) => i.slug === p.slug)) {
+        add({ slug: p.slug, name: p.name, variant: p.variants[0], qty: 1, image: p.image });
+      }
+    }
+  }, [product, items, add]);
 
   useEffect(() => {
     try {
@@ -39,136 +69,375 @@ function QuotePage() {
       if (d) setF((x) => ({ ...x, ...JSON.parse(d) }));
     } catch {}
   }, []);
+
   useEffect(() => {
     sessionStorage.setItem(DRAFT, JSON.stringify(f));
   }, [f]);
-  useEffect(() => {
-    if (service) {
-      const s = SERVICES.find((x) => x.slug === service);
-      if (s) {
-        setServices((prev) => (prev.includes(s.title) ? prev : [...prev, s.title]));
-        setF((x) => ({ ...x, requestType: items.length ? "Both" : "Services" }));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [service]);
-
-  const toggle = (t: string) => setServices((p) => (p.includes(t) ? p.filter((x) => x !== t) : [...p, t]));
 
   const data = {
     ...f,
     products: items.map((i) => ({ name: i.name, qty: i.qty, variant: i.variant })),
-    services,
   };
 
   const validate = () => {
-    const e: Partial<Record<"name" | "phone" | "city" | "email" | "items", string>> = {};
-    if (!f.name.trim()) e.name = "Full name is required.";
-    if (!/^[+\d\s()-]{7,}$/.test(f.phone)) e.phone = "Please enter a valid phone number.";
+    const e: Partial<
+      Record<"name" | "companyName" | "phone" | "city" | "email" | "items", string>
+    > = {};
+    if (!f.name.trim()) e.name = "Contact name is required.";
+    if (!f.companyName.trim()) e.companyName = "Company or business name is required.";
+    if (!/^[+\d\s()-]{7,}$/.test(f.phone)) e.phone = "Please enter a valid business phone / WhatsApp number.";
     if (!f.city.trim()) e.city = "City is required.";
-    if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) e.email = "Please enter a valid email.";
-    if (!items.length && !services.length) e.items = "Add at least one product or select a service.";
+    if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) e.email = "Please enter a valid business email.";
+    if (!items.length && !f.notes.trim()) {
+      e.items = "Please select at least one product or describe your required items below.";
+    }
     setErrors(e);
     return !Object.keys(e).length;
   };
 
-  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
+  const set = (k: keyof typeof f) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => setF({ ...f, [k]: e.target.value });
+
+  const formattedMessage = buildQuoteMessage(data);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(formattedMessage);
+    setCopied(true);
+    toast.success("Quote request copied to clipboard!");
+    setTimeout(() => setCopied(false), 2500);
+  };
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="section-dark relative hidden lg:block">
-        <img src={quoteImg} alt="Detailer drying a white car with a microfiber towel" width={1024} height={1408} className="sticky top-0 h-screen w-full object-cover" />
-        <div className="absolute inset-0 bg-fade-bottom" />
-        <div className="absolute bottom-12 left-12 right-12">
-          <p className="eyebrow">Quotation</p>
-          <p className="mt-3 font-display text-4xl font-bold leading-tight">Tell us what you need. We'll handle the rest.</p>
+      {/* Left Visual Column */}
+      <div className="section-dark relative hidden lg:block bg-[#07090e]">
+        <img
+          src={quoteImg}
+          alt="Automotive care products and commercial vehicle maintenance"
+          width={1024}
+          height={1408}
+          className="sticky top-0 h-screen w-full object-cover brightness-[0.75] contrast-[1.1]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        <div className="absolute bottom-12 left-12 right-12 z-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-primary backdrop-blur-md mb-4">
+            <Building2 className="size-3.5" />
+            B2B Commercial Supply
+          </div>
+          <p className="font-display text-4xl font-bold leading-tight text-white">
+            Wholesale Automotive Cleaning Products for Your Business.
+          </p>
+          <p className="mt-3 text-sm text-white/80 leading-relaxed max-w-lg">
+            Dedicated supply of concentrated car shampoos, waxes, degreasers, and surface chemicals
+            packaged in 20L, 25L, and 20KG commercial containers.
+          </p>
         </div>
       </div>
 
+      {/* Right Form Column */}
       <div className="px-5 pb-20 pt-28 sm:px-10 lg:px-14">
-        <Link to="/products" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Back to shopping</Link>
-        <h1 className="mt-6 text-4xl font-bold sm:text-5xl">Request a Quotation</h1>
-        <p className="mt-3 text-muted-foreground">Your quotation request will be sent to AutoUp through WhatsApp.</p>
+        <Link
+          to="/products"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="size-4" /> Back to product catalog
+        </Link>
+        <div className="mt-6">
+          <span className="eyebrow">COMMERCIAL INQUIRY</span>
+          <h1 className="mt-2 text-3xl font-bold sm:text-5xl tracking-tight text-foreground">
+            Request a Wholesale Quote
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
+            Provide your business requirements below to receive verified wholesale pricing, container
+            availability, and volume supply terms directly from our team.
+          </p>
+        </div>
 
         {!review ? (
           <form
             noValidate
-            className="mt-10 space-y-5"
+            className="mt-8 space-y-6"
             onSubmit={(e) => {
               e.preventDefault();
               if (validate()) setReview(true);
             }}
           >
-            <div className="grid gap-5 sm:grid-cols-2">
-              {([["name", "Full name *"], ["phone", "Phone number *"], ["city", "City *"], ["email", "Email (optional)"]] as const).map(([k, l]) => (
-                <div key={k}>
-                  <label htmlFor={k} className="mb-1.5 block text-sm font-medium">{l}</label>
-                  <input id={k} type={k === "email" ? "email" : k === "phone" ? "tel" : "text"} value={f[k]} onChange={set(k)} className={field} />
-                  {errors[k] && <p className="mt-1 text-xs text-destructive">{errors[k]}</p>}
+            {/* Business Contact Details */}
+            <div className="rounded-2xl border border-border/80 bg-card/60 p-5 space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-primary">
+                1. Business & Contact Information
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="companyName" className="mb-1.5 block text-xs font-medium">
+                    Company / Business Name *
+                  </label>
+                  <input
+                    id="companyName"
+                    placeholder="e.g. Apex Car Wash / Star Detailing"
+                    value={f.companyName}
+                    onChange={set("companyName")}
+                    className={field}
+                  />
+                  {errors.companyName && (
+                    <p className="mt-1 text-xs text-destructive">{errors.companyName}</p>
+                  )}
                 </div>
-              ))}
-            </div>
 
-            <div>
-              <p className="mb-2 text-sm font-medium">Request type</p>
-              <div className="flex gap-2">
-                {["Products", "Services", "Both"].map((t) => (
-                  <button type="button" key={t} onClick={() => setF({ ...f, requestType: t })} className={cn("rounded-full border px-5 py-2 text-sm", f.requestType === t ? "border-primary bg-primary text-primary-foreground" : "border-input hover:border-primary")}>{t}</button>
-                ))}
+                <div>
+                  <label htmlFor="name" className="mb-1.5 block text-xs font-medium">
+                    Contact Person Name *
+                  </label>
+                  <input
+                    id="name"
+                    placeholder="e.g. Alex Rahman"
+                    value={f.name}
+                    onChange={set("name")}
+                    className={field}
+                  />
+                  {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="mb-1.5 block text-xs font-medium">
+                    Phone / WhatsApp Number *
+                  </label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    placeholder="e.g. +971 50 123 4567"
+                    value={f.phone}
+                    onChange={set("phone")}
+                    className={field}
+                  />
+                  {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="mb-1.5 block text-xs font-medium">
+                    Business Email (optional)
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="procurement@company.com"
+                    value={f.email}
+                    onChange={set("email")}
+                    className={field}
+                  />
+                  {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="city" className="mb-1.5 block text-xs font-medium">
+                    City / Region *
+                  </label>
+                  <input
+                    id="city"
+                    placeholder="e.g. Dubai / Riyadh / Sharjah"
+                    value={f.city}
+                    onChange={set("city")}
+                    className={field}
+                  />
+                  {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="country" className="mb-1.5 block text-xs font-medium">
+                    Country (optional)
+                  </label>
+                  <input
+                    id="country"
+                    placeholder="e.g. United Arab Emirates"
+                    value={f.country}
+                    onChange={set("country")}
+                    className={field}
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <p className="mb-2 text-sm font-medium">Selected products</p>
+            {/* Product Selection */}
+            <div className="rounded-2xl border border-border/80 bg-card/60 p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-primary">
+                  2. Selected Products & Quantities
+                </h2>
+                <Link
+                  to="/products"
+                  className="text-xs text-primary hover:underline flex items-center gap-1"
+                >
+                  <Plus className="size-3" /> Add from catalog
+                </Link>
+              </div>
+
               {items.length === 0 ? (
-                <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">No products yet. <Link to="/products" className="text-primary hover:underline">Browse products</Link></p>
+                <div className="rounded-xl border border-dashed border-border/80 p-5 text-center">
+                  <ShoppingBag className="mx-auto size-8 text-muted-foreground/60 mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    No products added yet. Add products to your wholesale quote list:
+                  </p>
+                  <div className="mt-3 flex flex-wrap justify-center gap-2">
+                    {PRODUCTS.slice(0, 4).map((p) => (
+                      <button
+                        key={p.slug}
+                        type="button"
+                        onClick={() =>
+                          add({
+                            slug: p.slug,
+                            name: p.name,
+                            variant: p.variants[0],
+                            qty: 1,
+                            image: p.image,
+                          })
+                        }
+                        className="rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                      >
+                        + {p.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
-                <ul className="divide-y rounded-xl border bg-card">
+                <ul className="divide-y divide-border/60 rounded-xl border border-border/80 bg-card">
                   {items.map((i) => (
-                    <li key={i.slug + i.variant} className="flex items-center gap-3 p-3">
-                      <img src={i.image} alt="" width={48} height={48} className="size-12 rounded-lg object-cover" />
-                      <div className="flex-1 text-sm"><p className="font-medium">{i.name}</p><p className="text-xs text-muted-foreground">{i.variant}</p></div>
-                      <button type="button" aria-label="Decrease" onClick={() => setQty(i.slug, i.variant, i.qty - 1)} className="rounded-full border p-1"><Minus className="size-3" /></button>
-                      <span className="w-5 text-center text-sm">{i.qty}</span>
-                      <button type="button" aria-label="Increase" onClick={() => setQty(i.slug, i.variant, i.qty + 1)} className="rounded-full border p-1"><Plus className="size-3" /></button>
-                      <button type="button" aria-label="Remove" onClick={() => remove(i.slug, i.variant)} className="p-1 text-muted-foreground hover:text-destructive"><X className="size-4" /></button>
+                    <li key={i.slug + i.variant} className="flex items-center gap-3 p-3.5">
+                      <div className="size-12 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1 flex items-center justify-center">
+                        <img
+                          src={i.image}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm truncate">{i.name}</p>
+                        <p className="text-xs text-primary/80 font-medium">{i.variant}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 border border-border/80 rounded-lg bg-background px-1.5 py-0.5">
+                        <button
+                          type="button"
+                          aria-label="Decrease quantity"
+                          onClick={() => setQty(i.slug, i.variant, i.qty - 1)}
+                          className="p-1 text-muted-foreground hover:text-foreground"
+                        >
+                          <Minus className="size-3" />
+                        </button>
+                        <span className="w-6 text-center text-xs font-semibold">{i.qty}</span>
+                        <button
+                          type="button"
+                          aria-label="Increase quantity"
+                          onClick={() => setQty(i.slug, i.variant, i.qty + 1)}
+                          className="p-1 text-muted-foreground hover:text-foreground"
+                        >
+                          <Plus className="size-3" />
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        aria-label="Remove item"
+                        onClick={() => remove(i.slug, i.variant)}
+                        className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                      >
+                        <X className="size-4" />
+                      </button>
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
+              {errors.items && <p className="text-xs text-destructive">{errors.items}</p>}
 
-            <div>
-              <p className="mb-2 text-sm font-medium">Services</p>
-              <div className="flex flex-wrap gap-2">
-                {SERVICES.map((s) => (
-                  <button type="button" key={s.slug} onClick={() => toggle(s.title)} className={cn("rounded-full border px-4 py-2 text-xs", services.includes(s.title) ? "border-primary bg-primary text-primary-foreground" : "border-input hover:border-primary")}>{s.title}</button>
-                ))}
+              <div>
+                <label htmlFor="orderVolume" className="mb-1.5 block text-xs font-medium">
+                  Estimated Order Volume / Frequency
+                </label>
+                <input
+                  id="orderVolume"
+                  placeholder="e.g. 5–10 containers monthly, sample order, or single bulk pallet"
+                  value={f.orderVolume}
+                  onChange={set("orderVolume")}
+                  className={field}
+                />
               </div>
-              {errors.items && <p className="mt-2 text-xs text-destructive">{errors.items}</p>}
+
+              <div>
+                <label htmlFor="notes" className="mb-1.5 block text-xs font-medium">
+                  Additional Requirements / Inquiries
+                </label>
+                <textarea
+                  id="notes"
+                  rows={3}
+                  placeholder="Specify particular container requirements, delivery location, or specific product inquiries..."
+                  value={f.notes}
+                  onChange={set("notes")}
+                  className={`${field} h-auto py-3`}
+                />
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="notes" className="mb-1.5 block text-sm font-medium">Additional requirements</label>
-              <textarea id="notes" rows={3} value={f.notes} onChange={set("notes")} className={`${field} h-auto py-3`} />
-            </div>
-            <div>
-              <label htmlFor="delivery" className="mb-1.5 block text-sm font-medium">Preferred delivery or service details</label>
-              <input id="delivery" value={f.delivery} onChange={set("delivery")} className={field} />
-            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Wholesale pricing and stock availability are verified directly by our commercial team
+              and sent to you via WhatsApp / email.
+            </p>
 
-            <p className="text-xs text-muted-foreground">Privacy: your details are only used to prepare your quotation and are sent directly to AutoUp in WhatsApp.</p>
-            <Button type="submit" variant="hero" size="xl" className="w-full">Review Quotation</Button>
+            <Button type="submit" variant="hero" size="xl" className="w-full text-base font-semibold">
+              Review Wholesale Quote Request
+            </Button>
           </form>
         ) : (
-          <div className="mt-10 space-y-5">
-            <h2 className="text-2xl font-semibold">Order summary</h2>
-            <pre className="whitespace-pre-wrap rounded-2xl border bg-card p-6 font-sans text-sm leading-relaxed">{buildQuoteMessage(data)}</pre>
-            <Button asChild variant="hero" size="xl" className="w-full">
-              <a href={whatsappUrl(buildQuoteMessage(data))} target="_blank" rel="noreferrer"><MessageCircle /> Send Quotation on WhatsApp</a>
-            </Button>
-            <Button variant="line" size="xl" className="w-full" onClick={() => setReview(false)}>Edit details</Button>
-            <p className="text-center text-xs text-muted-foreground">Your quotation request will be sent to AutoUp through WhatsApp. Your order is confirmed only once AutoUp replies.</p>
+          /* Step 2: Review and Submit */
+          <div className="mt-8 space-y-6">
+            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+              <h2 className="text-lg font-bold text-foreground">Review Quotation Details</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Confirm your business inquiry details before opening WhatsApp.
+              </p>
+            </div>
+
+            <div className="relative">
+              <pre className="whitespace-pre-wrap rounded-2xl border border-border bg-card p-6 font-mono text-xs leading-relaxed text-foreground/90 overflow-x-auto">
+                {formattedMessage}
+              </pre>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground backdrop-blur-sm transition-colors cursor-pointer"
+              >
+                {copied ? <Check className="size-3.5 text-emerald-500" /> : <Copy className="size-3.5" />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <Button asChild variant="hero" size="xl" className="w-full text-base font-semibold">
+                <a
+                  href={whatsappUrl(formattedMessage)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="size-5 fill-white stroke-none" />
+                  Send Quote Request on WhatsApp
+                </a>
+              </Button>
+
+              <Button
+                type="button"
+                variant="line"
+                size="xl"
+                className="w-full"
+                onClick={() => setReview(false)}
+              >
+                Edit Inquired Items & Details
+              </Button>
+            </div>
+
+            <p className="text-center text-xs text-muted-foreground leading-relaxed">
+              Your inquiry will open in WhatsApp so you can send it directly to AutoUp. Our commercial
+              representative will review product stock and send a wholesale quotation.
+            </p>
           </div>
         )}
       </div>

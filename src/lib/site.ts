@@ -23,12 +23,15 @@ export function whatsappUrl(message?: string) {
 
 export type QuoteData = {
   name: string;
+  companyName?: string;
   phone: string;
   city: string;
+  country?: string;
   email?: string;
-  requestType: string;
+  requestType?: string;
+  orderVolume?: string;
   products: { name: string; qty: number; variant?: string | undefined }[];
-  services: string[];
+  services?: string[];
   notes?: string;
   delivery?: string;
 };
@@ -37,22 +40,32 @@ export function buildQuoteMessage(d: QuoteData) {
   const lines = [
     "Hello AutoUp,",
     "",
-    "I would like to request a quotation.",
+    "I would like to request a wholesale quotation for automotive cleaning products for business use.",
     "",
-    `Customer Name: ${d.name}`,
-    `Phone: ${d.phone}`,
-    `City: ${d.city}`,
+    `Contact Name: ${d.name}`,
   ];
-  if (d.email) lines.push(`Email: ${d.email}`);
-  lines.push(`Request Type: ${d.requestType}`, "", "Requested Products:");
+  if (d.companyName?.trim()) lines.push(`Company / Business: ${d.companyName.trim()}`);
+  lines.push(`Phone / WhatsApp: ${d.phone}`);
+  if (d.email?.trim()) lines.push(`Business Email: ${d.email.trim()}`);
+  lines.push(`Location: ${d.city}${d.country ? `, ${d.country}` : ""}`);
+  if (d.orderVolume?.trim()) lines.push(`Estimated Order Volume: ${d.orderVolume.trim()}`);
+
+  lines.push("", "Requested Products:");
   lines.push(
     ...(d.products.length
-      ? d.products.map((p) => `${p.name}${p.variant ? ` (${p.variant})` : ""} × ${p.qty}`)
-      : ["None"]),
+      ? d.products.map((p) => `- ${p.name}${p.variant ? ` (${p.variant})` : ""} × ${p.qty}`)
+      : ["General Product Inquiry"]),
   );
-  lines.push("", "Requested Services:", d.services.length ? d.services.join(", ") : "None");
-  lines.push("", "Additional Requirements:", d.notes?.trim() || "None");
-  if (d.delivery?.trim()) lines.push("", "Delivery / Service Details:", d.delivery.trim());
-  lines.push("", "Please share your quotation, availability and delivery/service details.", "", "Thank you.");
+
+  if (d.notes?.trim()) {
+    lines.push("", `Requirements & Message:\n${d.notes.trim()}`);
+  }
+
+  lines.push(
+    "",
+    "Please share product availability, wholesale pricing, and supply information.",
+    "",
+    "Thank you."
+  );
   return lines.join("\n");
 }

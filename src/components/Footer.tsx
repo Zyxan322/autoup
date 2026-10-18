@@ -2,9 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { MessageCircle, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { SITE, whatsappUrl } from "@/lib/site";
-import { SERVICES } from "@/lib/catalog";
+import { CATEGORIES } from "@/lib/catalog";
 
 export function Footer() {
+  const productCategories = CATEGORIES.filter((c) => c !== "All Products");
+
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/10">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-4 lg:px-8">
@@ -13,14 +15,14 @@ export function Footer() {
             <img src={logo} alt="AutoUp" width={1080} height={1350} loading="lazy" className="h-20 w-auto object-contain" />
           </Link>
           <p className="mt-4 max-w-xs text-sm text-white/70 leading-relaxed">
-            Premium car-care essentials for a cleaner finish, deeper gloss, and enduring vehicle protection.
+            B2B supplier of professional automotive cleaning products, concentrated shampoos, waxes, and specialized chemicals for commercial wash operations and detailing studios.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[0.68rem] font-medium text-white/80">
-              Clear-Coat Safe
+              Commercial Bulk Supply
             </span>
             <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[0.68rem] font-medium text-primary">
-              Ceramic Friendly
+              Professional Formulations
             </span>
           </div>
         </div>
@@ -29,21 +31,20 @@ export function Footer() {
           <h4 className="eyebrow mb-4 text-primary">Explore</h4>
           <ul className="space-y-2.5 text-sm text-white/70">
             <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
-            <li><Link to="/services" className="hover:text-primary transition-colors">Services</Link></li>
             <li><Link to="/products" className="hover:text-primary transition-colors">Products Catalog</Link></li>
             <li><Link to="/about" className="hover:text-primary transition-colors">About AutoUp</Link></li>
-            <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Support</Link></li>
-            <li><Link to="/quote" className="hover:text-primary transition-colors font-medium text-white">Request Quotation</Link></li>
+            <li><Link to="/contact" className="hover:text-primary transition-colors">Wholesale Contact</Link></li>
+            <li><Link to="/quote" className="hover:text-primary transition-colors font-medium text-white">Request a Quote</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="eyebrow mb-4 text-primary">Categories</h4>
+          <h4 className="eyebrow mb-4 text-primary">Product Categories</h4>
           <ul className="space-y-2.5 text-sm text-white/70">
-            {SERVICES.slice(0, 6).map((s) => (
-              <li key={s.slug}>
-                <Link to="/quote" search={{ service: s.slug }} className="hover:text-primary transition-colors">
-                  {s.title}
+            {productCategories.map((c) => (
+              <li key={c}>
+                <Link to="/products" search={{ cat: c }} className="hover:text-primary transition-colors">
+                  {c}
                 </Link>
               </li>
             ))}

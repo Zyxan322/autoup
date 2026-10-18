@@ -3,12 +3,10 @@ import { createRouter } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
-import { HOME_SERVICES } from "@/lib/home-services";
-import { photo } from "@/lib/media";
-import { PRODUCTS, SERVICES } from "@/lib/catalog";
+import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
 import { SITE, whatsappUrl, buildQuoteMessage } from "@/lib/site";
 
-describe("AutoUp Enhancements Verification", () => {
+describe("AutoUp B2B Product-Focused Verification", () => {
   const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
 
   it("matches all core routes without 404 fallback", () => {
@@ -20,55 +18,19 @@ describe("AutoUp Enhancements Verification", () => {
     }
   });
 
-  it("verifies HOME_SERVICES contains exactly 5 categories matching specification", () => {
-    expect(HOME_SERVICES).toHaveLength(5);
-
-    const expectedTitles = [
-      "Car Shampoo",
-      "Cleaning Chemicals",
-      "Car Wax & Polish",
-      "Interior Care",
-      "Exterior Care",
-    ];
-
-    const actualTitles = HOME_SERVICES.map((s) => s.title);
-    expect(actualTitles).toEqual(expectedTitles);
-
-    HOME_SERVICES.forEach((s) => {
-      expect(s.slug).toBeDefined();
-      expect(s.description).toBeDefined();
-      expect(s.image).toBeTruthy();
-      expect(s.modalImage).toBeTruthy();
-      expect(s.product).toBeDefined();
-      expect(s.product.slug).toBeDefined();
-      // Ensure modal image is distinct from card image
-      expect(s.image).not.toBe(s.modalImage);
-    });
+  it("verifies CATEGORIES contain only verified product categories", () => {
+    expect(CATEGORIES).toContain("All Products");
+    expect(CATEGORIES).toContain("Car Shampoo");
+    expect(CATEGORIES).toContain("Cleaning Chemicals");
+    expect(CATEGORIES).toContain("Car Wax & Polish");
+    expect(CATEGORIES).toContain("Interior Cleaners");
+    expect(CATEGORIES).toContain("Exterior Cleaners");
   });
 
-  it("verifies unique photographic assets across service placements", () => {
-    const serviceCardImages = HOME_SERVICES.map((s) => s.image);
-    const serviceModalImages = HOME_SERVICES.map((s) => s.modalImage);
+  it("verifies all real LifeLines products have unique images and verified fields", () => {
+    expect(PRODUCTS.length).toBe(10);
 
-    // Ensure all 5 card images are distinct
-    const uniqueCards = new Set(serviceCardImages);
-    expect(uniqueCards.size).toBe(5);
-
-    // Ensure all 5 modal images are distinct
-    const uniqueModals = new Set(serviceModalImages);
-    expect(uniqueModals.size).toBe(5);
-
-    // Ensure card images and modal images don't overlap
-    for (const img of serviceCardImages) {
-      expect(serviceModalImages).not.toContain(img);
-    }
-  });
-
-  it("verifies real LifeLines products have unique images and required fields", () => {
-    expect(PRODUCTS.length).toBeGreaterThanOrEqual(10);
-    expect(SERVICES.length).toBeGreaterThanOrEqual(5);
-
-    // Every product has real image, name, category, and at least one variant
+    // Every product has real image, name, category, and commercial variant (20L, 25L, 20KG)
     PRODUCTS.forEach((p) => {
       expect(p.slug).toBeTruthy();
       expect(p.name).toBeTruthy();
@@ -85,26 +47,29 @@ describe("AutoUp Enhancements Verification", () => {
     expect(uniqueImages.size).toBe(PRODUCTS.length);
   });
 
-  it("verifies WhatsApp URL and quotation message generation preserves quotation and contact data", () => {
+  it("verifies B2B wholesale quotation message generation with company details and WhatsApp URL", () => {
     const defaultUrl = whatsappUrl();
     expect(defaultUrl).toContain("https://wa.me/");
     expect(defaultUrl).toContain(SITE.whatsappCountryCode);
 
     const quoteMessage = buildQuoteMessage({
       name: "Alex Vance",
+      companyName: "Apex Detailing Studio",
       phone: "+971501234567",
       city: "Dubai",
-      requestType: "Product Inquiry",
+      orderVolume: "5 containers monthly",
       products: [{ name: "Colour Wax Shampoo", qty: 2, variant: "20 L" }],
-      services: ["Car Shampoo"],
-      notes: "Please confirm shipping timeline",
+      notes: "Please confirm commercial wholesale rates",
     });
 
     expect(quoteMessage).toContain("Alex Vance");
+    expect(quoteMessage).toContain("Apex Detailing Studio");
     expect(quoteMessage).toContain("Colour Wax Shampoo (20 L) × 2");
-    expect(quoteMessage).toContain("Requested Services:\nCar Shampoo");
+    expect(quoteMessage).toContain("5 containers monthly");
+    expect(quoteMessage).toContain("Please confirm commercial wholesale rates");
 
     const customUrl = whatsappUrl(quoteMessage);
     expect(customUrl).toContain(encodeURIComponent("Alex Vance"));
+    expect(customUrl).toContain(encodeURIComponent("Apex Detailing Studio"));
   });
 });

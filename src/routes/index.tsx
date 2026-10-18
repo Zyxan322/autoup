@@ -1,6 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, Droplets, Sparkles, ShieldCheck, Layers, MessageCircle, ShoppingBag, SlidersHorizontal } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ArrowRight,
+  Building,
+  CheckCircle2,
+  Droplets,
+  HelpCircle,
+  Layers,
+  MessageCircle,
+  Package,
+  PackageCheck,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+  Users,
+  Warehouse,
+} from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
@@ -8,49 +23,79 @@ import hero3 from "@/assets/hero-3.jpg";
 import hero4 from "@/assets/hero-4.jpg";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
-import { BeforeAfter } from '@/components/BeforeAfter';
-import { HomeServices } from '@/components/HomeServices';
-import { AutoGallery } from '@/components/AutoGallery';
-import { photo } from '@/lib/media';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ProductCard } from "@/components/ProductCard";
-import { PRODUCTS } from "@/lib/catalog";
+import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { SITE, whatsappUrl } from "@/lib/site";
+import { photo } from "@/lib/media";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AutoUp — Premium Car Care Products & Essentials" },
-      { name: "description", content: "Car shampoo, wax, cleaning chemicals and complete car-care essentials from AutoUp. Request a quotation on WhatsApp." },
+      { title: "AutoUp — Professional Automotive Cleaning Products Supplier" },
+      {
+        name: "description",
+        content:
+          "AutoUp supplies professional automotive cleaning products, concentrated car shampoos, waxes, and chemicals in bulk containers (20L, 25L, 20KG) to businesses.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "AutoUp — Premium Car Care Products" },
-      { property: "og:description", content: "Bring out your car's best with premium car-care essentials from AutoUp." },
+      {
+        property: "og:title",
+        content: "AutoUp — Professional Automotive Cleaning Products for Your Business",
+      },
+      {
+        property: "og:description",
+        content:
+          "Discover automotive cleaning products for professional use. Explore our product range and contact our team for business inquiries, bulk purchasing, and supply information.",
+      },
     ],
   }),
   component: Index,
 });
 
-type To = "/products" | "/services" | "/quote" | "/contact";
-type Slide = { img: string; eyebrow: string; title: string; text: string; a: [string, To]; b: [string, To] };
-const SLIDES: Slide[] = [
-  { img: hero1, eyebrow: "Premium Automotive Care", title: "Bring Out Your Car's Best.", text: "Premium car-care essentials for a cleaner finish, deeper shine and better vehicle maintenance.", a: ["Explore Products", "/products"], b: ["Discover Our Services", "/services"] },
-  { img: hero2, eyebrow: "Clean. Shine. Protect.", title: "Every Detail. Every Drive.", text: "Discover the essentials that help keep your vehicle looking its best.", a: ["Shop Car Care", "/products"], b: ["Get a Quote", "/quote"] },
-  { img: hero3, eyebrow: "Your Car Deserves More", title: "Make Every Finish Count.", text: "From cleaning shampoos to protective waxes, find the right products for your car-care routine.", a: ["View Products", "/products"], b: ["Contact Us", "/contact"] },
-  { img: hero4, eyebrow: "Care in Every Mile", title: "Shine That Turns Heads.", text: "Everything you need to keep your car clean, glossy and well-maintained — all in one place.", a: ["Browse Collection", "/products"], b: ["Request a Quote", "/quote"] },
+/* =========================================================================
+   1. HERO CAROUSEL COMPONENT
+   ========================================================================= */
+const HERO_SLIDES = [
+  {
+    img: hero1,
+    tag: "B2B Automotive Cleaning Chemicals",
+    headline: "Professional Automotive Cleaning Products for Your Business",
+    text: "Discover automotive cleaning products for professional use. Explore our product range and contact our team for business inquiries, bulk purchasing, and supply information.",
+  },
+  {
+    img: hero2,
+    tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
+    headline: "Commercial-Grade Formulations for High-Volume Wash Facilities",
+    text: "High-dilution concentrated shampoos, pre-washes, and specialized surface polishes engineered for automated and manual car wash operations.",
+  },
+  {
+    img: hero3,
+    tag: "Wholesale & Business Supply",
+    headline: "Reliable Chemical Supply for Detailing Studios & Dealerships",
+    text: "Supplying car washes, detailing centers, automotive workshops, and fleet operators with surface-safe, clear-coat tested cleaning solutions.",
+  },
+  {
+    img: hero4,
+    tag: "Direct Commercial Procurement",
+    headline: "Equip Your Facility with Professional Auto-Care Products",
+    text: "Direct wholesale inquiries, flexible container volumes, and fast quotation confirmations via WhatsApp.",
+  },
 ];
 
-function Hero() {
+function HeroSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     duration: 38,
   });
-  const [i, setI] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setI(emblaApi.selectedScrollSnap());
+    setActiveIdx(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
   useEffect(() => {
@@ -67,32 +112,26 @@ function Hero() {
     if (!emblaApi || paused) return;
     const timer = setInterval(() => {
       emblaApi.scrollNext();
-    }, 6000);
+    }, 6500);
     return () => clearInterval(timer);
   }, [emblaApi, paused]);
 
-  const user = (n: number) => {
-    setPaused(true);
-    emblaApi?.scrollTo(n);
-  };
-
-  const slide = SLIDES[i] ?? SLIDES[0];
-  if (!slide) return null;
+  const slide = HERO_SLIDES[activeIdx] ?? HERO_SLIDES[0];
 
   return (
     <section
-      className="section-dark relative h-[96svh] min-h-[620px] overflow-hidden select-none"
-      aria-roledescription="carousel"
+      className="section-dark relative h-[94svh] min-h-[620px] max-h-[920px] overflow-hidden select-none"
+      aria-label="Professional automotive cleaning products hero"
       onPointerDown={() => setPaused(true)}
     >
-      {/* Sliding Embla Viewport for smooth animated transitions */}
+      {/* Sliding Embla Viewport */}
       <div ref={emblaRef} className="h-full w-full overflow-hidden">
         <div className="flex h-full w-full">
-          {SLIDES.map((s, n) => (
+          {HERO_SLIDES.map((s, n) => (
             <div
               key={n}
               className="relative h-full w-full flex-[0_0_100%] min-w-0 overflow-hidden"
-              aria-hidden={n !== i}
+              aria-hidden={n !== activeIdx}
             >
               <img
                 src={s.img}
@@ -102,8 +141,8 @@ function Hero() {
                 loading={n === 0 ? "eager" : "lazy"}
                 fetchPriority={n === 0 ? "high" : "auto"}
                 className={cn(
-                  "size-full object-cover brightness-[1.08] contrast-[1.06] saturate-[1.12] transition-transform duration-[6500ms] ease-out",
-                  n === i ? "scale-105" : "scale-100"
+                  "size-full object-cover brightness-[0.72] contrast-[1.1] transition-transform duration-[7000ms] ease-out",
+                  n === activeIdx ? "scale-106" : "scale-100",
                 )}
               />
             </div>
@@ -111,88 +150,96 @@ function Hero() {
         </div>
       </div>
 
-      {/* Prominent Overlay (subtle so cars shine through with high prominence) */}
-      <div className="absolute inset-0 bg-hero-overlay pointer-events-none" />
-      <div className="absolute inset-x-0 bottom-0 h-28 bg-fade-bottom pointer-events-none" />
+      {/* Hero Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/40 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-fade-bottom pointer-events-none" />
 
-      {/* Editorial Content — Left Aligned, Premium Automotive Typography & CTAs */}
+      {/* Editorial Content */}
       <div className="absolute inset-0 z-10 pointer-events-none flex items-center pt-16">
         <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
           <div
-            key={i}
-            className="pointer-events-auto flex max-w-2xl lg:max-w-2xl xl:max-w-3xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-8 duration-700"
+            key={activeIdx}
+            className="pointer-events-auto flex max-w-2xl lg:max-w-3xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-6 duration-600"
           >
-            {/* Eyebrow Pill Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-primary backdrop-blur-md shadow-[0_0_15px_rgba(22,119,255,0.2)]">
-              <span className="size-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--electric)]" />
-              {slide.eyebrow}
+            {/* Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary backdrop-blur-md shadow-[0_0_15px_rgba(22,119,255,0.25)]">
+              <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+              {slide.tag}
             </div>
 
-            {/* Heading */}
-            <h1 className="mt-5 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.05] drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
-              {slide.title}
+            {/* B2B Headline */}
+            <h1 className="mt-5 font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+              {slide.headline}
             </h1>
 
-            {/* Description */}
-            <p className="mt-6 max-w-xl text-base sm:text-lg text-white/85 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            {/* Supporting Text */}
+            <p className="mt-5 max-w-xl text-sm sm:text-base lg:text-lg text-white/85 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
               {slide.text}
             </p>
 
-            {/* CTAs */}
+            {/* Primary & Secondary CTAs */}
             <div className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
               <Button
                 asChild
                 variant="hero"
                 size="xl"
-                className="group relative overflow-hidden shadow-[0_0_28px_rgba(22,119,255,0.65)] hover:shadow-[0_0_36px_rgba(22,119,255,0.9)] transition-all duration-300 font-semibold"
+                className="group relative overflow-hidden shadow-[0_0_25px_rgba(22,119,255,0.6)] hover:shadow-[0_0_32px_rgba(22,119,255,0.85)] transition-all font-semibold"
               >
-                <Link to={slide.a[1]}>
-                  {slide.a[0]}
+                <Link to="/products">
+                  Explore Our Products
                   <ArrowRight className="size-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
+
               <Button
                 asChild
                 variant="glass"
                 size="xl"
-                className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 shadow-lg font-medium transition-all duration-300"
+                className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 font-medium transition-all"
               >
-                <Link to={slide.b[1]}>{slide.b[0]}</Link>
+                <Link to="/quote">Request a Wholesale Quote</Link>
               </Button>
             </div>
 
-            {/* Micro Trust Features */}
-            <div className="mt-8 flex flex-wrap items-center gap-5 sm:gap-6 text-xs text-white/75 drop-shadow-sm">
+            {/* Verified Supply Highlights */}
+            <div className="mt-8 flex flex-wrap items-center gap-5 sm:gap-7 text-xs font-medium text-white/75">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary shrink-0" />
-                <span>100% Paint-Safe Formulas</span>
+                <PackageCheck className="size-4 text-primary shrink-0" />
+                <span>20L, 25L & 20KG Bulk Packaging</span>
               </div>
               <div className="flex items-center gap-2">
-                <Sparkles className="size-4 text-primary shrink-0" />
-                <span>Showroom Finish & Gloss</span>
+                <ShieldCheck className="size-4 text-primary shrink-0" />
+                <span>Commercial Dilution Economics</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Warehouse className="size-4 text-primary shrink-0" />
+                <span>B2B Supply Partner</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Pagination Indicators — Positioned bottom right for visual balance with left text */}
-      <div className="absolute bottom-9 right-5 lg:right-8 flex items-center gap-2 z-20 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg">
-        {SLIDES.map((_, n) => (
+      {/* Pagination Indicators */}
+      <div className="absolute bottom-8 right-5 lg:right-8 flex items-center gap-2 z-20 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+        {HERO_SLIDES.map((_, n) => (
           <button
             key={n}
             type="button"
             aria-label={`Go to slide ${n + 1}`}
-            aria-pressed={n === i}
-            onClick={() => user(n)}
+            aria-pressed={n === activeIdx}
+            onClick={() => {
+              setPaused(true);
+              emblaApi?.scrollTo(n);
+            }}
             className="group p-1 cursor-pointer focus:outline-none"
           >
             <span
               className={cn(
                 "block h-1.5 transition-all duration-500 rounded-full",
-                n === i
+                n === activeIdx
                   ? "w-8 bg-primary shadow-[0_0_12px_var(--electric)]"
-                  : "w-2.5 bg-white/40 hover:bg-white/80"
+                  : "w-2.5 bg-white/40 hover:bg-white/80",
               )}
             />
           </button>
@@ -202,145 +249,195 @@ function Hero() {
   );
 }
 
-const CATS = [
-  { title: "Exterior Cleaning", cat: "Exterior Cleaners", image: "editorial-10" },
-  { title: "Interior Cleaning", cat: "Interior Cleaners", image: "detail-1" },
-  { title: "Paint Shine", cat: "Car Wax & Polish", image: "editorial-12" },
-  { title: "Protective Wax", cat: "Car Wax & Polish", image: "detail-2" },
-  { title: "Complete Car-Care Kits", cat: "All Products", image: "editorial-11" },
+/* =========================================================================
+   2. PRODUCT CATEGORIES (Supported by actual inventory)
+   ========================================================================= */
+const CATEGORY_CARDS = [
+  {
+    title: "Car Shampoo",
+    cat: "Car Shampoo",
+    desc: "Concentrated foam shampoos and pre-washes formulated for automatic and manual wash systems.",
+    image: "editorial-10",
+    containerSize: "20L & 20KG",
+    itemCount: "4 Products",
+  },
+  {
+    title: "Cleaning Chemicals",
+    cat: "Cleaning Chemicals",
+    desc: "Heavy-duty all-purpose cleaners (ChemX C2) for engines, rims, linings, and high-grime components.",
+    image: "editorial-16",
+    containerSize: "25L Drum",
+    itemCount: "ChemX Series",
+  },
+  {
+    title: "Car Wax & Polish",
+    cat: "Car Wax & Polish",
+    desc: "Post-wash final touch shine waxes (F55) delivering instant gloss, zero residue, and dust repellency.",
+    image: "detail-2",
+    containerSize: "20L Container",
+    itemCount: "F55 Final Touch",
+  },
+  {
+    title: "Interior Cleaners",
+    cat: "Interior Cleaners",
+    desc: "Dashboard and trim polishes (ChemX D2) engineered for vinyl, leather, and interior plastics.",
+    image: "detail-1",
+    containerSize: "20KG Drum",
+    itemCount: "ChemX D2",
+  },
+  {
+    title: "Exterior Cleaners",
+    cat: "Exterior Cleaners",
+    desc: "Solvent tire dressings (O2, ChemX T1) and ammonia-free streakless glass polishes (G4).",
+    image: "editorial-12",
+    containerSize: "20L & 20KG",
+    itemCount: "Tire & Glass Care",
+  },
 ];
 
-const FAQ = [
-  ["Which car-care products does AutoUp offer?", "Explore shampoos, cleaning chemicals, paste wax, exterior cleaners, interior care conditioners and microfiber detailing accessories in our current collection."],
-  ["How do I choose the right car shampoo?", "Our Foam Car Shampoo is pH-neutral and safe for all finishes including waxes, sealants and ceramic coatings. Dilute according to instructions for regular bucket or foam cannon washing."],
-  ["How can I request a product quotation?", "Add your desired products and quantities to your cart, click 'Get a Quote', enter your vehicle and contact details, and send the formatted request directly via WhatsApp."],
-  ["Can I request a quotation for multiple products and custom sizes?", "Yes. Your quotation automatically itemizes all products, selected container sizes, and quantities from your cart for fast WhatsApp confirmation."],
-  ["How do I contact AutoUp through WhatsApp?", "Click any 'WhatsApp us' or 'Request Quote' button across the site to instantly start a direct conversation with our detailing specialists."],
-  ["Are product prices verified online?", "All prices and bulk trade discounts are confirmed promptly in your quotation so you receive accurate real-time pricing and stock confirmation."],
+/* =========================================================================
+   3. WHO WE SUPPLY (B2B Commercial Target Audiences)
+   ========================================================================= */
+const WHO_WE_SUPPLY = [
+  {
+    title: "Car Wash Businesses",
+    desc: "High-throughput automatic tunnel washes and manual hand wash bays requiring high-dilution shampoo concentrates.",
+    icon: Droplets,
+  },
+  {
+    title: "Automotive Detailing Studios",
+    desc: "Specialized vehicle detailers demanding high-gloss finishing waxes, tire polishes, and interior conditioners.",
+    icon: Sparkles,
+  },
+  {
+    title: "Vehicle Dealerships",
+    desc: "New and pre-owned vehicle showrooms preparing cars for customer handover with showroom surface gloss.",
+    icon: Building,
+  },
+  {
+    title: "Automotive Workshops",
+    desc: "Service centers and mechanical garages requiring powerful degreasing chemicals for engine bays and rims.",
+    icon: Warehouse,
+  },
+  {
+    title: "Fleet & Transport Operators",
+    desc: "Commercial transport companies, taxi fleets, and rental operators maintaining fleets under rigorous daily schedules.",
+    icon: Truck,
+  },
+  {
+    title: "Distributors & Resellers",
+    desc: "Regional automotive product wholesalers and procurement teams sourcing reliable commercial-grade chemicals.",
+    icon: Users,
+  },
 ];
 
+/* =========================================================================
+   4. WHY CHOOSE AUTOUP (Verified B2B Strengths)
+   ========================================================================= */
+const WHY_CHOOSE_ITEMS = [
+  {
+    icon: Package,
+    title: "Commercial-Grade Bulk Containers",
+    desc: "Standardized 20-litre, 25-litre, and 20-kilogram commercial containers designed specifically for high-frequency business usage.",
+  },
+  {
+    icon: Droplets,
+    title: "High Dilution Ratios & Economy",
+    desc: "Formulations engineered for dilution rates up to 1:100 and 1:150, significantly reducing chemical cost per cleaned vehicle.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Paint-Safe & Clear-Coat Tested",
+    desc: "Formulas engineered to preserve automotive paint, protect clear coats, and safely treat delicate vinyl, leather, and glass.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Direct WhatsApp Commercial Quotes",
+    desc: "Fast, itemized quotation turnarounds with verified container stock and transparent supply information directly via WhatsApp.",
+  },
+];
+
+/* =========================================================================
+   5. BULK & WHOLESALE INQUIRIES WORKFLOW
+   ========================================================================= */
+const WHOLESALE_STEPS = [
+  {
+    step: "01",
+    title: "Select Products",
+    desc: "Review our 10 verified commercial product formulas and select the container quantities needed for your operation.",
+  },
+  {
+    step: "02",
+    title: "Submit Business Information",
+    desc: "Provide your company name, location, and estimated monthly or sample volume through our simple inquiry form.",
+  },
+  {
+    step: "03",
+    title: "Receive Verified Quotation",
+    desc: "Our commercial representative confirms stock availability, volume pricing, and logistics options directly on WhatsApp.",
+  },
+];
+
+/* =========================================================================
+   6. B2B FREQUENTLY ASKED QUESTIONS
+   ========================================================================= */
+const B2B_FAQ = [
+  [
+    "What products does AutoUp supply?",
+    "AutoUp supplies commercial automotive cleaning products including concentrated car shampoos (Colour Wax Shampoo, Pre-Wash), all-purpose degreasers (ChemX C2), finishing waxes (F55), dashboard conditioners (ChemX D2), tire dressings (ChemX T1, O2 Solvent), and streak-free glass polish (G4).",
+  ],
+  [
+    "Does AutoUp provide consumer car washing or vehicle detailing services?",
+    "No. AutoUp is strictly a B2B product supplier. We do not provide car washing, detailing, vehicle polishing, or in-person cleaning services to individual retail consumers.",
+  ],
+  [
+    "What container sizes are available for business purchasing?",
+    "Our products are supplied in heavy-duty commercial packaging: 20-litre liquid containers, 25-litre chemical drums, and 20-kilogram containers for pre-wash concentrates and polishes.",
+  ],
+  [
+    "How can businesses request wholesale pricing?",
+    "You can build an inquiry list on our website and click 'Request a Wholesale Quote', or message our team directly on WhatsApp. We provide itemized wholesale quotations based on your required products and order volume.",
+  ],
+  [
+    "What are the dilution recommendations for car wash operations?",
+    "Each product features specific dilution guidelines printed on the packaging. For example, our Colour Wax Shampoo dilutes at 1 litre to 100 litres of water for manual washing and 1:150 for pump systems, delivering cost-effective operational economics.",
+  ],
+  [
+    "Are product prices shown on the website?",
+    "Because AutoUp is a B2B supplier, wholesale pricing is customized based on order volumes and delivery locations. Pricing is verified directly through our quotation and WhatsApp inquiry flow.",
+  ],
+];
+
+/* =========================================================================
+   MAIN HOMEPAGE COMPONENT
+   ========================================================================= */
 function Index() {
   return (
-    <>
-      {/* 1. Hero Carousel */}
-      <Hero />
+    <div className="flex flex-col">
+      {/* 1. Header (Rendered globally via __root.tsx) */}
 
-      {/* 2. Brand Introduction (LIGHT BACKGROUND) */}
-      <section className="page-band bg-background">
-        <div className="page-inner grid items-center gap-12 lg:grid-cols-2">
-          <Reveal className="relative overflow-hidden rounded-2xl border border-border shadow-xl">
-            <img
-              src={photo("editorial-1")}
-              alt="Silver classic coupe parked on scenic coastal highway"
-              width={720}
-              height={580}
-              loading="lazy"
-              className="aspect-[5/4] w-full object-cover transition-transform duration-700 hover:scale-105"
-            />
-            <div className="absolute bottom-4 left-4 rounded-full bg-black/70 backdrop-blur-md border border-white/10 px-4 py-1.5 text-xs font-semibold text-white">
-              <span className="text-primary mr-1.5">●</span> Surface-Safe Technology
-            </div>
-          </Reveal>
+      {/* 2. Hero Section */}
+      <HeroSection />
 
-          <Reveal>
-            <p className="eyebrow">THE AUTOUP DIFFERENCE</p>
-            <h2 className="section-title">More Than Clean. It's a Better Kind of Shine.</h2>
-            <p className="section-copy">
-              Discover car-care essentials designed to help you maintain a showroom exterior, a fresh interior and deep surface protection that lasts on every mile.
-            </p>
-
-            <div className="my-8 grid grid-cols-3 gap-4">
-              {[
-                [Droplets, "Clean", "Lifts stubborn road grime safely"],
-                [Sparkles, "Shine", "Deep wet-look reflection"],
-                [ShieldCheck, "Protect", "Hydrophobic surface barrier"],
-              ].map(([Icon, label, desc]) => {
-                const I = Icon as typeof Droplets;
-                return (
-                  <div key={String(label)} className="rounded-xl border border-border/80 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-sm">
-                    <I className="size-6 text-primary mb-2" />
-                    <h3 className="text-sm font-semibold text-foreground">{String(label)}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground leading-normal">{String(desc)}</p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <Button asChild variant="line" size="lg">
-              <Link to="/products">
-                Explore Products <ArrowRight className="ml-1 size-4" />
-              </Link>
-            </Button>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 3. Interactive Before & After Transformation (DARK BACKGROUND) */}
-      <section className="section-dark page-band bg-[#090b10] border-y border-white/5">
+      {/* 3. Product Categories */}
+      <section id="categories" className="page-band bg-background border-b border-border/60">
         <div className="page-inner">
-          <Reveal className="mb-10 max-w-2xl">
-            <p className="eyebrow">SEE THE TRANSFORMATION</p>
-            <h2 className="section-title">See the Difference. Feel the Finish.</h2>
+          <Reveal className="max-w-2xl">
+            <span className="eyebrow text-primary">COMMERCIAL CATEGORIES</span>
+            <h2 className="section-title">Product Categories</h2>
             <p className="section-copy">
-              Drag the interactive divider to witness the dramatic transformation that thoughtful automotive care makes on road film, brake fallout, and surface clarity.
-            </p>
-          </Reveal>
-          <Reveal>
-            <BeforeAfter />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 4. Compact 5-Column Services Grid (LIGHT BACKGROUND) */}
-      <HomeServices />
-
-      {/* 5. Featured Products (DARK BACKGROUND) */}
-      <section className="section-dark page-band bg-[#0c0f16] border-y border-white/5">
-        <div className="page-inner">
-          <Reveal>
-            <p className="eyebrow">CURATED COLLECTION</p>
-            <h2 className="section-title max-w-2xl">The Essentials Behind a Brilliant Finish.</h2>
-            <p className="section-copy">
-              Hand-picked bestsellers ready to add directly to your vehicle care regimen.
-            </p>
-          </Reveal>
-
-          <div className="card-grid-5 mt-10">
-            {PRODUCTS.slice(0, 5).map((p, n) => (
-              <Reveal key={p.slug} delay={n * 60}>
-                <ProductCard p={p} />
-              </Reveal>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Button asChild variant="hero" size="xl">
-              <Link to="/products">
-                Shop All Products <ArrowRight className="ml-1 size-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Automotive Care Categories (LIGHT BACKGROUND) */}
-      <section className="page-band bg-background">
-        <div className="page-inner">
-          <Reveal>
-            <p className="eyebrow">SURFACE CATEGORIES</p>
-            <h2 className="section-title">Care From Every Angle.</h2>
-            <p className="section-copy">
-              Browse tailored solutions organized by vehicle surface to achieve maximum optical clarity and longevity.
+              Explore professional cleaning chemistry grouped by application surface and commercial wash
+              requirements.
             </p>
           </Reveal>
 
           <div className="category-grid mt-10">
-            {CATS.map((c, n) => (
+            {CATEGORY_CARDS.map((c, n) => (
               <Reveal key={c.title} className={`category-item category-item-${n}`}>
                 <Link
                   to="/products"
-                  search={{ cat: c.cat === "All Products" ? undefined : c.cat }}
-                  className="section-dark group relative block h-full overflow-hidden rounded-xl border border-white/10 shadow-lg"
+                  search={{ cat: c.cat }}
+                  className="section-dark group relative block h-full overflow-hidden rounded-2xl border border-white/10 shadow-lg hover:border-primary/40 transition-colors"
                 >
                   <img
                     src={photo(c.image)}
@@ -348,15 +445,21 @@ function Index() {
                     width={560}
                     height={400}
                     loading="lazy"
-                    className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+                    className="size-full object-cover brightness-[0.7] contrast-[1.1] transition-transform duration-700 ease-out group-hover:scale-106"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-2">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                  <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
                     <div>
-                      <span className="text-[0.65rem] font-bold uppercase tracking-wider text-primary">Category</span>
-                      <h3 className="text-xl font-semibold text-white tracking-tight">{c.title}</h3>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="rounded-full bg-primary/20 border border-primary/40 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-primary">
+                          {c.containerSize}
+                        </span>
+                        <span className="text-[0.68rem] text-white/60">{c.itemCount}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-white tracking-tight">{c.title}</h3>
+                      <p className="mt-1 text-xs text-white/75 line-clamp-2 max-w-sm">{c.desc}</p>
                     </div>
-                    <div className="grid size-9 place-items-center rounded-full bg-white/10 text-white backdrop-blur group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="grid size-9 shrink-0 place-items-center rounded-full bg-white/10 text-white backdrop-blur group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                       <ArrowRight className="size-4" />
                     </div>
                   </div>
@@ -367,109 +470,265 @@ function Index() {
         </div>
       </section>
 
-      {/* 7. Three-Step Care Routine (DARK BACKGROUND) */}
-      <section className="section-dark page-band bg-[#0a0d14] border-y border-white/5">
+      {/* 4. Featured Products (5 per row on desktop) */}
+      <section className="section-dark page-band bg-[#080b11] border-b border-white/5">
         <div className="page-inner">
-          <Reveal>
-            <p className="eyebrow">THE AUTOUP SYSTEM</p>
-            <h2 className="section-title">A Simple Routine. A Better Finish.</h2>
-            <p className="section-copy">
-              Follow our three-stage care methodology to clean without scratching, bring out deep gloss, and lock in long-term protection.
-            </p>
-          </Reveal>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <Reveal className="max-w-2xl">
+              <span className="eyebrow text-primary">ACTUAL PRODUCT CATALOG</span>
+              <h2 className="section-title text-white">Featured Automotive Cleaning Products</h2>
+              <p className="section-copy text-white/75">
+                Authentic LifeLines commercial formulations packaged in high-capacity containers for
+                professional vehicle cleaning operations.
+              </p>
+            </Reveal>
+            <Reveal>
+              <Button asChild variant="glass" size="lg" className="border-white/20 text-white">
+                <Link to="/products">
+                  View Full Catalog (10 Products) <ArrowRight className="size-4 ml-1.5" />
+                </Link>
+              </Button>
+            </Reveal>
+          </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {[
-              ["Clean", "Dissolve traffic film, bug splatter and brake dust safely with pH-neutral, high-lubricity foam shampoo.", "editorial-16"],
-              ["Shine", "Revitalize paint depth, optical clarity and leather suppleness with specialized conditioners and glazes.", "detail-13"],
-              ["Protect", "Seal clear coat with hydrophobic carnauba and synthetic barriers that repel water, dust and UV rays.", "detail-15"],
-            ].map(([title, text, img], n) => (
-              <Reveal key={title} delay={n * 100}>
-                <article className="group overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-primary/40 hover:-translate-y-1">
-                  <div className="aspect-[16/10] overflow-hidden rounded-lg">
-                    <img
-                      src={photo(img ?? "")}
-                      alt={title}
-                      width={520}
-                      height={340}
-                      loading="lazy"
-                      className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
-                    />
-                  </div>
-                  <div className="mt-5 flex items-start gap-4">
-                    <span className="font-display text-xl font-bold text-primary">0{n + 1}</span>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white">{title}</h3>
-                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{text}</p>
-                    </div>
-                  </div>
-                </article>
+          {/* 5 Compact Cards Per Row on Desktop */}
+          <div className="card-grid-5 mt-10">
+            {PRODUCTS.slice(0, 10).map((p, n) => (
+              <Reveal key={p.slug} delay={(n % 5) * 50}>
+                <ProductCard p={p} />
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. Why Choose AutoUp (LIGHT BACKGROUND) */}
-      <section className="page-band bg-background">
-        <div className="page-inner grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
-            <p className="eyebrow">WHY CHOOSE AUTOUP</p>
-            <h2 className="section-title">Everything You Need to Care for Your Car.</h2>
-            <p className="section-copy">
-              We design premium detailing chemistry and vehicle maintenance essentials that provide professional results with zero compromise on surface safety.
-            </p>
+      {/* 5. Why Choose AutoUp */}
+      <section className="page-band bg-background border-b border-border/60">
+        <div className="page-inner">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <Reveal>
+              <span className="eyebrow text-primary">COMMERCIAL ADVANTAGES</span>
+              <h2 className="section-title">Why Businesses Choose AutoUp</h2>
+              <p className="section-copy">
+                AutoUp supplies high-efficiency cleaning chemistry that allows professional wash and
+                detailing teams to achieve superior surface shine, reduce chemical waste, and safeguard customer
+                vehicles.
+              </p>
 
-            <div className="mt-8 grid gap-5 sm:grid-cols-2">
-              {[
-                [Layers, "Focused Range", "Curated car-care essentials with no filler products."],
-                [SlidersHorizontal, "Surface Safe", "Formulas tailored for clear coat, alloy wheels, glass & leather."],
-                [ShoppingBag, "Fast Cart Selection", "Instant item review with size variants and quantity controls."],
-                [MessageCircle, "Direct WhatsApp Quotes", "Get personalized recommendations and verified pricing."],
-              ].map(([Icon, title, t]) => {
-                const I = Icon as typeof Layers;
-                return (
-                  <div key={String(title)} className="rounded-xl border border-border/80 bg-card p-4 transition-all hover:border-primary/40">
-                    <I className="mb-2.5 size-6 text-primary" />
-                    <h3 className="text-sm font-semibold text-foreground">{String(title)}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{String(t)}</p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {WHY_CHOOSE_ITEMS.map(({ icon: Icon, title, desc }) => (
+                  <div
+                    key={title}
+                    className="rounded-xl border border-border/80 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-sm"
+                  >
+                    <Icon className="size-5 text-primary mb-2.5" />
+                    <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{desc}</p>
                   </div>
-                );
-              })}
-            </div>
-          </Reveal>
+                ))}
+              </div>
+            </Reveal>
 
-          <Reveal className="overflow-hidden rounded-2xl border border-border shadow-xl">
-            <img
-              src={photo("detail-3")}
-              alt="White modern sedan parked outside contemporary architecture"
-              width={720}
-              height={720}
-              loading="lazy"
-              className="aspect-square w-full object-cover transition-transform duration-700 hover:scale-105"
-            />
-          </Reveal>
+            <Reveal className="relative overflow-hidden rounded-2xl border border-border shadow-xl">
+              <img
+                src={photo("editorial-1")}
+                alt="Automotive cleaning chemicals commercial supply"
+                width={720}
+                height={580}
+                loading="lazy"
+                className="aspect-[5/4] w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white">
+                <div className="inline-flex items-center gap-2 rounded-full bg-primary/20 border border-primary/40 px-3 py-1 text-xs font-bold text-primary backdrop-blur-md mb-2">
+                  <PackageCheck className="size-3.5" />
+                  Heavy-Duty Containers
+                </div>
+                <h3 className="text-xl font-bold">Standard 20L, 25L & 20KG Drums</h3>
+                <p className="mt-1 text-xs text-white/80">
+                  Engineered specifically for business inventory, automated dosing pumps, and commercial wash
+                  bays.
+                </p>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* 9. Premium Automotive Image Gallery (DARK BACKGROUND) */}
-      <AutoGallery />
+      {/* 6. Who We Supply */}
+      <section className="section-dark page-band bg-[#090c12] border-b border-white/5">
+        <div className="page-inner">
+          <Reveal className="text-center max-w-3xl mx-auto">
+            <span className="eyebrow text-primary">TARGET BUSINESS CLIENTELE</span>
+            <h2 className="section-title text-white">Who AutoUp Supplies</h2>
+            <p className="section-copy text-white/75 mx-auto">
+              Our products are engineered to support commercial automotive facilities and high-volume vehicle
+              cleaning operations across diverse business sectors.
+            </p>
+          </Reveal>
 
-      {/* 10. FAQ Accordion (LIGHT BACKGROUND) */}
-      <section className="page-band bg-background">
-        <div className="mx-auto max-w-3xl px-5">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {WHO_WE_SUPPLY.map(({ title, desc, icon: Icon }, idx) => (
+              <Reveal key={title} delay={idx * 60}>
+                <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-primary/40 hover:bg-white/[0.07] transition-all">
+                  <div className="size-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4">
+                    <Icon className="size-5" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">{title}</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-white/70 leading-relaxed">{desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Bulk and Wholesale Inquiries */}
+      <section className="page-band bg-background border-b border-border/60">
+        <div className="page-inner">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <Reveal className="rounded-3xl border border-border/80 bg-card p-8 sm:p-10 shadow-sm">
+              <span className="eyebrow text-primary">ORDERING PROCESS</span>
+              <h2 className="section-title">Bulk and Wholesale Inquiries</h2>
+              <p className="section-copy">
+                We make commercial chemical procurement straightforward, fast, and transparent. Learn how
+                businesses contact AutoUp for product availability, container volumes, and pricing.
+              </p>
+
+              <div className="mt-8 space-y-6">
+                {WHOLESALE_STEPS.map((s) => (
+                  <div key={s.step} className="flex gap-4 items-start">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/30 font-mono text-sm font-bold text-primary">
+                      {s.step}
+                    </span>
+                    <div>
+                      <h3 className="text-base font-bold text-foreground">{s.title}</h3>
+                      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild variant="hero" size="lg">
+                  <Link to="/quote">Request a Wholesale Quote</Link>
+                </Button>
+                <Button asChild variant="line" size="lg">
+                  <a
+                    href={whatsappUrl(
+                      "Hello AutoUp, I would like to inquire about bulk wholesale purchasing for automotive cleaning products.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageCircle className="size-4 mr-2" />
+                    Chat on WhatsApp
+                  </a>
+                </Button>
+              </div>
+            </Reveal>
+
+            <Reveal className="space-y-6">
+              <div className="rounded-2xl border border-border/80 bg-card/60 p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <CheckCircle2 className="size-5 text-primary shrink-0" />
+                  <h3 className="font-semibold text-foreground">Verified Container Sizing</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Every product is supplied in manufacturer-verified commercial capacities (20L, 25L, 20KG)
+                  matching industrial handling requirements.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border/80 bg-card/60 p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <CheckCircle2 className="size-5 text-primary shrink-0" />
+                  <h3 className="font-semibold text-foreground">Flexible Order Volumes</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Whether requesting initial product test samples or scheduled pallet deliveries for multi-bay
+                  chains, we tailor supply arrangements to your operational scale.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border/80 bg-card/60 p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <CheckCircle2 className="size-5 text-primary shrink-0" />
+                  <h3 className="font-semibold text-foreground">Accurate Label Data & Dilution Guidance</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Printed container instructions provide precise dilution ratios for high-pressure spray
+                  pumps, foam lances, and manual wash buckets.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. About AutoUp */}
+      <section className="section-dark page-band bg-[#07090e] border-b border-white/5">
+        <div className="page-inner">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <Reveal>
+              <span className="eyebrow text-primary">COMPANY OVERVIEW</span>
+              <h2 className="section-title text-white">About AutoUp</h2>
+              <p className="section-copy text-white/80">
+                AutoUp is a specialized B2B supplier of automotive cleaning products, concentrated
+                detergents, and vehicle maintenance chemistry.
+              </p>
+              <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5">
+                <p className="text-sm text-white/90 leading-relaxed">
+                  <strong className="text-primary font-bold">Important Note:</strong> AutoUp sells and
+                  supplies automotive cleaning products exclusively. We do NOT provide car washing, vehicle
+                  detailing, polishing, or mobile cleaning services to consumers.
+                </p>
+              </div>
+              <p className="mt-5 text-xs text-white/70 leading-relaxed">
+                By focusing strictly on product chemistry and wholesale supply, we ensure commercial buyers
+                receive reliable stock, authentic LifeLines packaging, and verified chemical specifications.
+              </p>
+
+              <div className="mt-8 flex gap-4">
+                <Button asChild variant="hero" size="lg">
+                  <Link to="/about">Read More About Us</Link>
+                </Button>
+                <Button asChild variant="glass" size="lg">
+                  <Link to="/contact">Contact Commercial Team</Link>
+                </Button>
+              </div>
+            </Reveal>
+
+            <Reveal className="overflow-hidden rounded-2xl border border-white/10 shadow-xl">
+              <img
+                src={photo("editorial-2")}
+                alt="Professional automotive cleaning products and commercial care"
+                width={720}
+                height={580}
+                loading="lazy"
+                className="aspect-[5/4] w-full object-cover brightness-[0.8] contrast-[1.1]"
+              />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Frequently Asked Questions */}
+      <section className="page-band bg-background border-b border-border/60">
+        <div className="mx-auto max-w-3xl px-5 py-8">
           <Reveal className="text-center">
-            <p className="eyebrow">FREQUENT QUESTIONS</p>
+            <span className="eyebrow text-primary">QUESTIONS & ANSWERS</span>
             <h2 className="section-title">Frequently Asked Questions</h2>
             <p className="section-copy mx-auto">
-              Everything you need to know about our products, surfaces, and instant WhatsApp quotations.
+              Answers regarding our commercial product inventory, container sizes, and B2B ordering
+              procedures.
             </p>
           </Reveal>
 
           <Accordion type="single" collapsible className="mt-10">
-            {FAQ.map(([q = "", a]) => (
+            {B2B_FAQ.map(([q = "", a]) => (
               <AccordionItem key={q} value={q} className="border-border/80">
-                <AccordionTrigger className="py-5 text-base font-semibold hover:text-primary transition-colors text-left">
+                <AccordionTrigger className="py-5 text-base font-semibold hover:text-primary transition-colors text-left text-foreground">
                   {q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm leading-relaxed text-muted-foreground pb-5">
@@ -481,39 +740,61 @@ function Index() {
         </div>
       </section>
 
-      {/* 11. Cinematic Final CTA Banner (DARK BACKGROUND) */}
-      <section className="section-dark relative overflow-hidden py-28 sm:py-36">
+      {/* 10. Final CTA Banner */}
+      <section className="section-dark relative overflow-hidden py-24 sm:py-32">
         <img
           src={photo("detail-4")}
-          alt="Blue sports coupe parked during golden hour sunset"
+          alt="Automotive product supply for businesses"
           width={1920}
           height={1080}
           loading="lazy"
-          className="absolute inset-0 size-full object-cover"
+          className="absolute inset-0 size-full object-cover brightness-[0.4] contrast-[1.15]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/85 to-black/60" />
 
         <Reveal className="page-inner relative">
-          <p className="eyebrow text-primary">CARE IN EVERY MILE</p>
+          <span className="eyebrow text-primary">COMMERCIAL VEHICLE CARE</span>
           <h2 className="section-title max-w-2xl text-white">
-            Ready to Elevate Your Car-Care Routine?
+            Looking for Automotive Cleaning Products for Your Business?
           </h2>
           <p className="section-copy max-w-xl text-white/80">
-            Explore our curated catalog of automotive shampoos, waxes, and conditioning solutions, or request an immediate quotation on WhatsApp.
+            Discover automotive cleaning products for professional use. Explore our product range and contact
+            our team for business inquiries, bulk purchasing, and supply information.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button asChild variant="hero" size="xl" className="shadow-[0_0_25px_-5px_var(--electric)]">
-              <Link to="/products">
-                Explore Products <ArrowRight className="ml-1 size-4" />
+            <Button
+              asChild
+              variant="hero"
+              size="xl"
+              className="shadow-[0_0_25px_-5px_var(--electric)] font-semibold"
+            >
+              <Link to="/quote">
+                Request a Quote <ArrowRight className="ml-1.5 size-4" />
               </Link>
             </Button>
-            <Button asChild variant="glass" size="xl">
-              <Link to="/quote">Request a Quote</Link>
+            <Button
+              asChild
+              variant="glass"
+              size="xl"
+              className="bg-emerald-500/20 hover:bg-emerald-500/30 border-emerald-500/40 text-emerald-300 font-semibold"
+            >
+              <a
+                href={whatsappUrl(
+                  "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="size-4 mr-2" />
+                Contact on WhatsApp
+              </a>
             </Button>
           </div>
         </Reveal>
       </section>
-    </>
+
+      {/* 11. Footer (Rendered globally via __root.tsx) */}
+    </div>
   );
 }

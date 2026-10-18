@@ -7,12 +7,12 @@ import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { to: "/", label: "Home" },
-  { to: "/services", label: "Services" },
-  { to: "/products", label: "Products" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-] as const;
+  { to: "/" as const, label: "Home" },
+  { to: "/products" as const, label: "Products" },
+  { to: "/products" as const, hash: "categories", label: "Product Categories" },
+  { to: "/about" as const, label: "About Us" },
+  { to: "/contact" as const, label: "Contact" },
+];
 
 export function Header() {
   const { count, setOpen } = useCart();
@@ -51,8 +51,9 @@ export function Header() {
         <nav className="hidden items-center gap-9 lg:flex">
           {NAV.map((n) => (
             <Link
-              key={n.to}
+              key={n.label}
               to={n.to}
+              hash={n.hash}
               activeOptions={{ exact: n.to === "/" }}
               className="nav-underline text-sm font-medium text-white/90 hover:text-white hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.8)] transition-all duration-300"
             >
@@ -82,7 +83,7 @@ export function Header() {
             )}
           </button>
           <Button asChild variant="hero" size="sm" className="ml-2 hidden h-10 px-5 sm:inline-flex shadow-[0_0_20px_-3px_var(--electric)]">
-            <Link to="/quote">Get a Quote</Link>
+            <Link to="/quote">Request a Quote</Link>
           </Button>
           <button
             aria-label="Menu"
@@ -116,15 +117,16 @@ export function Header() {
         <nav className="flex flex-col gap-1 border-t border-white/10 px-5 pt-3 pb-6 lg:hidden bg-black/95 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-300">
           {NAV.map((n) => (
             <Link
-              key={n.to}
+              key={n.label}
               to={n.to}
+              hash={n.hash}
               className="rounded-lg px-3 py-3 font-display text-lg text-white/90 hover:text-white hover:bg-white/10 hover:translate-x-1 transition-all"
             >
               {n.label}
             </Link>
           ))}
           <Button asChild variant="hero" size="xl" className="mt-3 shadow-[0_0_20px_-3px_var(--electric)]">
-            <Link to="/quote">Get a Quote</Link>
+            <Link to="/quote">Request a Quote</Link>
           </Button>
         </nav>
       )}

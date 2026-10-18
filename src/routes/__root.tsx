@@ -17,6 +17,7 @@ import { CartProvider } from "@/lib/cart";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
+import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 
 function NotFoundComponent() {
   return (
@@ -83,11 +84,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "AutoUp" },
-      { name: "description", content: "AutoUp premium car care products" },
+      { title: "AutoUp — Professional Automotive Cleaning Products Supplier" },
+      { name: "description", content: "AutoUp supplies professional automotive cleaning products, concentrated shampoos, waxes, and chemicals to businesses, car washes, and detailing studios." },
       { name: "author", content: "AutoUp" },
-      { property: "og:title", content: "AutoUp" },
-      { property: "og:description", content: "AutoUp premium car care products" },
+      { property: "og:title", content: "AutoUp — Professional Automotive Cleaning Products Supplier" },
+      { property: "og:description", content: "B2B supplier of professional automotive cleaning products, concentrates, and chemicals." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -135,6 +136,7 @@ function RootComponent() {
         </main>
         <Footer />
         <CartDrawer />
+        <StickyWhatsApp />
         <Toaster position="bottom-right" theme="dark" richColors />
       </CartProvider>
     </QueryClientProvider>
