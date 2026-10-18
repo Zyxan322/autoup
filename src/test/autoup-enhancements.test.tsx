@@ -10,7 +10,7 @@ describe("AutoUp B2B Product-Focused Verification", () => {
   const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
 
   it("matches all core routes without 404 fallback", () => {
-    const routes = ["/", "/services", "/products", "/about", "/contact", "/quote"];
+    const routes = ["/", "/services", "/products", "/gallery", "/about", "/contact", "/quote"];
     for (const r of routes) {
       const match = router.matchRoutes(r);
       expect(match.length).toBeGreaterThan(0);

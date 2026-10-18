@@ -32,6 +32,7 @@ export function Footer() {
           <ul className="space-y-2.5 text-sm text-white/70">
             <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
             <li><Link to="/products" className="hover:text-primary transition-colors">Products Catalog</Link></li>
+            <li><Link to="/gallery" className="hover:text-primary transition-colors">Visual Gallery</Link></li>
             <li><Link to="/about" className="hover:text-primary transition-colors">About AutoUp</Link></li>
             <li><Link to="/contact" className="hover:text-primary transition-colors">Wholesale Contact</Link></li>
             <li><Link to="/quote" className="hover:text-primary transition-colors font-medium text-white">Request a Quote</Link></li>
