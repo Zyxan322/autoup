@@ -1,0 +1,168 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
+import { MessageCircle, Minus, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ProductCard } from "@/components/ProductCard";
+import { PRODUCTS, productBySlug } from "@/lib/catalog";
+import { useCart } from "@/lib/cart";
+import { whatsappUrl } from "@/lib/site";
+
+import { cn } from "@/lib/utils";
+
+export const Route = createFileRoute("/products/$slug")({
+  loader: ({ params }) => {
+    const product = productBySlug(params.slug);
+    if (!product) throw notFound();
+    return { product };
+  },
+  head: ({ loaderData }) => ({
+    meta: loaderData
+      ? [
+          { title: `${loaderData.product.name} — AutoUp` },
+          { name: "description", content: loaderData.product.description },
+          { property: "og:title", content: `${loaderData.product.name} — AutoUp` },
+          { property: "og:description", content: loaderData.product.short },
+        ]
+      : [{ title: "Product unavailable — AutoUp" }, { name: "robots", content: "noindex" }],
+  }),
+  notFoundComponent: () => (
+    <div className="mx-auto max-w-xl px-5 py-48 text-center">
+      <h1 className="text-3xl font-bold">Product not found</h1>
+      <Button asChild variant="hero" size="xl" className="mt-6"><Link to="/products">Back to products</Link></Button>
+    </div>
+  ),
+  component: ProductPage,
+});
+
+function ProductPage() {
+  const { product: p } = Route.useLoaderData();
+  const { add } = useCart();
+  const [variant, setVariant] = useState(p.variants[0]);
+  const [qty, setQty] = useState(1);
+  const detailImage = p.image;
+  const related = PRODUCTS.filter((x) => x.slug !== p.slug).slice(0, 5);
+
+  return (
+    <>
+      <section className="mx-auto max-w-7xl px-5 pt-28 pb-16 lg:px-8">
+        <nav aria-label="Breadcrumb" className="mb-8 text-xs text-muted-foreground flex items-center gap-2">
+          <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+          <span>/</span>
+          <Link to="/products" className="hover:text-primary transition-colors">Products</Link>
+          <span>/</span>
+          <span className="text-foreground font-medium">{p.name}</span>
+        </nav>
+
+        <div className="grid gap-12 lg:grid-cols-2 items-start">
+          <div className="relative overflow-hidden rounded-2xl border border-primary/20 shadow-xl" style={{background: '#0c0f15'}}>
+            {/* Real product photo — contain so full label is visible */}
+            <div className="flex items-center justify-center p-8" style={{aspectRatio: '3/4'}}>
+              <img
+                src={detailImage}
+                alt={p.name}
+                width={640}
+                height={853}
+                className="max-h-full max-w-full object-contain transition-transform duration-700 hover:scale-105"
+              />
+            </div>
+            {p.code && (
+              <span className="absolute top-4 right-4 rounded-full bg-primary/90 px-3 py-1 text-xs font-bold tracking-wider text-white shadow-lg">{p.code}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col">
+            <span className="eyebrow">{p.category}</span>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">{p.name}</h1>
+            {p.code && <p className="mt-1 text-sm font-semibold text-primary/70">Product Code: {p.code}</p>}
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{p.description}</p>
+            <p className="mt-2 text-xs font-semibold text-primary">Price and bulk availability confirmed on WhatsApp quotation.</p>
+
+            <div className="mt-8">
+              <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Size / Package</p>
+              <div className="flex flex-wrap gap-2">
+                {p.variants.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setVariant(v)}
+                    className={cn(
+                      "rounded-full border px-4 py-2 text-xs font-medium transition-all cursor-pointer",
+                      v === variant
+                        ? "border-primary bg-primary text-primary-foreground shadow-[0_0_12px_rgba(22,119,255,0.4)]"
+                        : "border-input bg-card hover:border-primary/60",
+                    )}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="flex h-11 items-center rounded-lg border border-input bg-card px-2">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  onClick={() => setQty((q) => Math.max(1, q - 1))}
+                  className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  <Minus className="size-4" />
+                </button>
+                <span className="w-8 text-center text-sm font-semibold">{qty}</span>
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  onClick={() => setQty((q) => q + 1)}
+                  className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
+                  <Plus className="size-4" />
+                </button>
+              </div>
+
+              <Button
+                variant="hero"
+                size="xl"
+                className="flex-1 h-11 shadow-[0_0_15px_-3px_var(--electric)] cursor-pointer"
+                onClick={() => {
+                  add({ slug: p.slug, name: p.name, variant, qty, image: detailImage });
+                  toast.success(`${p.name} added to cart`);
+                }}
+              >
+                Add to Cart
+              </Button>
+            </div>
+
+            <Button asChild variant="line" size="xl" className="mt-3 h-11 cursor-pointer">
+              <a
+                href={whatsappUrl(`Hello AutoUp,\n\nI'd like a quotation for ${p.name} (${variant}) × ${qty}.\n\nThank you.`)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircle className="size-4 mr-2" />
+                Ask for a quote on WhatsApp
+              </a>
+            </Button>
+
+            <div className="mt-8 rounded-xl border border-border bg-card p-5 shadow-sm">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-primary">How to Use & Application</h2>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{p.usage}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-dark page-band bg-[#090b10] border-t border-white/5">
+        <div className="page-inner">
+          <p className="eyebrow">COMPLETE YOUR CARE ROUTINE</p>
+          <h2 className="section-title">You May Also Like</h2>
+          <div className="card-grid-5 mt-8">
+            {related.map((r) => (
+              <ProductCard key={r.slug} p={r} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
