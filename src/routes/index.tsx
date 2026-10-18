@@ -59,15 +59,15 @@ export const Route = createFileRoute("/")({
 const HERO_SLIDES = [
   {
     img: hero1,
-    tag: "B2B Automotive Cleaning Chemicals",
+    tag: "B2B Automotive Cleaning Products",
     headline: "Professional Automotive Cleaning Products for Your Business",
-    text: "Discover automotive cleaning products for professional use. Explore our product range and contact our team for business inquiries, bulk purchasing, and supply information.",
+    text: "Discover commercial-grade cleaning products and bulk concentrates engineered for professional vehicle care.",
   },
   {
     img: hero2,
     tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
-    headline: "Commercial-Grade Formulations for High-Volume Wash Facilities",
-    text: "High-dilution concentrated shampoos, pre-washes, and specialized surface polishes engineered for automated and manual car wash operations.",
+    headline: "High-Yield Formulations for Wash Facilities",
+    text: "Concentrated shampoos, waxes, and specialized chemicals packaged for high-throughput commercial operations.",
   },
 ];
 
@@ -106,7 +106,7 @@ function HeroSection() {
 
   return (
     <section
-      className="section-dark relative h-[94svh] min-h-[620px] max-h-[920px] overflow-hidden select-none"
+      className="section-dark relative h-[92svh] min-h-[580px] max-h-[860px] overflow-hidden select-none"
       aria-label="Professional automotive cleaning products hero"
       onPointerDown={() => setPaused(true)}
     >
@@ -127,8 +127,8 @@ function HeroSection() {
                 loading={n === 0 ? "eager" : "lazy"}
                 fetchPriority={n === 0 ? "high" : "auto"}
                 className={cn(
-                  "size-full object-cover brightness-[0.72] contrast-[1.1] transition-transform duration-[7000ms] ease-out",
-                  n === activeIdx ? "scale-106" : "scale-100",
+                  "size-full object-cover brightness-[0.88] contrast-[1.06] saturate-[1.08] transition-transform duration-[7000ms] ease-out",
+                  n === activeIdx ? "scale-105" : "scale-100",
                 )}
               />
             </div>
@@ -136,39 +136,39 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Hero Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/40 pointer-events-none" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-fade-bottom pointer-events-none" />
+      {/* Lightened, Focused Hero Overlays — keeps the car / product image prominently visible */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 via-40% to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-fade-bottom pointer-events-none" />
 
-      {/* Editorial Content */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex items-center pt-16">
+      {/* Editorial Content — Compact & Focused on Left */}
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center pt-12">
         <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
           <div
             key={activeIdx}
-            className="pointer-events-auto flex max-w-2xl lg:max-w-3xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-6 duration-600"
+            className="pointer-events-auto flex max-w-xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-5 duration-500"
           >
             {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary backdrop-blur-md shadow-[0_0_15px_rgba(22,119,255,0.25)]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary backdrop-blur-md shadow-[0_0_15px_rgba(22,119,255,0.25)]">
               <span className="size-1.5 rounded-full bg-primary animate-pulse" />
               {slide.tag}
             </div>
 
             {/* B2B Headline */}
-            <h1 className="mt-5 font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
+            <h1 className="mt-4 font-sans text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.1] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
               {slide.headline}
             </h1>
 
-            {/* Supporting Text */}
-            <p className="mt-5 max-w-xl text-sm sm:text-base lg:text-lg text-white/85 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            {/* Concise Supporting Text */}
+            <p className="mt-4 max-w-lg text-sm sm:text-base text-white/90 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               {slide.text}
             </p>
 
             {/* Primary & Secondary CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
+            <div className="mt-7 flex flex-wrap items-center gap-3.5">
               <Button
                 asChild
                 variant="hero"
-                size="xl"
+                size="lg"
                 className="group relative overflow-hidden shadow-[0_0_25px_rgba(22,119,255,0.6)] hover:shadow-[0_0_32px_rgba(22,119,255,0.85)] transition-all font-semibold"
               >
                 <Link to="/products">
@@ -180,27 +180,11 @@ function HeroSection() {
               <Button
                 asChild
                 variant="glass"
-                size="xl"
+                size="lg"
                 className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 font-medium transition-all"
               >
                 <Link to="/quote">Request a Wholesale Quote</Link>
               </Button>
-            </div>
-
-            {/* Verified Supply Highlights */}
-            <div className="mt-8 flex flex-wrap items-center gap-5 sm:gap-7 text-xs font-medium text-white/75">
-              <div className="flex items-center gap-2">
-                <PackageCheck className="size-4 text-primary shrink-0" />
-                <span>20L, 25L & 20KG Bulk Packaging</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary shrink-0" />
-                <span>Commercial Dilution Economics</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Warehouse className="size-4 text-primary shrink-0" />
-                <span>B2B Supply Partner</span>
-              </div>
             </div>
           </div>
         </div>
