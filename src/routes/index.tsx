@@ -19,6 +19,8 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import hero1 from "@/assets/Hero1.jpg";
 import hero2 from "@/assets/Hero2.jpg";
+import hero3 from "@/assets/hero3.jpg";
+import hero4 from "@/assets/hero4.jpg";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { ProductCard } from "@/components/ProductCard";
@@ -68,6 +70,18 @@ const HERO_SLIDES = [
     tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
     headline: "High-Yield Formulations for Wash Facilities",
     text: "Concentrated shampoos, waxes, and specialized chemicals packaged for high-throughput commercial operations.",
+  },
+  {
+    img: hero3,
+    tag: "Wholesale & Business Supply",
+    headline: "Reliable Chemical Supply for Detailing Studios & Dealerships",
+    text: "Supplying car washes, detailing centers, automotive workshops, and fleet operators with surface-safe cleaning solutions.",
+  },
+  {
+    img: hero4,
+    tag: "Direct Commercial Procurement",
+    headline: "Equip Your Facility with Professional Auto-Care Products",
+    text: "Direct wholesale inquiries, flexible container volumes, and fast quotation confirmations via WhatsApp.",
   },
 ];
 
