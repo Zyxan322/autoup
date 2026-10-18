@@ -17,10 +17,8 @@ import {
   Warehouse,
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import hero1 from "@/assets/hero-1.jpg";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
-import hero4 from "@/assets/hero-4.jpg";
+import hero1 from "@/assets/Hero1.jpg";
+import hero2 from "@/assets/Hero2.jpg";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { ProductCard } from "@/components/ProductCard";
@@ -70,18 +68,6 @@ const HERO_SLIDES = [
     tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
     headline: "Commercial-Grade Formulations for High-Volume Wash Facilities",
     text: "High-dilution concentrated shampoos, pre-washes, and specialized surface polishes engineered for automated and manual car wash operations.",
-  },
-  {
-    img: hero3,
-    tag: "Wholesale & Business Supply",
-    headline: "Reliable Chemical Supply for Detailing Studios & Dealerships",
-    text: "Supplying car washes, detailing centers, automotive workshops, and fleet operators with surface-safe, clear-coat tested cleaning solutions.",
-  },
-  {
-    img: hero4,
-    tag: "Direct Commercial Procurement",
-    headline: "Equip Your Facility with Professional Auto-Care Products",
-    text: "Direct wholesale inquiries, flexible container volumes, and fast quotation confirmations via WhatsApp.",
   },
 ];
 

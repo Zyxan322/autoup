@@ -29,6 +29,7 @@ export function Header() {
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
+
   useEffect(() => {
     setMobile(false);
     setSearch(false);
@@ -40,15 +41,23 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        solid ? "header-glass-scrolled" : "header-glass-transparent",
+        solid ? "header-glass-scrolled shadow-lg shadow-black/20" : "header-glass-transparent",
       )}
     >
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
         <Link to="/" aria-label="AutoUp home" className="shrink-0 transition-opacity hover:opacity-95">
-          <img src={logo} alt="AutoUp — Care in Every Mile" width={1080} height={1350} className="h-16 w-auto object-contain" />
+          <img
+            src={logo}
+            alt="AutoUp — Care in Every Mile"
+            width={1080}
+            height={1350}
+            className="h-14 sm:h-16 w-auto object-contain"
+          />
         </Link>
 
-        <nav className="hidden items-center gap-9 lg:flex">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-7 xl:gap-9 lg:flex">
           {NAV.map((n) => (
             <Link
               key={n.label}
@@ -62,39 +71,56 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-1.5">
+        {/* Action Buttons Group */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Search Toggle Button */}
           <button
+            type="button"
             aria-label="Search products"
             onClick={() => setSearch((s) => !s)}
-            className="rounded-full p-2.5 text-white/90 hover:bg-white/10 hover:text-primary transition-colors cursor-pointer"
+            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Search className="size-5" />
+            {search ? <X className="size-4" /> : <Search className="size-4" />}
           </button>
+
+          {/* Cart / Inquiry List Button with Badge */}
           <button
-            aria-label={`Open cart, ${count} items`}
+            type="button"
+            aria-label={`Open quotation inquiry list, ${count} items`}
             onClick={() => setOpen(true)}
-            className="relative rounded-full p-2.5 text-white/90 hover:bg-white/10 hover:text-primary transition-colors cursor-pointer"
+            className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <ShoppingBag className="size-5" />
+            <ShoppingBag className="size-4" />
             {count > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] font-bold text-primary-foreground shadow-[0_0_10px_var(--electric)]">
+              <span className="absolute -right-1 -top-1 grid min-w-5 h-5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] font-bold text-primary-foreground shadow-[0_0_10px_var(--electric)]">
                 {count}
               </span>
             )}
           </button>
-          <Button asChild variant="hero" size="sm" className="ml-2 hidden h-10 px-5 sm:inline-flex shadow-[0_0_20px_-3px_var(--electric)]">
+
+          {/* Prominent "Request a Quote" CTA Button */}
+          <Button
+            asChild
+            variant="hero"
+            size="sm"
+            className="h-9 sm:h-10 px-3.5 sm:px-5 text-xs sm:text-sm font-semibold shadow-[0_0_20px_-3px_var(--electric)] hover:shadow-[0_0_28px_rgba(22,119,255,0.85)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+          >
             <Link to="/quote">Request a Quote</Link>
           </Button>
+
+          {/* Mobile Menu Hamburger Toggle */}
           <button
-            aria-label="Menu"
+            type="button"
+            aria-label="Toggle navigation menu"
             onClick={() => setMobile((m) => !m)}
-            className="rounded-full p-2.5 text-white/90 hover:bg-white/10 hover:text-primary transition-colors lg:hidden cursor-pointer"
+            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 lg:hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {mobile ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
 
+      {/* Expandable Search Bar */}
       {search && (
         <form
           className="mx-auto max-w-3xl px-5 pb-5 animate-in fade-in slide-in-from-top-2 duration-300"
@@ -103,16 +129,26 @@ export function Header() {
             navigate({ to: "/products", search: { q: q || undefined } });
           }}
         >
-          <input
-            autoFocus
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search products or categories…"
-            className="h-12 w-full rounded-full border border-white/20 bg-black/60 px-5 text-white placeholder:text-white/50 backdrop-blur-md focus:border-primary focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] focus:outline-none"
-          />
+          <div className="relative">
+            <input
+              autoFocus
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search products or categories (e.g. shampoo, wax, ChemX)..."
+              className="h-12 w-full rounded-full border border-white/25 bg-black/80 pl-5 pr-12 text-sm text-white placeholder:text-white/50 backdrop-blur-xl focus:border-primary focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] focus:outline-none"
+            />
+            <button
+              type="submit"
+              aria-label="Submit search"
+              className="absolute right-2 top-1.5 flex size-9 items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              <Search className="size-4" />
+            </button>
+          </div>
         </form>
       )}
 
+      {/* Mobile Menu Drawer */}
       {mobile && (
         <nav className="flex flex-col gap-1 border-t border-white/10 px-5 pt-3 pb-6 lg:hidden bg-black/95 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-300">
           {NAV.map((n) => (
@@ -120,12 +156,19 @@ export function Header() {
               key={n.label}
               to={n.to}
               hash={n.hash}
-              className="rounded-lg px-3 py-3 font-display text-lg text-white/90 hover:text-white hover:bg-white/10 hover:translate-x-1 transition-all"
+              onClick={() => setMobile(false)}
+              className="rounded-lg px-3 py-3 font-display text-base font-medium text-white/90 hover:text-white hover:bg-white/10 hover:translate-x-1 transition-all"
             >
               {n.label}
             </Link>
           ))}
-          <Button asChild variant="hero" size="xl" className="mt-3 shadow-[0_0_20px_-3px_var(--electric)]">
+          <Button
+            asChild
+            variant="hero"
+            size="xl"
+            className="mt-3 h-12 shadow-[0_0_20px_-3px_var(--electric)]"
+            onClick={() => setMobile(false)}
+          >
             <Link to="/quote">Request a Quote</Link>
           </Button>
         </nav>
