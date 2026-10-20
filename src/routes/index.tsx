@@ -17,18 +17,24 @@ import {
   Warehouse,
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import hero1 from "@/assets/Hero1.jpg";
+import hero from "@/assets/hero.jpg";
 import hero2 from "@/assets/Hero2.jpg";
 import hero3 from "@/assets/hero3.jpg";
 import hero4 from "@/assets/hero4.jpg";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
-import { ProductCard } from "@/components/ProductCard";
-import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { GALLON_PRODUCTS, PRODUCTS, RETAIL_PRODUCTS } from "@/lib/catalog";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { photo } from "@/lib/media";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/lib/i18n";
+import { ProductCarousel } from "@/components/ProductCarousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,7 +66,7 @@ export const Route = createFileRoute("/")({
    ========================================================================= */
 const HERO_SLIDES = [
   {
-    img: hero1,
+    img: hero,
     tag: "B2B Automotive Cleaning Products",
     headline: "Professional Automotive Cleaning Products for Your Business",
     text: "Discover commercial-grade cleaning products and bulk concentrates engineered for professional vehicle care.",
@@ -116,7 +122,7 @@ function HeroSection() {
     return () => clearInterval(timer);
   }, [emblaApi, paused]);
 
-  const slide = HERO_SLIDES[activeIdx] ?? HERO_SLIDES[0];
+  const slide = HERO_SLIDES[activeIdx] ?? HERO_SLIDES[0]!;
 
   return (
     <section
@@ -396,6 +402,7 @@ const B2B_FAQ = [
    MAIN HOMEPAGE COMPONENT
    ========================================================================= */
 function Index() {
+  const { locale } = useLocale();
   return (
     <div className="flex flex-col">
       {/* 1. Header (Rendered globally via __root.tsx) */}
@@ -403,15 +410,78 @@ function Index() {
       {/* 2. Hero Section */}
       <HeroSection />
 
-      {/* 3. Product Categories */}
+      {/* 3. Retail and 20L Products */}
+      <section className="section-dark page-band bg-[#080b11] border-b border-white/5">
+        <div className="page-inner">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <Reveal className="max-w-2xl">
+              <span className="eyebrow text-primary">ACTUAL PRODUCT CATALOG</span>
+              <h2 className="section-title text-white">
+                {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
+              </h2>
+              <p className="section-copy text-white/75">
+                {locale === "ar"
+                  ? "منتجات أصلية للعناية اليومية بالمركبات، إلى جانب حلول تجارية موثقة بعبوات 20 لترًا."
+                  : "Authentic everyday vehicle-care products alongside verified 20L commercial solutions."}
+              </p>
+            </Reveal>
+            <Reveal>
+              <Button asChild variant="glass" size="lg" className="border-white/20 text-white">
+                <Link to="/products">
+                  {locale === "ar"
+                    ? `عرض جميع المنتجات (${PRODUCTS.length})`
+                    : `View Full Catalog (${PRODUCTS.length} Products)`}
+                  <ArrowRight className="size-4 ml-1.5" />
+                </Link>
+              </Button>
+            </Reveal>
+          </div>
+
+          {RETAIL_PRODUCTS.length > 0 && (
+            <div className="mt-10">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold text-white">
+                  {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
+                </h3>
+                <p className="mt-1 text-sm text-white/65">
+                  {locale === "ar"
+                    ? "منتجات التنظيف والتلميع والحماية للاستخدام اليومي."
+                    : "Professional cleaning, shining and protection products for everyday vehicle care."}
+                </p>
+              </div>
+              <ProductCarousel products={RETAIL_PRODUCTS} productType="retail" />
+            </div>
+          )}
+
+          {GALLON_PRODUCTS.length > 0 && (
+            <div className="mt-14">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold text-white">
+                  {locale === "ar"
+                    ? "حلول احترافية بعبوات 20 لترًا"
+                    : "Professional 20L Gallon Solutions"}
+                </h3>
+                <p className="mt-1 text-sm text-white/65">
+                  {locale === "ar"
+                    ? "حلول تجارية للورش ومراكز العناية ومغاسل السيارات."
+                    : "Bulk solutions for workshops, detailing studios, car washes and commercial businesses."}
+                </p>
+              </div>
+              <ProductCarousel products={GALLON_PRODUCTS} productType="gallon" />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 4. Product Categories */}
       <section id="categories" className="page-band bg-background border-b border-border/60">
         <div className="page-inner">
           <Reveal className="max-w-2xl">
             <span className="eyebrow text-primary">COMMERCIAL CATEGORIES</span>
             <h2 className="section-title">Product Categories</h2>
             <p className="section-copy">
-              Explore professional cleaning chemistry grouped by application surface and commercial wash
-              requirements.
+              Explore professional cleaning chemistry grouped by application surface and commercial
+              wash requirements.
             </p>
           </Reveal>
 
@@ -454,38 +524,6 @@ function Index() {
         </div>
       </section>
 
-      {/* 4. Featured Products (5 per row on desktop) */}
-      <section className="section-dark page-band bg-[#080b11] border-b border-white/5">
-        <div className="page-inner">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <Reveal className="max-w-2xl">
-              <span className="eyebrow text-primary">ACTUAL PRODUCT CATALOG</span>
-              <h2 className="section-title text-white">Featured Automotive Cleaning Products</h2>
-              <p className="section-copy text-white/75">
-                Authentic LifeLines commercial formulations packaged in high-capacity containers for
-                professional vehicle cleaning operations.
-              </p>
-            </Reveal>
-            <Reveal>
-              <Button asChild variant="glass" size="lg" className="border-white/20 text-white">
-                <Link to="/products">
-                  View Full Catalog (10 Products) <ArrowRight className="size-4 ml-1.5" />
-                </Link>
-              </Button>
-            </Reveal>
-          </div>
-
-          {/* 5 Compact Cards Per Row on Desktop */}
-          <div className="card-grid-5 mt-10">
-            {PRODUCTS.slice(0, 10).map((p, n) => (
-              <Reveal key={p.slug} delay={(n % 5) * 50}>
-                <ProductCard p={p} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* 5. Why Choose AutoUp */}
       <section className="page-band bg-background border-b border-border/60">
         <div className="page-inner">
@@ -495,8 +533,8 @@ function Index() {
               <h2 className="section-title">Why Businesses Choose AutoUp</h2>
               <p className="section-copy">
                 AutoUp supplies high-efficiency cleaning chemistry that allows professional wash and
-                detailing teams to achieve superior surface shine, reduce chemical waste, and safeguard customer
-                vehicles.
+                detailing teams to achieve superior surface shine, reduce chemical waste, and
+                safeguard customer vehicles.
               </p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -530,8 +568,8 @@ function Index() {
                 </div>
                 <h3 className="text-xl font-bold">Standard 20L, 25L & 20KG Drums</h3>
                 <p className="mt-1 text-xs text-white/80">
-                  Engineered specifically for business inventory, automated dosing pumps, and commercial wash
-                  bays.
+                  Engineered specifically for business inventory, automated dosing pumps, and
+                  commercial wash bays.
                 </p>
               </div>
             </Reveal>
@@ -546,8 +584,8 @@ function Index() {
             <span className="eyebrow text-primary">TARGET BUSINESS CLIENTELE</span>
             <h2 className="section-title text-white">Who AutoUp Supplies</h2>
             <p className="section-copy text-white/75 mx-auto">
-              Our products are engineered to support commercial automotive facilities and high-volume vehicle
-              cleaning operations across diverse business sectors.
+              Our products are engineered to support commercial automotive facilities and
+              high-volume vehicle cleaning operations across diverse business sectors.
             </p>
           </Reveal>
 
@@ -575,8 +613,9 @@ function Index() {
               <span className="eyebrow text-primary">ORDERING PROCESS</span>
               <h2 className="section-title">Bulk and Wholesale Inquiries</h2>
               <p className="section-copy">
-                We make commercial chemical procurement straightforward, fast, and transparent. Learn how
-                businesses contact AutoUp for product availability, container volumes, and pricing.
+                We make commercial chemical procurement straightforward, fast, and transparent.
+                Learn how businesses contact AutoUp for product availability, container volumes, and
+                pricing.
               </p>
 
               <div className="mt-8 space-y-6">
@@ -600,7 +639,9 @@ function Index() {
                 <Button asChild variant="line" size="lg">
                   <a
                     href={whatsappUrl(
-                      "Hello AutoUp, I would like to inquire about bulk wholesale purchasing for automotive cleaning products.",
+                      locale === "ar"
+                        ? "مرحباً AutoUp، أود الاستفسار عن شراء منتجات تنظيف السيارات بالجملة."
+                        : "Hello AutoUp, I would like to inquire about bulk wholesale purchasing for automotive cleaning products.",
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -619,8 +660,8 @@ function Index() {
                   <h3 className="font-semibold text-foreground">Verified Container Sizing</h3>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Every product is supplied in manufacturer-verified commercial capacities (20L, 25L, 20KG)
-                  matching industrial handling requirements.
+                  Every product is supplied in manufacturer-verified commercial capacities (20L,
+                  25L, 20KG) matching industrial handling requirements.
                 </p>
               </div>
 
@@ -630,19 +671,21 @@ function Index() {
                   <h3 className="font-semibold text-foreground">Flexible Order Volumes</h3>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Whether requesting initial product test samples or scheduled pallet deliveries for multi-bay
-                  chains, we tailor supply arrangements to your operational scale.
+                  Whether requesting initial product test samples or scheduled pallet deliveries for
+                  multi-bay chains, we tailor supply arrangements to your operational scale.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/80 bg-card/60 p-6">
                 <div className="flex items-center gap-3 mb-2">
                   <CheckCircle2 className="size-5 text-primary shrink-0" />
-                  <h3 className="font-semibold text-foreground">Accurate Label Data & Dilution Guidance</h3>
+                  <h3 className="font-semibold text-foreground">
+                    Accurate Label Data & Dilution Guidance
+                  </h3>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Printed container instructions provide precise dilution ratios for high-pressure spray
-                  pumps, foam lances, and manual wash buckets.
+                  Printed container instructions provide precise dilution ratios for high-pressure
+                  spray pumps, foam lances, and manual wash buckets.
                 </p>
               </div>
             </Reveal>
@@ -663,14 +706,15 @@ function Index() {
               </p>
               <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5">
                 <p className="text-sm text-white/90 leading-relaxed">
-                  <strong className="text-primary font-bold">Important Note:</strong> AutoUp sells and
-                  supplies automotive cleaning products exclusively. We do NOT provide car washing, vehicle
-                  detailing, polishing, or mobile cleaning services to consumers.
+                  <strong className="text-primary font-bold">Important Note:</strong> AutoUp sells
+                  and supplies automotive cleaning products exclusively. We do NOT provide car
+                  washing, vehicle detailing, polishing, or mobile cleaning services to consumers.
                 </p>
               </div>
               <p className="mt-5 text-xs text-white/70 leading-relaxed">
-                By focusing strictly on product chemistry and wholesale supply, we ensure commercial buyers
-                receive reliable stock, authentic LifeLines packaging, and verified chemical specifications.
+                By focusing strictly on product chemistry and wholesale supply, we ensure commercial
+                buyers receive reliable stock, authentic LifeLines packaging, and verified chemical
+                specifications.
               </p>
 
               <div className="mt-8 flex gap-4">
@@ -742,8 +786,8 @@ function Index() {
             Looking for Automotive Cleaning Products for Your Business?
           </h2>
           <p className="section-copy max-w-xl text-white/80">
-            Discover automotive cleaning products for professional use. Explore our product range and contact
-            our team for business inquiries, bulk purchasing, and supply information.
+            Discover automotive cleaning products for professional use. Explore our product range
+            and contact our team for business inquiries, bulk purchasing, and supply information.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
@@ -765,7 +809,9 @@ function Index() {
             >
               <a
                 href={whatsappUrl(
-                  "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
+                  locale === "ar"
+                    ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
+                    : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
                 )}
                 target="_blank"
                 rel="noopener noreferrer"

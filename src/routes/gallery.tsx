@@ -10,6 +10,7 @@ import { photo } from "@/lib/media";
 import { PRODUCTS } from "@/lib/catalog";
 import hero1 from "@/assets/Hero1.jpg";
 import hero2 from "@/assets/Hero2.jpg";
+import { useLocale, translateText } from "@/lib/i18n";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -331,15 +332,19 @@ const GALLERY_ITEMS: GalleryItem[] = [
   },
 ];
 
-const CATEGORY_TABS = ["All Images", "Vehicles", "Products", "Details", "Craft"] as const;
+export const DISPLAY_GALLERY_ITEMS = GALLERY_ITEMS.filter((item) =>
+  ["hero-1", "hero-2", "ed-15", "ed-16", "dt-2", "dt-3", "dt-13", "dt-15"].includes(item.id),
+);
+const CATEGORY_TABS = ["All Images", "Vehicles", "Details", "Craft"] as const;
 
 function GalleryPage() {
+  const { locale } = useLocale();
   const [tab, setTab] = useState<(typeof CATEGORY_TABS)[number]>("All Images");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered = useMemo(() => {
-    if (tab === "All Images") return GALLERY_ITEMS;
-    return GALLERY_ITEMS.filter((item) => item.category === tab);
+    if (tab === "All Images") return DISPLAY_GALLERY_ITEMS;
+    return DISPLAY_GALLERY_ITEMS.filter((item) => item.category === tab);
   }, [tab]);
 
   const activeItem = lightboxIndex !== null ? filtered[lightboxIndex] : null;
@@ -374,46 +379,35 @@ function GalleryPage() {
                     : "border border-input bg-card/60 text-muted-foreground hover:border-primary/50 hover:text-foreground"
                 }`}
               >
-                {t} {t === "All Images" ? `(${GALLERY_ITEMS.length})` : `(${GALLERY_ITEMS.filter((i) => i.category === t).length})`}
+                {translateText(t, locale)}{" "}
+                {t === "All Images"
+                  ? `(${DISPLAY_GALLERY_ITEMS.length})`
+                  : `(${DISPLAY_GALLERY_ITEMS.filter((i) => i.category === t).length})`}
               </button>
             ))}
           </div>
 
           <div className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
             <Sparkles className="size-3.5 text-primary" />
-            Showing {filtered.length} gallery assets
+            {locale === "ar"
+              ? `يعرض المعرض ${filtered.length} صور`
+              : `Showing ${filtered.length} gallery assets`}
           </div>
         </div>
 
-        {/* Collage Masonry Grid with Hover Cards */}
-        <div className="mt-8 columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((item, idx) => (
-            <Reveal key={item.id} delay={(idx % 6) * 40} className="break-inside-avoid">
+            <Reveal key={item.id} delay={(idx % 6) * 40} className="h-full">
               <article
                 onClick={() => setLightboxIndex(idx)}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#090b11] shadow-lg transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/60 hover:shadow-[0_12px_32px_rgba(22,119,255,0.3)]"
+                className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#090b11] shadow-lg transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/60 hover:shadow-[0_12px_32px_rgba(22,119,255,0.3)]"
               >
-                {/* Image Container with contain for products, cover for vehicles */}
-                <div
-                  className={`relative overflow-hidden w-full ${
-                    item.category === "Products"
-                      ? "p-6 bg-[#0c0f16] flex items-center justify-center aspect-[3/4]"
-                      : item.aspect === "tall"
-                        ? "aspect-[3/4]"
-                        : item.aspect === "square"
-                          ? "aspect-square"
-                          : "aspect-[16/10]"
-                  }`}
-                >
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt={translateText(item.title, locale)}
                     loading="lazy"
-                    className={`transition-transform duration-700 ease-out group-hover:scale-108 ${
-                      item.category === "Products"
-                        ? "max-h-full max-w-full object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.8)]"
-                        : "size-full object-cover brightness-[0.9] contrast-[1.05]"
-                    }`}
+                    className="size-full object-cover brightness-[0.9] contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-108"
                   />
 
                   {/* Gradient Scrim on Hover */}
@@ -422,7 +416,7 @@ function GalleryPage() {
                   {/* Top Category Badge */}
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
                     <span className="rounded-full bg-black/75 border border-white/15 px-2.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-white backdrop-blur-md">
-                      {item.category}
+                      {translateText(item.category, locale)}
                     </span>
                   </div>
 
@@ -434,10 +428,10 @@ function GalleryPage() {
                   {/* Bottom Text Content revealed / translated on hover */}
                   <div className="absolute inset-x-0 bottom-0 p-4 transition-transform duration-300">
                     <h3 className="font-display text-base font-bold text-white tracking-tight leading-snug drop-shadow-md">
-                      {item.title}
+                      {translateText(item.title, locale)}
                     </h3>
                     <p className="mt-1 text-xs text-white/80 line-clamp-2 leading-relaxed">
-                      {item.subtitle}
+                      {translateText(item.subtitle, locale)}
                     </p>
                   </div>
                 </div>
@@ -459,10 +453,14 @@ function GalleryPage() {
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
               <div>
                 <DialogTitle className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  {activeItem.title}
+                  {translateText(activeItem.title, locale)}
                 </DialogTitle>
                 <DialogDescription className="mt-0.5 text-xs sm:text-sm text-white/70">
-                  {activeItem.subtitle} · Category: <span className="text-primary font-semibold">{activeItem.category}</span>
+                  {translateText(activeItem.subtitle, locale)} ·{" "}
+                  {locale === "ar" ? "الفئة:" : "Category:"}{" "}
+                  <span className="text-primary font-semibold">
+                    {translateText(activeItem.category, locale)}
+                  </span>
                 </DialogDescription>
               </div>
             </div>
@@ -471,7 +469,7 @@ function GalleryPage() {
             <div className="relative mt-4 flex items-center justify-center overflow-hidden rounded-2xl bg-neutral-950/80 p-2 border border-white/10 max-h-[70vh]">
               <img
                 src={activeItem.image}
-                alt={activeItem.title}
+                alt={translateText(activeItem.title, locale)}
                 className="max-h-[66vh] max-w-full object-contain rounded-lg"
               />
             </div>

@@ -8,6 +8,8 @@ import { PRODUCTS } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
 import { toast } from "sonner";
+import { useLocale, translateText } from "@/lib/i18n";
+import { isTwentyLitreVariant } from "@/lib/installments";
 
 export const Route = createFileRoute("/quote")({
   validateSearch: z.object({ from: z.string().optional(), product: z.string().optional() }),
@@ -37,6 +39,7 @@ const DRAFT = "autoup-b2b-quote-draft";
 function QuotePage() {
   const { product } = Route.useSearch();
   const { items, setQty, remove, add } = useCart();
+  const { locale } = useLocale();
   const [f, setF] = useState({
     name: "",
     companyName: "",
@@ -67,7 +70,9 @@ function QuotePage() {
     try {
       const d = sessionStorage.getItem(DRAFT);
       if (d) setF((x) => ({ ...x, ...JSON.parse(d) }));
-    } catch {}
+    } catch (error) {
+      console.error("Unable to restore the saved AutoUp quote draft.", error);
+    }
   }, []);
 
   useEffect(() => {
@@ -76,7 +81,12 @@ function QuotePage() {
 
   const data = {
     ...f,
-    products: items.map((i) => ({ name: i.name, qty: i.qty, variant: i.variant })),
+    products: items.map((i) => ({
+      name: i.name,
+      qty: i.qty,
+      variant: i.variant,
+      paymentOption: i.paymentOption,
+    })),
   };
 
   const validate = () => {
@@ -99,7 +109,7 @@ function QuotePage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => setF({ ...f, [k]: e.target.value });
 
-  const formattedMessage = buildQuoteMessage(data);
+  const formattedMessage = buildQuoteMessage(data, locale);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(formattedMessage);
@@ -302,7 +312,10 @@ function QuotePage() {
               ) : (
                 <ul className="divide-y divide-border/60 rounded-xl border border-border/80 bg-card">
                   {items.map((i) => (
-                    <li key={i.slug + i.variant} className="flex items-center gap-3 p-3.5">
+                    <li
+                      key={`${i.slug}${i.variant ?? ""}${i.paymentOption ?? "full"}`}
+                      className="flex items-center gap-3 p-3.5"
+                    >
                       <div className="size-12 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1 flex items-center justify-center">
                         <img
                           src={i.image}
@@ -313,14 +326,25 @@ function QuotePage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{i.name}</p>
+                        <p className="font-semibold text-sm truncate">{translateText(i.name, locale)}</p>
                         <p className="text-xs text-primary/80 font-medium">{i.variant}</p>
+                        {isTwentyLitreVariant(i.variant) && (
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {i.paymentOption === "installment-quote"
+                              ? locale === "ar"
+                                ? "طلب عرض تقسيط"
+                                : "Installment quote requested"
+                              : locale === "ar"
+                                ? "الدفع الكامل"
+                                : "Full payment"}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center gap-1.5 border border-border/80 rounded-lg bg-background px-1.5 py-0.5">
                         <button
                           type="button"
                           aria-label="Decrease quantity"
-                          onClick={() => setQty(i.slug, i.variant, i.qty - 1)}
+                          onClick={() => setQty(i.slug, i.variant, i.qty - 1, i.paymentOption)}
                           className="p-1 text-muted-foreground hover:text-foreground"
                         >
                           <Minus className="size-3" />
@@ -329,7 +353,7 @@ function QuotePage() {
                         <button
                           type="button"
                           aria-label="Increase quantity"
-                          onClick={() => setQty(i.slug, i.variant, i.qty + 1)}
+                          onClick={() => setQty(i.slug, i.variant, i.qty + 1, i.paymentOption)}
                           className="p-1 text-muted-foreground hover:text-foreground"
                         >
                           <Plus className="size-3" />
@@ -338,7 +362,7 @@ function QuotePage() {
                       <button
                         type="button"
                         aria-label="Remove item"
-                        onClick={() => remove(i.slug, i.variant)}
+                        onClick={() => remove(i.slug, i.variant, i.paymentOption)}
                         className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
                       >
                         <X className="size-4" />

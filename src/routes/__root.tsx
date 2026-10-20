@@ -18,6 +18,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
+import { LocaleProvider } from "@/lib/i18n";
+import logo from "@/assets/logo.png";
 
 function NotFoundComponent() {
   return (
@@ -100,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", href: logo, type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
@@ -111,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ar" dir="rtl">
       <head>
         <HeadContent />
       </head>
@@ -129,16 +131,18 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <CartProvider>
-        <Header />
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
-        <CartDrawer />
-        <StickyWhatsApp />
-        <Toaster position="bottom-right" theme="dark" richColors />
-      </CartProvider>
+      <LocaleProvider>
+        <CartProvider>
+          <Header />
+          <main>
+            <Outlet />
+          </main>
+          <Footer />
+          <CartDrawer />
+          <StickyWhatsApp />
+          <Toaster position="bottom-right" theme="dark" richColors />
+        </CartProvider>
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }

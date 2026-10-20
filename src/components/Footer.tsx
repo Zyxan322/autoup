@@ -3,13 +3,15 @@ import { MessageCircle, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { CATEGORIES } from "@/lib/catalog";
+import { useLocale } from "@/lib/i18n";
 
 export function Footer() {
+  const { locale } = useLocale();
   const productCategories = CATEGORIES.filter((c) => c !== "All Products");
 
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/10">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-5 lg:px-8">
         <div>
           <Link to="/" aria-label="AutoUp" className="inline-block transition-opacity hover:opacity-90">
             <img src={logo} alt="AutoUp" width={1080} height={1350} loading="lazy" className="h-20 w-auto object-contain" />
@@ -72,15 +74,26 @@ export function Footer() {
                 <span>Chat on WhatsApp</span>
               </a>
             </li>
-            <li className="text-xs text-white/60 pt-1 leading-relaxed">{SITE.address}</li>
             <li className="text-xs text-white/60">{SITE.hours}</li>
           </ul>
+        </div>
+
+        <div>
+          <h4 className="eyebrow mb-4 text-primary">{locale === "ar" ? "العنوان" : "Address"}</h4>
+          <p className="max-w-xs text-sm leading-relaxed text-white/70">
+            {locale === "ar" ? SITE.address.ar : SITE.address.en}
+          </p>
         </div>
       </div>
 
       <div className="border-t border-white/10 bg-black/60">
         <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-4 px-5 py-6 text-xs text-white/50 lg:px-8">
-          <p>© {new Date().getFullYear()} AutoUp. {SITE.tagline}. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} AutoUp.{" "}
+            {locale === "ar"
+              ? "عناية ترافقك في كل رحلة. جميع الحقوق محفوظة."
+              : `${SITE.tagline}. All rights reserved.`}
+          </p>
           <div className="flex gap-6">
             <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
             <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>

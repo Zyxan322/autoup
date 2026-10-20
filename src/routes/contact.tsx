@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SITE, whatsappUrl } from "@/lib/site";
+import { useLocale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -54,6 +55,7 @@ const input =
   "h-12 w-full rounded-xl border border-input bg-card px-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 
 function ContactPage() {
+  const { locale } = useLocale();
   const [form, setForm] = useState({
     companyName: "",
     name: "",
@@ -74,7 +76,18 @@ function ContactPage() {
     setErrors(er);
     if (Object.keys(er).length) return;
 
-    const b2bMsg = [
+    const b2bMsg = locale === "ar" ? [
+      "مرحباً AutoUp،",
+      "",
+      "لدي استفسار تجاري حول منتجات تنظيف السيارات لديكم.",
+      "",
+      `الشركة: ${form.companyName}`,
+      `اسم مسؤول التواصل: ${form.name}`,
+      `الهاتف: ${form.phone}`,
+      `المدينة: ${form.city}`,
+      "",
+      `الاستفسار / المتطلبات:\n${form.message}`,
+    ].join("\n") : [
       "Hello AutoUp,",
       "",
       "I have a business inquiry regarding your automotive cleaning products.",
@@ -106,9 +119,9 @@ function ContactPage() {
         {/* Left Column: Direct Commercial Contact */}
         <div className="space-y-4">
           <a
-            href={whatsappUrl(
-              "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
-            )}
+            href={whatsappUrl(locale === "ar"
+              ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
+              : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.")}
             target="_blank"
             rel="noopener noreferrer"
             className="card-stroke flex items-center gap-4 rounded-2xl bg-card p-6 hover:border-primary/50 transition-colors"
@@ -153,7 +166,9 @@ function ContactPage() {
             </div>
             <div>
               <p className="font-semibold text-foreground">Location</p>
-              <p className="text-sm text-muted-foreground">{SITE.address}</p>
+              <p className="text-sm text-muted-foreground">
+                {locale === "ar" ? SITE.address.ar : SITE.address.en}
+              </p>
             </div>
           </div>
 

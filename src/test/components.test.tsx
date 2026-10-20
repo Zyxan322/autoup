@@ -5,6 +5,7 @@ import { CartProvider, useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { Footer } from "@/components/Footer";
+import { LocaleProvider, useLocale } from "@/lib/i18n";
 
 // Mock @tanstack/react-router Link
 vi.mock("@tanstack/react-router", () => ({
@@ -27,12 +28,85 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>{children}</CartProvider>
+      <LocaleProvider initialLocale="en">
+        <CartProvider>{children}</CartProvider>
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }
 
 describe("B2B Components Functionality Verification", () => {
+  it("defaults to Arabic, updates document direction, and persists a language change", () => {
+    localStorage.removeItem("autoup-language");
+
+    function LocaleInspector() {
+      const { locale, setLocale } = useLocale();
+      return <button onClick={() => setLocale(locale === "ar" ? "en" : "ar")}>{locale}</button>;
+    }
+
+    render(
+      <LocaleProvider>
+        <LocaleInspector />
+      </LocaleProvider>,
+    );
+
+    expect(screen.getByRole("button")).toHaveTextContent("ar");
+    expect(document.documentElement.lang).toBe("ar");
+    expect(document.documentElement.dir).toBe("rtl");
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(screen.getByRole("button")).toHaveTextContent("en");
+    expect(localStorage.getItem("autoup-language")).toBe("en");
+    expect(document.documentElement.lang).toBe("en");
+    expect(document.documentElement.dir).toBe("ltr");
+
+    localStorage.removeItem("autoup-language");
+  });
+
+  it("keeps full-payment and installment quote items independently editable", () => {
+    localStorage.removeItem("autoup-cart");
+
+    function PaymentInspector() {
+      const { items, add, remove } = useCart();
+      const product = {
+        slug: "lifelines-colour-wax-shampoo",
+        name: "Colour Wax Shampoo",
+        variant: "20 L",
+        qty: 1,
+        image: "test-image.jpg",
+      };
+      return (
+        <div>
+          <button onClick={() => add({ ...product, paymentOption: "full" })}>Add full</button>
+          <button onClick={() => add({ ...product, paymentOption: "installment-quote" })}>
+            Add installment
+          </button>
+          <button
+            onClick={() => remove(product.slug, product.variant, "installment-quote")}
+          >
+            Remove installment
+          </button>
+          <output data-testid="payments">{items.map((item) => item.paymentOption).join(",")}</output>
+        </div>
+      );
+    }
+
+    render(
+      <Wrapper>
+        <PaymentInspector />
+      </Wrapper>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Add full" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add installment" }));
+    expect(screen.getByTestId("payments")).toHaveTextContent("full,installment-quote");
+
+    fireEvent.click(screen.getByRole("button", { name: "Remove installment" }));
+    expect(screen.getByTestId("payments")).toHaveTextContent(/^full$/);
+    localStorage.removeItem("autoup-cart");
+  });
+
   it("renders compact ProductCard with quantity stepper, View Details link, and Inquire button", () => {
     const testProduct = {
       slug: "lifelines-colour-wax-shampoo",
@@ -65,10 +139,10 @@ describe("B2B Components Functionality Verification", () => {
     expect(screen.getByRole("link", { name: "Colour Wax Shampoo" })).toBeInTheDocument();
     expect(screen.getByText("CWS-1")).toBeInTheDocument();
     expect(screen.getByText("20 L")).toBeInTheDocument();
-    expect(screen.getByText("Wholesale Pricing")).toBeInTheDocument();
+    expect(screen.getByText(/price on request|السعر عند الطلب/i)).toBeInTheDocument();
 
     // View Details button
-    const viewDetails = screen.getByRole("link", { name: "View Details" });
+    const viewDetails = screen.getAllByRole("link", { name: /view details|عرض التفاصيل/i })[0];
     expect(viewDetails).toBeInTheDocument();
 
     // Stepper buttons
@@ -78,14 +152,18 @@ describe("B2B Components Functionality Verification", () => {
 
     // Inquire button
     const initialCount = cartCount;
-    const inquireBtn = screen.getByRole("button", { name: /inquire/i });
+    const inquireBtn = screen.getByRole("button", { name: /inquire|استفسر/i });
     expect(inquireBtn).toBeInTheDocument();
     fireEvent.click(inquireBtn);
     expect(screen.getByTestId("cart-count").textContent).toBe(String(initialCount + 2));
   });
 
   it("renders StickyWhatsApp button with prefilled B2B inquiry message and accessible label", () => {
-    render(<StickyWhatsApp />);
+    render(
+      <Wrapper>
+        <StickyWhatsApp />
+      </Wrapper>,
+    );
 
     const button = screen.getByRole("link", { name: /contact autoup on whatsapp/i });
     expect(button).toBeInTheDocument();
@@ -98,7 +176,11 @@ describe("B2B Components Functionality Verification", () => {
   });
 
   it("renders B2B Footer with commercial attributes, WhatsApp link, and product categories", () => {
-    render(<Footer />);
+    render(
+      <Wrapper>
+        <Footer />
+      </Wrapper>,
+    );
 
     expect(screen.getByText(/care in every mile/i)).toBeInTheDocument();
     expect(screen.getByText(/commercial bulk supply/i)).toBeInTheDocument();

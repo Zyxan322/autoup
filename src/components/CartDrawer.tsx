@@ -4,14 +4,20 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
+import { useLocale, translateText } from "@/lib/i18n";
+import { isTwentyLitreVariant } from "@/lib/installments";
 
 export function CartDrawer() {
   const { items, open, setOpen, setQty, remove, clear, count } = useCart();
+  const { locale } = useLocale();
   const navigate = useNavigate();
 
   return (
     <div
-      className={cn("fixed inset-0 z-[60]", open ? "pointer-events-auto" : "pointer-events-none")}
+      className={cn(
+        "fixed inset-0 z-[60] overflow-hidden",
+        open ? "pointer-events-auto" : "pointer-events-none",
+      )}
       aria-hidden={!open}
     >
       <div
@@ -24,14 +30,19 @@ export function CartDrawer() {
       <aside
         role="dialog"
         aria-label="Wholesale Quote List"
+        data-open={open}
+        data-closed={!open}
         className={cn(
-          "section-dark glass absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l transition-transform duration-500 ease-[var(--ease-out)]",
+          "quote-drawer section-dark glass absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l transition-transform duration-500 ease-[var(--ease-out)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
         <div className="flex items-center justify-between border-b px-6 py-5">
           <h2 className="text-xl font-semibold">
-            Wholesale Quote List <span className="text-muted-foreground font-normal text-sm">({count} items)</span>
+            {locale === "ar" ? "قائمة طلب عرض السعر" : "Wholesale Quote List"}{" "}
+            <span className="text-muted-foreground font-normal text-sm">
+              ({count} {locale === "ar" ? "منتجات" : "items"})
+            </span>
           </h2>
           <button
             aria-label="Close quote drawer"
@@ -46,7 +57,9 @@ export function CartDrawer() {
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
               <ShoppingBag className="size-12 text-primary/70" />
-              <p className="text-muted-foreground text-sm">Your wholesale quote list is empty.</p>
+              <p className="text-muted-foreground text-sm">
+                {locale === "ar" ? "قائمة طلب عرض السعر فارغة." : "Your wholesale quote list is empty."}
+              </p>
               <Button asChild variant="line" onClick={() => setOpen(false)}>
                 <Link to="/products">Browse products</Link>
               </Button>
@@ -54,7 +67,10 @@ export function CartDrawer() {
           ) : (
             <ul className="divide-y divide-border">
               {items.map((i) => (
-                <li key={i.slug + i.variant} className="flex gap-4 py-4 items-center">
+                <li
+                  key={`${i.slug}${i.variant ?? ""}${i.paymentOption ?? "full"}`}
+                  className="flex gap-4 py-4 items-center"
+                >
                   <div className="size-20 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1.5 flex items-center justify-center">
                     <img
                       src={i.image}
@@ -65,12 +81,23 @@ export function CartDrawer() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{i.name}</p>
+                    <p className="font-semibold text-sm truncate">{translateText(i.name, locale)}</p>
                     {i.variant && <p className="text-xs text-primary font-medium">{i.variant}</p>}
+                    {isTwentyLitreVariant(i.variant) && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {i.paymentOption === "installment-quote"
+                          ? locale === "ar"
+                            ? "طلب عرض تقسيط"
+                            : "Installment quote requested"
+                          : locale === "ar"
+                            ? "الدفع الكامل"
+                            : "Full payment"}
+                      </p>
+                    )}
                     <div className="mt-2 flex items-center gap-2">
                       <button
                         aria-label="Decrease quantity"
-                        onClick={() => setQty(i.slug, i.variant, i.qty - 1)}
+                        onClick={() => setQty(i.slug, i.variant, i.qty - 1, i.paymentOption)}
                         className="rounded-full border p-1 hover:border-primary cursor-pointer"
                       >
                         <Minus className="size-3" />
@@ -78,7 +105,7 @@ export function CartDrawer() {
                       <span className="w-6 text-center text-xs font-semibold">{i.qty}</span>
                       <button
                         aria-label="Increase quantity"
-                        onClick={() => setQty(i.slug, i.variant, i.qty + 1)}
+                        onClick={() => setQty(i.slug, i.variant, i.qty + 1, i.paymentOption)}
                         className="rounded-full border p-1 hover:border-primary cursor-pointer"
                       >
                         <Plus className="size-3" />
@@ -87,7 +114,7 @@ export function CartDrawer() {
                   </div>
                   <button
                     aria-label={`Remove ${i.name}`}
-                    onClick={() => remove(i.slug, i.variant)}
+                    onClick={() => remove(i.slug, i.variant, i.paymentOption)}
                     className="self-start p-1 text-muted-foreground hover:text-destructive cursor-pointer"
                   >
                     <Trash2 className="size-4" />

@@ -20,6 +20,14 @@ import pWaterlessWash from "@/assets/products/product-waterless-wash.jpeg";
 import pColourWaxShampoo from "@/assets/products/product-colour-wax-shampoo.jpeg";
 import pColourWaxShampooRose from "@/assets/products/product-colour-wax-shampoo-rose.jpeg";
 import pPreWashShampoo from "@/assets/products/product-pre-wash-shampoo.jpeg";
+import pC6Bottle from "@/assets/products/imgi_10_adbaf30f-77cd-4723-9725-0c340de48414-500x500-ZbPENDcUWk8hs1lVpz5ILjSwIj7F3MXrAmSFQu36.png";
+import pO2Bottle from "@/assets/products/imgi_11_4f1f3ac3-aebb-400c-b0de-e1ae1de0caab-500x500-HQgb89xy4fBVsvZiFmNggqEvhcjHG8v9KooUCtYb.png";
+import pWaterlessBottle from "@/assets/products/imgi_18_2277741b-cccd-4f7d-9444-1c89c9fcd57b-500x500-TzKStWMTy3Q1JNG5b5oLuuPts1SQG5WVFrGp4hXk.jpg";
+import pRustRemover from "@/assets/products/imgi_19_0385406c-2c3d-4ab7-a3fc-1704ee12ce6a-500x500-zLtbRBuI8yxMR17Ga5NauoICRuBbWOq0hTc13XF0.jpg";
+import pPreWashBottle from "@/assets/products/imgi_20_6c5faa3b-8ddb-464d-b3b2-923851cbe446-500x500-MU8e8ssvw5EqbExg4nsUCPi7isgckN4MrIFHuvUY.jpg";
+import pIronRemover from "@/assets/products/imgi_22_eb0c09eb-18c9-475e-a8e5-5723d8f937c2-500x500-Bxm4ILMLbzCpg0ZXqFjYrs9UERkf4sGuQOCr7EkN.jpg";
+import pShampooWaxBottle from "@/assets/products/imgi_30_220e1edb-cfd6-43ba-8003-5813d686f78e-500x500-WVvvvjZ7GPmdgUBUwOPjSOeWmvEMiLGLNZngKVZm.jpg";
+import pD2Bottle from "@/assets/products/imgi_35_38190e6b-4e92-439b-b543-9f91846c6d0a-500x500-MtQDKaypgVMaWVQcgLYzkOx6ta6zUpUkOb0OAySO.png";
 
 export type Service = { slug: string; title: string; description: string; image: string };
 
@@ -47,6 +55,7 @@ export type Product = {
   slug: string;
   name: string;
   code?: string; // product code printed on label, if readable
+  packageType: "retail" | "gallon" | "other-commercial";
   category: (typeof CATEGORIES)[number];
   short: string;
   description: string;
@@ -61,6 +70,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-colour-wax-shampoo",
     name: "Colour Wax Shampoo",
+    packageType: "gallon",
     code: undefined,
     category: "Car Shampoo",
     short: "Advanced formula that preserves paint and delivers a long-lasting attractive luster.",
@@ -73,6 +83,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-colour-wax-shampoo-rose",
     name: "Colour Wax Shampoo — Rose",
+    packageType: "gallon",
     code: undefined,
     category: "Car Shampoo",
     short: "Same advanced wax shampoo formula in a signature rose fragrance.",
@@ -85,6 +96,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-pre-wash-shampoo",
     name: "Pre Wash Car Shampoo",
+    packageType: "other-commercial",
     code: undefined,
     category: "Car Shampoo",
     short: "High-performance pre-wash for automatic and manual car wash systems.",
@@ -97,6 +109,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-waterless-car-wash",
     name: "Waterless Car Wash",
+    packageType: "gallon",
     code: undefined,
     category: "Car Shampoo",
     short: "Wash your car without water — cleans, shines and protects in one step.",
@@ -109,6 +122,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-chemx-c2",
     name: "ChemX C2",
+    packageType: "other-commercial",
     code: "ChemX C2",
     category: "Cleaning Chemicals",
     short: "Chemical all-purpose cleaner for engines, rims, interiors and more.",
@@ -121,6 +135,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-f55-wax",
     name: "F55 Final Touch Wax",
+    packageType: "gallon",
     code: "F55",
     category: "Car Wax & Polish",
     short: "Post-wash shine wax — instant gloss, no residue, dust-resistant.",
@@ -133,6 +148,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-chemx-d2",
     name: "ChemX D2",
+    packageType: "other-commercial",
     code: "ChemX D2",
     category: "Interior Cleaners",
     short: "Dashboard polish for vinyl, leather and plastic — long-lasting shine.",
@@ -145,6 +161,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-chemx-t1",
     name: "ChemX T1",
+    packageType: "other-commercial",
     code: "ChemX T1",
     category: "Exterior Cleaners",
     short: "Tire polish for deep, rich, long-lasting shine on rubber surfaces.",
@@ -157,6 +174,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-o2-solvent",
     name: "O2 Solvent Tire Polish",
+    packageType: "gallon",
     code: "O2",
     category: "Exterior Cleaners",
     short: "Powerful solvent tire polish for deep shine and long-lasting protection.",
@@ -169,6 +187,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "lifelines-g4-glass",
     name: "G4 Car Glass Cleaner & Polish",
+    packageType: "gallon",
     code: "G4",
     category: "Exterior Cleaners",
     short: "Ammonia-free glass cleaner and polish — streak-free, long-lasting protection.",
@@ -178,6 +197,112 @@ export const PRODUCTS: Product[] = [
     image: pG4Glass,
     featured: 10,
   },
+  {
+    slug: "lifelines-chemx-c6-500ml",
+    name: "ChemX C6",
+    code: "C6",
+    packageType: "retail",
+    category: "Cleaning Chemicals",
+    short: "Chemical degreaser in a verified 500 ml bottle.",
+    description: "ChemX C6 chemical degreaser in a 500 ml bottle.",
+    variants: ["500 ml"],
+    usage: "Follow the dilution and use directions printed on the product label.",
+    image: pC6Bottle,
+    featured: 11,
+  },
+  {
+    slug: "lifelines-o2-solvent-500ml",
+    name: "O2 Solvent Tire Polish",
+    code: "O2",
+    packageType: "retail",
+    category: "Exterior Cleaners",
+    short: "O2 tire polish in a verified 500 ml bottle.",
+    description: "LifeLines O2 Solvent Tire Polish in a 500 ml bottle.",
+    variants: ["500 ml"],
+    usage: "Follow the directions printed on the product label.",
+    image: pO2Bottle,
+    featured: 12,
+  },
+  {
+    slug: "lifelines-waterless-car-wash-480ml",
+    name: "Waterless Car Wash",
+    packageType: "retail",
+    category: "Car Shampoo",
+    short: "Waterless car wash in a verified 480 ml bottle.",
+    description: "LifeLines Waterless Car Wash in a 480 ml bottle.",
+    variants: ["480 ml"],
+    usage: "Follow the directions printed on the product label.",
+    image: pWaterlessBottle,
+    featured: 13,
+  },
+  {
+    slug: "lifelines-pre-wash-shampoo-1kg",
+    name: "Pre Wash Car Shampoo",
+    packageType: "retail",
+    category: "Car Shampoo",
+    short: "Pre-wash shampoo in a verified 1 kg bottle.",
+    description: "LifeLines Pre Wash Car Shampoo in a 1 kg bottle.",
+    variants: ["1 kg"],
+    usage: "Follow the dilution and use directions printed on the product label.",
+    image: pPreWashBottle,
+    featured: 14,
+  },
+  {
+    slug: "lifelines-chemx-d2-500ml",
+    name: "ChemX D2 Dashboard Polish",
+    code: "ChemX D2",
+    packageType: "retail",
+    category: "Interior Cleaners",
+    short: "Dashboard polish in a verified 500 ml bottle.",
+    description: "LifeLines ChemX D2 Dashboard Polish in a 500 ml bottle.",
+    variants: ["500 ml"],
+    usage: "Follow the directions printed on the product label.",
+    image: pD2Bottle,
+    featured: 15,
+  },
+  {
+    slug: "lifelines-iron-remover-460ml",
+    name: "Iron Remover",
+    packageType: "retail",
+    category: "Cleaning Chemicals",
+    short: "Iron remover in a verified 460 ml spray bottle.",
+    description: "LifeLines Iron Remover in a 460 ml spray bottle.",
+    variants: ["460 ml"],
+    usage: "Follow the directions printed on the product label.",
+    image: pIronRemover,
+    featured: 16,
+  },
+  {
+    slug: "lifelines-rust-remover-rr-5l",
+    name: "Professional Rust Remover RR",
+    code: "RR",
+    packageType: "retail",
+    category: "Cleaning Chemicals",
+    short: "Professional rust remover in a verified 5 L container.",
+    description: "LifeLines Professional Rust Remover RR in a 5 L container.",
+    variants: ["5 L"],
+    usage: "Follow the directions printed on the product label.",
+    image: pRustRemover,
+    featured: 17,
+  },
+  {
+    slug: "lifelines-shampoo-wax-1l",
+    name: "Shampoo Wax",
+    packageType: "retail",
+    category: "Car Shampoo",
+    short: "Shampoo wax in a verified 1 L bottle.",
+    description: "LifeLines Shampoo Wax in a 1 L bottle.",
+    variants: ["1 L"],
+    usage: "Follow the dilution and use directions printed on the product label.",
+    image: pShampooWaxBottle,
+    featured: 18,
+  },
 ];
+
+export const RETAIL_PRODUCTS = PRODUCTS.filter((product) => product.packageType === "retail");
+export const GALLON_PRODUCTS = PRODUCTS.filter((product) => product.packageType === "gallon");
+export const OTHER_COMMERCIAL_PRODUCTS = PRODUCTS.filter(
+  (product) => product.packageType === "other-commercial",
+);
 
 export const productBySlug = (slug: string) => PRODUCTS.find((p) => p.slug === slug);

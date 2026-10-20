@@ -1,10 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, Search, ShoppingBag, X } from "lucide-react";
+import { Languages, Menu, Search, ShoppingBag, X } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/lib/i18n";
 
 const NAV = [
   { to: "/" as const, label: "Home" },
@@ -15,6 +16,7 @@ const NAV = [
 ];
 
 export function Header() {
+  const { locale, setLocale } = useLocale();
   const { count, setOpen } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -46,13 +48,17 @@ export function Header() {
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" aria-label="AutoUp home" className="shrink-0 transition-opacity hover:opacity-95">
+        <Link
+          to="/"
+          aria-label="AutoUp home"
+          className="relative h-16 w-28 shrink-0 overflow-hidden transition-opacity hover:opacity-95 sm:h-20 sm:w-36 lg:w-40"
+        >
           <img
             src={logo}
             alt="AutoUp — Care in Every Mile"
             width={1080}
             height={1350}
-            className="h-14 sm:h-16 w-auto object-contain"
+            className="absolute left-0 top-[-2.45rem] h-auto w-full max-w-none sm:top-[-2.95rem] lg:top-[-3.3rem]"
           />
         </Link>
 
@@ -62,7 +68,6 @@ export function Header() {
             <Link
               key={n.label}
               to={n.to}
-              hash={n.hash}
               activeOptions={{ exact: n.to === "/" }}
               className="nav-underline text-sm font-medium text-white/90 hover:text-white hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.8)] transition-all duration-300"
             >
@@ -73,6 +78,16 @@ export function Header() {
 
         {/* Action Buttons Group */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          <button
+            type="button"
+            aria-label={locale === "ar" ? "Switch language to English" : "تغيير اللغة إلى العربية"}
+            onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
+            className="flex h-9 sm:h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white/90 backdrop-blur-md transition-all hover:border-primary/60 hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <Languages className="size-4" />
+            <span>{locale === "ar" ? "English" : "العربية"}</span>
+          </button>
+
           {/* Search Toggle Button */}
           <button
             type="button"
@@ -86,7 +101,11 @@ export function Header() {
           {/* Cart / Inquiry List Button with Badge */}
           <button
             type="button"
-            aria-label={`Open quotation inquiry list, ${count} items`}
+            aria-label={
+              locale === "ar"
+                ? `افتح قائمة طلب عرض السعر، ${count} منتجات`
+                : `Open quotation inquiry list, ${count} items`
+            }
             onClick={() => setOpen(true)}
             className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
@@ -103,7 +122,7 @@ export function Header() {
             asChild
             variant="hero"
             size="sm"
-            className="h-9 sm:h-10 px-3.5 sm:px-5 text-xs sm:text-sm font-semibold shadow-[0_0_20px_-3px_var(--electric)] hover:shadow-[0_0_28px_rgba(22,119,255,0.85)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+            className="hidden sm:inline-flex h-9 sm:h-10 px-3.5 sm:px-5 text-xs sm:text-sm font-semibold shadow-[0_0_20px_-3px_var(--electric)] hover:shadow-[0_0_28px_rgba(22,119,255,0.85)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
           >
             <Link to="/quote">Request a Quote</Link>
           </Button>
@@ -155,7 +174,6 @@ export function Header() {
             <Link
               key={n.label}
               to={n.to}
-              hash={n.hash}
               onClick={() => setMobile(false)}
               className="rounded-lg px-3 py-3 font-display text-base font-medium text-white/90 hover:text-white hover:bg-white/10 hover:translate-x-1 transition-all"
             >

@@ -7,8 +7,16 @@ import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import {
+  CATEGORIES,
+  GALLON_PRODUCTS,
+  OTHER_COMMERCIAL_PRODUCTS,
+  PRODUCTS,
+  RETAIL_PRODUCTS,
+} from "@/lib/catalog";
 import { cn } from "@/lib/utils";
+import { useLocale, translateText } from "@/lib/i18n";
+import { ProfessionalGallonCard } from "@/components/ProfessionalGallonCard";
 
 export const Route = createFileRoute("/products/")({
   validateSearch: z.object({ q: z.string().optional(), cat: z.string().optional() }),
@@ -31,14 +39,11 @@ export const Route = createFileRoute("/products/")({
   component: ProductsPage,
 });
 
-const PAGE = 10;
-
 function ProductsPage() {
+  const { locale } = useLocale();
   const { q = "", cat = "All Products" } = Route.useSearch();
   const navigate = useNavigate({ from: "/products/" });
   const [sort, setSort] = useState("featured");
-  const [shown, setShown] = useState(PAGE);
-
   const list = useMemo(() => {
     const term = q.toLowerCase();
     const r = PRODUCTS.filter(
@@ -46,13 +51,21 @@ function ProductsPage() {
         (cat === "All Products" || p.category === cat) &&
         (!term ||
           p.name.toLowerCase().includes(term) ||
+          translateText(p.name, locale).toLowerCase().includes(term) ||
           p.category.toLowerCase().includes(term) ||
+          translateText(p.category, locale).toLowerCase().includes(term) ||
           (p.code && p.code.toLowerCase().includes(term))),
     );
     return [...r].sort((a, b) =>
       sort === "name" ? a.name.localeCompare(b.name) : a.featured - b.featured,
     );
-  }, [q, cat, sort]);
+  }, [q, cat, sort, locale]);
+
+  const retailProducts = list.filter((product) => product.packageType === "retail");
+  const gallonProducts = list.filter((product) => product.packageType === "gallon");
+  const otherCommercialProducts = list.filter(
+    (product) => product.packageType === "other-commercial",
+  );
 
   return (
     <>
@@ -124,20 +137,83 @@ function ProductsPage() {
             </button>
           </div>
         ) : (
-          <div className="card-grid-5 mt-10">
-            {list.slice(0, shown).map((p, n) => (
-              <Reveal key={p.slug} delay={(n % 5) * 60}>
-                <ProductCard p={p} />
-              </Reveal>
-            ))}
-          </div>
-        )}
+          <div className="mt-10 space-y-16">
+            {retailProducts.length > 0 && (
+              <section aria-labelledby="car-care-products-title">
+                <div className="mb-7 max-w-3xl">
+                  <p className="eyebrow">
+                    {locale === "ar" ? "عبوات يومية" : "EVERYDAY CARE"}
+                  </p>
+                  <h2 id="car-care-products-title" className="section-title mt-2">
+                    {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {locale === "ar"
+                      ? "منتجات احترافية للتنظيف والتلميع والحماية، للعناية اليومية بالمركبات."
+                      : "Professional cleaning, shining and protection products for everyday vehicle care."}
+                  </p>
+                </div>
+                <div className="card-grid-5">
+                  {retailProducts.map((product, n) => (
+                    <Reveal key={product.slug} delay={(n % 5) * 60}>
+                      <ProductCard p={product} action="cart" />
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
 
-        {list.length > shown && (
-          <div className="mt-12 text-center">
-            <Button variant="line" size="xl" onClick={() => setShown((s) => s + PAGE)}>
-              Load More Products
-            </Button>
+            {gallonProducts.length > 0 && (
+              <section aria-labelledby="professional-gallons-title">
+                <div className="mb-7 max-w-3xl">
+                  <p className="eyebrow">
+                    {locale === "ar" ? "توريد تجاري" : "COMMERCIAL SUPPLY"}
+                  </p>
+                  <h2 id="professional-gallons-title" className="section-title mt-2">
+                    {locale === "ar"
+                      ? "حلول احترافية بعبوات 20 لترًا"
+                      : "Professional 20L Gallon Solutions"}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {locale === "ar"
+                      ? "حلول عناية بالجملة للورش ومراكز العناية ومغاسل السيارات والمنشآت التجارية."
+                      : "Bulk car care solutions for workshops, detailing studios, car washes and commercial businesses."}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {gallonProducts.map((product, n) => (
+                    <Reveal key={product.slug} delay={(n % 3) * 80}>
+                      <ProfessionalGallonCard product={product} />
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {otherCommercialProducts.length > 0 && (
+              <section aria-labelledby="other-commercial-products-title">
+                <div className="mb-7 max-w-3xl">
+                  <p className="eyebrow">
+                    {locale === "ar" ? "عبوات تجارية أخرى" : "OTHER COMMERCIAL SIZES"}
+                  </p>
+                  <h2 id="other-commercial-products-title" className="section-title mt-2">
+                    {locale === "ar" ? "أحجام تجارية إضافية" : "Additional Commercial Packaging"}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {locale === "ar"
+                      ? "تظهر هذه المنتجات بأحجامها الأصلية المعتمدة، ولا تُصنّف ضمن عبوات 20 لترًا."
+                      : "These products retain their verified original packaging sizes and are not classified as 20 L gallons."}
+                  </p>
+                </div>
+                <div className="card-grid-5">
+                  {otherCommercialProducts.map((product, n) => (
+                    <Reveal key={product.slug} delay={(n % 5) * 60}>
+                      <ProductCard p={product} />
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </section>

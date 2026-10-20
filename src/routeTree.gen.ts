@@ -17,6 +17,7 @@ import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as QuoteInstallationRouteImport } from './routes/quote.installation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,15 +59,21 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
   path: '/products/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuoteInstallationRoute = QuoteInstallationRouteImport.update({
+  id: '/installation',
+  path: '/installation',
+  getParentRoute: () => QuoteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/quote': typeof QuoteRoute
+  '/quote': typeof QuoteRouteWithChildren
   '/services': typeof ServicesRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/quote/installation': typeof QuoteInstallationRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,9 +81,10 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/quote': typeof QuoteRoute
+  '/quote': typeof QuoteRouteWithChildren
   '/services': typeof ServicesRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/quote/installation': typeof QuoteInstallationRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
@@ -85,9 +93,10 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/quote': typeof QuoteRoute
+  '/quote': typeof QuoteRouteWithChildren
   '/services': typeof ServicesRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/quote/installation': typeof QuoteInstallationRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/quote'
     | '/services'
     | '/products/$slug'
+    | '/quote/installation'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/quote'
     | '/services'
     | '/products/$slug'
+    | '/quote/installation'
     | '/products'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/quote'
     | '/services'
     | '/products/$slug'
+    | '/quote/installation'
     | '/products/'
   fileRoutesById: FileRoutesById
 }
@@ -128,7 +140,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
-  QuoteRoute: typeof QuoteRoute
+  QuoteRoute: typeof QuoteRouteWithChildren
   ServicesRoute: typeof ServicesRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
@@ -192,15 +204,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quote/installation': {
+      id: '/quote/installation'
+      path: '/installation'
+      fullPath: '/quote/installation'
+      preLoaderRoute: typeof QuoteInstallationRouteImport
+      parentRoute: typeof QuoteRoute
+    }
   }
 }
+
+interface QuoteRouteChildren {
+  QuoteInstallationRoute: typeof QuoteInstallationRoute
+}
+
+const QuoteRouteChildren: QuoteRouteChildren = {
+  QuoteInstallationRoute: QuoteInstallationRoute,
+}
+
+const QuoteRouteWithChildren = QuoteRoute._addFileChildren(QuoteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
-  QuoteRoute: QuoteRoute,
+  QuoteRoute: QuoteRouteWithChildren,
   ServicesRoute: ServicesRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ProductsIndexRoute: ProductsIndexRoute,

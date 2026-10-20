@@ -5,6 +5,9 @@ import { describe, expect, it } from "vitest";
 import { routeTree } from "@/routeTree.gen";
 import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
 import { SITE, whatsappUrl, buildQuoteMessage } from "@/lib/site";
+import { configuredInstallmentPlan, isTwentyLitreVariant } from "@/lib/installments";
+import { translateText } from "@/lib/i18n";
+import { DISPLAY_GALLERY_ITEMS } from "@/routes/gallery";
 
 describe("AutoUp B2B Product-Focused Verification", () => {
   const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
@@ -28,7 +31,7 @@ describe("AutoUp B2B Product-Focused Verification", () => {
   });
 
   it("verifies all real LifeLines products have unique images and verified fields", () => {
-    expect(PRODUCTS.length).toBe(10);
+    expect(PRODUCTS.length).toBeGreaterThanOrEqual(10);
 
     // Every product has real image, name, category, and commercial variant (20L, 25L, 20KG)
     PRODUCTS.forEach((p) => {
@@ -45,6 +48,58 @@ describe("AutoUp B2B Product-Focused Verification", () => {
     const allImages = PRODUCTS.map((p) => p.image);
     const uniqueImages = new Set(allImages);
     expect(uniqueImages.size).toBe(PRODUCTS.length);
+  });
+
+  it("offers installment requests only for verified 20-litre variants without inventing plan terms", () => {
+    expect(isTwentyLitreVariant("20 L")).toBe(true);
+    expect(isTwentyLitreVariant("20 Litre")).toBe(true);
+    expect(isTwentyLitreVariant("20 KG")).toBe(false);
+    expect(isTwentyLitreVariant("25 L")).toBe(false);
+    expect(PRODUCTS.filter((product) => isTwentyLitreVariant(product.variants[0]))).toHaveLength(6);
+    expect(
+      PRODUCTS.every(
+        (product) => configuredInstallmentPlan(product, product.variants[0]) === undefined,
+      ),
+    ).toBe(true);
+  });
+
+  it("uses Arabic by default in translations and keeps the gallery curated", () => {
+    expect(translateText("Request a Quote", "ar")).toBe("اطلب عرض سعر");
+    expect(translateText("اطلب عرض سعر", "en")).toBe("Request a Quote");
+    expect(DISPLAY_GALLERY_ITEMS).toHaveLength(8);
+    expect(new Set(DISPLAY_GALLERY_ITEMS.map((item) => item.id)).size).toBe(8);
+    expect(new Set(DISPLAY_GALLERY_ITEMS.map((item) => item.image)).size).toBe(8);
+  });
+
+  it("provides the confirmed business address in Arabic and English", () => {
+    expect(SITE.address).toEqual({
+      ar: "حي الربيع، بريدة 52361",
+      en: "Al Rabie District, Buraydah 52361",
+    });
+  });
+
+  it("includes payment preference in quotations only for eligible 20-litre products", () => {
+    const message = buildQuoteMessage(
+      {
+        name: "Alex",
+        phone: "+966500000000",
+        city: "Riyadh",
+        products: [
+          {
+            name: "Colour Wax Shampoo",
+            qty: 1,
+            variant: "20 L",
+            paymentOption: "installment-quote",
+          },
+          { name: "ChemX C2", qty: 1, variant: "25 L" },
+        ],
+      },
+      "ar",
+    );
+
+    expect(message).toContain("شامبو الشمع الملون (20 L) × 1 — طلب عرض تقسيط");
+    expect(message).toContain("ChemX C2 (25 L) × 1");
+    expect(message).not.toContain("ChemX C2 (25 L) × 1 — الدفع الكامل");
   });
 
   it("verifies B2B wholesale quotation message generation with company details and WhatsApp URL", () => {
