@@ -82,7 +82,7 @@ export function Header() {
             type="button"
             aria-label={locale === "ar" ? "Switch language to English" : "تغيير اللغة إلى العربية"}
             onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
-            className="flex h-9 sm:h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white/90 backdrop-blur-md transition-all hover:border-primary/60 hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex h-9 sm:h-10 items-center justify-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white/90 backdrop-blur-md transition-all duration-250 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-white/15 hover:text-white active:translate-y-0 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Languages className="size-4" />
             <span>{locale === "ar" ? "English" : "العربية"}</span>
@@ -93,7 +93,7 @@ export function Header() {
             type="button"
             aria-label="Search products"
             onClick={() => setSearch((s) => !s)}
-            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-250 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {search ? <X className="size-4" /> : <Search className="size-4" />}
           </button>
@@ -107,11 +107,11 @@ export function Header() {
                 : `Open quotation inquiry list, ${count} items`
             }
             onClick={() => setOpen(true)}
-            className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-250 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <ShoppingBag className="size-4" />
             {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid min-w-5 h-5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] font-bold text-primary-foreground shadow-[0_0_10px_var(--electric)]">
+              <span className="absolute -right-1 -top-1 grid min-w-5 h-5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] font-bold text-primary-foreground shadow-[0_0_10px_var(--electric)] transition-transform duration-200">
                 {count}
               </span>
             )}
@@ -122,7 +122,7 @@ export function Header() {
             asChild
             variant="hero"
             size="sm"
-            className="hidden sm:inline-flex h-9 sm:h-10 px-3.5 sm:px-5 text-xs sm:text-sm font-semibold shadow-[0_0_20px_-3px_var(--electric)] hover:shadow-[0_0_28px_rgba(22,119,255,0.85)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+            className="hidden sm:inline-flex h-9 sm:h-10 px-3.5 sm:px-5 text-xs sm:text-sm font-semibold shadow-[0_0_20px_-3px_var(--electric)] hover:shadow-[0_0_28px_rgba(22,119,255,0.85)] cursor-pointer whitespace-nowrap"
           >
             <Link to="/quote">Request a Quote</Link>
           </Button>
@@ -132,7 +132,7 @@ export function Header() {
             type="button"
             aria-label="Toggle navigation menu"
             onClick={() => setMobile((m) => !m)}
-            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white transition-all duration-200 lg:hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/90 backdrop-blur-md hover:border-primary/60 hover:bg-white/15 hover:text-white hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-250 lg:hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {mobile ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

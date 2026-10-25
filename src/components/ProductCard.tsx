@@ -92,7 +92,7 @@ export function ProductCard({
               type="button"
               aria-label={locale === "ar" ? "تقليل الكمية" : "Decrease quantity"}
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="px-2 py-0.5 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+              className="px-2 py-0.5 text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
             >
               <Minus className="size-2.5" />
             </button>
@@ -101,7 +101,7 @@ export function ProductCard({
               type="button"
               aria-label={locale === "ar" ? "زيادة الكمية" : "Increase quantity"}
               onClick={() => setQty((q) => q + 1)}
-              className="px-2 py-0.5 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+              className="px-2 py-0.5 text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
             >
               <Plus className="size-2.5" />
             </button>

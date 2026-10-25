@@ -78,7 +78,7 @@ function ProductsPage() {
       <section id="categories" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-14">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <label className="relative block w-full md:max-w-sm">
-            <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-colors duration-200" />
             <input
               value={q}
               onChange={(e) =>
@@ -88,14 +88,14 @@ function ProductsPage() {
                 })
               }
               placeholder="Search products or codes (e.g. ChemX, F55, G4)..."
-              className="h-12 w-full rounded-full border border-input bg-card pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+              className="h-12 w-full rounded-full border border-input bg-card pl-11 pr-4 text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:border-primary focus:shadow-[0_0_15px_rgba(59,130,246,0.35)] focus:outline-none"
             />
           </label>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
             aria-label="Sort products"
-            className="h-12 rounded-full border border-input bg-card px-5 text-foreground focus:border-primary focus:outline-none cursor-pointer"
+            className="h-12 rounded-full border border-input bg-card px-5 text-foreground transition-all duration-200 focus:border-primary hover:border-primary/60 focus:outline-none cursor-pointer"
           >
             <option value="featured">Sort: Featured</option>
             <option value="name">Sort: Name</option>
@@ -114,7 +114,7 @@ function ProductsPage() {
                 })
               }
               className={cn(
-                "rounded-full border px-4 py-2 text-xs sm:text-sm font-medium transition-colors cursor-pointer",
+                "category-pill rounded-full border px-4 py-2 text-xs sm:text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer",
                 cat === c
                   ? "border-primary bg-primary text-primary-foreground shadow-[0_0_12px_rgba(22,119,255,0.4)]"
                   : "border-input bg-card hover:border-primary/60 text-foreground",

@@ -88,6 +88,9 @@
   --shadow-card: 0 10px 30px -10px rgba(8, 11, 16, 0.12);
   --shadow-glow: 0 0 0 1px var(--electric), 0 12px 30px -10px rgba(22, 119, 255, 0.4);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 750ms;
+  --duration-hover: 280ms;
 }
 
 .section-dark {
@@ -167,13 +170,13 @@
 @utility card-stroke {
   border: 1px solid oklch(0.6 0.21 257 / 0.25);
   transition:
-    border-color 0.5s var(--ease-out),
-    box-shadow 0.5s var(--ease-out),
-    transform 0.5s var(--ease-out);
+    border-color 0.4s var(--ease-cinematic),
+    box-shadow 0.4s var(--ease-cinematic),
+    transform 0.4s var(--ease-cinematic);
   &:hover {
     border-color: var(--electric);
     box-shadow: var(--shadow-glow);
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
@@ -198,14 +201,14 @@
   &::after {
     content: "";
     position: absolute;
-    left: 0;
+    inset-inline-start: 0;
     bottom: -6px;
     height: 1.5px;
     width: 100%;
     background: var(--electric);
     transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s var(--ease-out);
+    transform-origin: start;
+    transition: transform 0.35s var(--ease-cinematic);
   }
   &:hover::after,
   &[data-status="active"]::after {
@@ -215,15 +218,46 @@
 
 @utility reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(22px);
+  will-change: opacity, transform;
   transition:
-    opacity 0.9s var(--ease-out),
-    transform 0.9s var(--ease-out);
+    opacity var(--duration-reveal) var(--ease-cinematic),
+    transform var(--duration-reveal) var(--ease-cinematic);
   &[data-shown="true"] {
     opacity: 1;
     transform: none;
   }
 }
+
+.reveal-fade {
+  transform: none;
+}
+.reveal-scale {
+  transform: scale(0.97);
+}
+.reveal-left {
+  transform: translateX(-24px);
+}
+.reveal-right {
+  transform: translateX(24px);
+}
+
+.reveal[data-shown="true"],
+.reveal-fade[data-shown="true"],
+.reveal-scale[data-shown="true"],
+.reveal-left[data-shown="true"],
+.reveal-right[data-shown="true"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger > *:nth-child(6) { transition-delay: 400ms; }
+
 
 .payment-partners-reveal .payment-partner-tile {
   opacity: 0;
@@ -599,9 +633,9 @@ html[dir="rtl"] [data-ltr="true"] {
   height: 100%;
   box-shadow: 0 5px 18px -12px rgba(15, 23, 42, 0.34);
   transition:
-    transform 0.35s var(--ease-out),
-    border-color 0.35s var(--ease-out),
-    box-shadow 0.35s var(--ease-out);
+    transform 0.35s var(--ease-cinematic),
+    border-color 0.35s var(--ease-cinematic),
+    box-shadow 0.35s var(--ease-cinematic);
 }
 .service-card-compact:hover,
 .product-card-compact:hover,
@@ -609,8 +643,8 @@ html[dir="rtl"] [data-ltr="true"] {
   transform: translateY(-4px);
   border-color: rgba(22, 119, 255, 0.45);
   box-shadow:
-    0 14px 30px -18px rgba(15, 23, 42, 0.36),
-    0 0 0 1px rgba(22, 119, 255, 0.12);
+    0 16px 36px -16px rgba(15, 23, 42, 0.36),
+    0 0 0 1px rgba(22, 119, 255, 0.16);
 }
 
 /* Product image area — contain-fit so full label is visible */
@@ -630,10 +664,10 @@ html[dir="rtl"] [data-ltr="true"] {
   height: 100%;
   object-fit: contain;
   object-position: center;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.6s var(--ease-cinematic);
 }
 .product-card-compact:hover .product-card-img {
-  transform: scale(1.05);
+  transform: scale(1.045);
 }
 .product-card-description {
   min-height: 2.5rem;
@@ -654,10 +688,17 @@ html[dir="rtl"] [data-ltr="true"] {
     0 0 0 1px rgba(22, 119, 255, 0.14),
     0 0 18px rgba(22, 119, 255, 0.2);
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    background-color 0.25s var(--ease-cinematic),
+    border-color 0.25s var(--ease-cinematic),
+    box-shadow 0.25s var(--ease-cinematic),
+    transform 0.25s var(--ease-cinematic);
+}
+.product-carousel-arrow:hover:not(:disabled) {
+  transform: scale(1.08) translateY(-1px);
+  box-shadow: 0 0 20px rgba(22, 119, 255, 0.45);
+}
+.product-carousel-arrow:active:not(:disabled) {
+  transform: scale(0.96) translateY(0);
 }
 .product-carousel-arrow:not(:disabled) {
   animation: product-carousel-pulse 2s ease-in-out infinite;
@@ -843,5 +884,80 @@ html[dir="rtl"] [data-ltr="true"] {
   }
   .gallery-item-5 {
     grid-column: span 7;
+  }
+}
+
+/* =========================================================================
+   Interactive Micro-Interactions & Hover Polish
+   ========================================================================= */
+
+/* Category card image hover */
+.category-item img {
+  transition: transform 0.7s var(--ease-cinematic);
+}
+.category-item:hover img {
+  transform: scale(1.045);
+}
+
+/* Category filter buttons */
+.category-pill {
+  transition:
+    transform 0.25s var(--ease-cinematic),
+    background-color 0.25s var(--ease-cinematic),
+    border-color 0.25s var(--ease-cinematic),
+    color 0.25s var(--ease-cinematic),
+    box-shadow 0.25s var(--ease-cinematic);
+}
+.category-pill:hover {
+  transform: translateY(-1.5px);
+}
+.category-pill:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Smooth input and search hover/focus transitions */
+input,
+select,
+textarea {
+  transition:
+    border-color 0.25s var(--ease-cinematic),
+    box-shadow 0.25s var(--ease-cinematic),
+    background-color 0.25s var(--ease-cinematic);
+}
+
+/* Quantity controls in cards */
+.quantity-control-btn {
+  transition:
+    color 0.2s var(--ease-cinematic),
+    background-color 0.2s var(--ease-cinematic),
+    transform 0.15s var(--ease-cinematic);
+}
+.quantity-control-btn:hover {
+  transform: scale(1.1);
+}
+.quantity-control-btn:active {
+  transform: scale(0.9);
+}
+
+/* Accessibility: Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal,
+  .reveal-up,
+  .reveal-fade,
+  .reveal-scale,
+  .reveal-left,
+  .reveal-right,
+  [data-shown] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

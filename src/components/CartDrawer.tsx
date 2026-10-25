@@ -33,7 +33,7 @@ export function CartDrawer() {
         data-open={open}
         data-closed={!open}
         className={cn(
-          "quote-drawer section-dark glass absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l transition-transform duration-500 ease-[var(--ease-out)]",
+          "quote-drawer section-dark glass absolute right-0 top-0 flex h-full w-full max-w-md flex-col border-l transition-transform duration-500 ease-[var(--ease-cinematic)]",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
@@ -47,7 +47,7 @@ export function CartDrawer() {
           <button
             aria-label="Close quote drawer"
             onClick={() => setOpen(false)}
-            className="rounded-full p-2 hover:bg-foreground/10 cursor-pointer"
+            className="rounded-full p-2 hover:bg-foreground/10 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
           >
             <X className="size-5" />
           </button>
@@ -69,7 +69,7 @@ export function CartDrawer() {
               {items.map((i) => (
                 <li
                   key={`${i.slug}${i.variant ?? ""}${i.paymentOption ?? "full"}`}
-                  className="flex gap-4 py-4 items-center"
+                  className="flex gap-4 py-4 items-center transition-colors duration-200"
                 >
                   <div className="size-20 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1.5 flex items-center justify-center">
                     <img
@@ -98,7 +98,7 @@ export function CartDrawer() {
                       <button
                         aria-label="Decrease quantity"
                         onClick={() => setQty(i.slug, i.variant, i.qty - 1, i.paymentOption)}
-                        className="rounded-full border p-1 hover:border-primary cursor-pointer"
+                        className="rounded-full border p-1 hover:border-primary hover:scale-110 active:scale-90 transition-all duration-150 cursor-pointer"
                       >
                         <Minus className="size-3" />
                       </button>
@@ -106,7 +106,7 @@ export function CartDrawer() {
                       <button
                         aria-label="Increase quantity"
                         onClick={() => setQty(i.slug, i.variant, i.qty + 1, i.paymentOption)}
-                        className="rounded-full border p-1 hover:border-primary cursor-pointer"
+                        className="rounded-full border p-1 hover:border-primary hover:scale-110 active:scale-90 transition-all duration-150 cursor-pointer"
                       >
                         <Plus className="size-3" />
                       </button>
@@ -115,7 +115,7 @@ export function CartDrawer() {
                   <button
                     aria-label={`Remove ${i.name}`}
                     onClick={() => remove(i.slug, i.variant, i.paymentOption)}
-                    className="self-start p-1 text-muted-foreground hover:text-destructive cursor-pointer"
+                    className="self-start p-1 text-muted-foreground hover:text-destructive hover:scale-110 active:scale-90 transition-all duration-150 cursor-pointer"
                   >
                     <Trash2 className="size-4" />
                   </button>

@@ -10,6 +10,7 @@ import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
 import { toast } from "sonner";
 import { useLocale, translateText } from "@/lib/i18n";
 import { isTwentyLitreVariant } from "@/lib/installments";
+import { Reveal } from "@/components/Reveal";
 
 export const Route = createFileRoute("/quote")({
   validateSearch: z.object({ from: z.string().optional(), product: z.string().optional() }),
@@ -130,7 +131,7 @@ function QuotePage() {
           className="sticky top-0 h-screen w-full object-cover brightness-[0.75] contrast-[1.1]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-        <div className="absolute bottom-12 left-12 right-12 z-10">
+        <Reveal delay={60} direction="up" className="absolute bottom-12 left-12 right-12 z-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-primary backdrop-blur-md mb-4">
             <Building2 className="size-3.5" />
             B2B Commercial Supply
@@ -142,7 +143,7 @@ function QuotePage() {
             Dedicated supply of concentrated car shampoos, waxes, degreasers, and surface chemicals
             packaged in 20L, 25L, and 20KG commercial containers.
           </p>
-        </div>
+        </Reveal>
       </div>
 
       {/* Right Form Column */}
@@ -153,7 +154,7 @@ function QuotePage() {
         >
           <ArrowLeft className="size-4" /> Back to product catalog
         </Link>
-        <div className="mt-6">
+        <Reveal delay={60} direction="up" className="mt-6">
           <span className="eyebrow">COMMERCIAL INQUIRY</span>
           <h1 className="mt-2 text-3xl font-bold sm:text-5xl tracking-tight text-foreground">
             Request a Wholesale Quote
@@ -162,7 +163,7 @@ function QuotePage() {
             Provide your business requirements below to receive verified wholesale pricing, container
             availability, and volume supply terms directly from our team.
           </p>
-        </div>
+        </Reveal>
 
         {!review ? (
           <form

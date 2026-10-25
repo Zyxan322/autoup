@@ -373,7 +373,7 @@ function GalleryPage() {
                   setTab(t);
                   setLightboxIndex(null);
                 }}
-                className={`rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
+                className={`rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all duration-250 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer ${
                   tab === t
                     ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(22,119,255,0.4)]"
                     : "border border-input bg-card/60 text-muted-foreground hover:border-primary/50 hover:text-foreground"

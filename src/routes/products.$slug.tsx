@@ -4,6 +4,7 @@ import { MessageCircle, Minus, Plus, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
+import { Reveal } from "@/components/Reveal";
 import { PRODUCTS, productBySlug } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { whatsappUrl } from "@/lib/site";
@@ -84,7 +85,9 @@ function ProductPage() {
         </nav>
 
         <div className="grid gap-12 lg:grid-cols-2 items-start">
-          <div
+          <Reveal
+            delay={40}
+            direction="up"
             className="relative overflow-hidden rounded-2xl border border-primary/20 shadow-xl"
             style={{ background: "#0c0f15" }}
           >
@@ -103,9 +106,9 @@ function ProductPage() {
                 {p.code}
               </span>
             )}
-          </div>
+          </Reveal>
 
-          <div className="flex flex-col">
+          <Reveal delay={100} direction="up" className="flex flex-col">
             <span className="eyebrow">{translateText(p.category, locale)}</span>
             <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
               {translateText(p.name, locale)}
@@ -134,7 +137,7 @@ function ProductPage() {
                       if (!isTwentyLitreVariant(v)) setPaymentOption("full");
                     }}
                     className={cn(
-                      "rounded-full border px-4 py-2 text-xs font-medium transition-all cursor-pointer",
+                      "rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer",
                       v === variant
                         ? "border-primary bg-primary text-primary-foreground shadow-[0_0_12px_rgba(22,119,255,0.4)]"
                         : "border-input bg-card hover:border-primary/60",
@@ -212,7 +215,7 @@ function ProductPage() {
                   type="button"
                   aria-label="Decrease quantity"
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  className="p-2 text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
                 >
                   <Minus className="size-4" />
                 </button>
@@ -221,7 +224,7 @@ function ProductPage() {
                   type="button"
                   aria-label="Increase quantity"
                   onClick={() => setQty((q) => q + 1)}
-                  className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  className="p-2 text-muted-foreground hover:text-primary transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
                 >
                   <Plus className="size-4" />
                 </button>
@@ -277,17 +280,21 @@ function ProductPage() {
                 {translateText(p.usage, locale)}
               </p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="section-dark page-band bg-[#090b10] border-t border-white/5">
         <div className="page-inner">
-          <p className="eyebrow">COMPLETE YOUR CARE ROUTINE</p>
-          <h2 className="section-title">You May Also Like</h2>
+          <Reveal delay={40} direction="up">
+            <p className="eyebrow">COMPLETE YOUR CARE ROUTINE</p>
+            <h2 className="section-title">You May Also Like</h2>
+          </Reveal>
           <div className="card-grid-5 mt-8">
-            {related.map((r) => (
-              <ProductCard key={r.slug} p={r} />
+            {related.map((r, n) => (
+              <Reveal key={r.slug} delay={(n % 5) * 60} direction="up">
+                <ProductCard p={r} />
+              </Reveal>
             ))}
           </div>
         </div>

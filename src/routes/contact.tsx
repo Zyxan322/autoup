@@ -7,6 +7,7 @@ import { PageHero } from "@/components/PageHero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { useLocale } from "@/lib/i18n";
+import { Reveal } from "@/components/Reveal";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -117,7 +118,7 @@ function ContactPage() {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_1.3fr] lg:gap-10 lg:py-16">
         {/* Left Column: Direct Commercial Contact */}
-        <div className="space-y-4">
+        <Reveal delay={60} direction="up" className="space-y-4">
           <a
             href={whatsappUrl(locale === "ar"
               ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
@@ -193,10 +194,11 @@ function ContactPage() {
             </Link>
             .
           </p>
-        </div>
+        </Reveal>
 
         {/* Right Column: Commercial Inquiry Form */}
-        <form onSubmit={submit} noValidate className="space-y-4 rounded-3xl border border-border/80 bg-card p-8 shadow-card">
+        <Reveal delay={120} direction="up">
+          <form onSubmit={submit} noValidate className="space-y-4 rounded-3xl border border-border/80 bg-card p-8 shadow-card">
           <div className="mb-2">
             <span className="eyebrow text-primary">BUSINESS INQUIRY</span>
             <h2 className="text-2xl font-bold text-foreground">Send a Wholesale Inquiry</h2>
@@ -285,31 +287,34 @@ function ContactPage() {
           <p className="text-center text-xs text-muted-foreground leading-relaxed">
             Your inquiry will open directly in WhatsApp with our commercial team.
           </p>
-        </form>
+          </form>
+        </Reveal>
       </section>
 
       {/* FAQ */}
       <section className="section-dark py-20 bg-[#090b10] border-t border-white/5">
         <div className="mx-auto max-w-3xl px-5">
-          <div className="text-center">
+          <Reveal className="text-center">
             <span className="eyebrow text-primary">COMMERCIAL FAQ</span>
             <h2 className="text-3xl font-bold sm:text-4xl text-white">Frequently Asked Questions</h2>
             <p className="mt-3 text-sm text-white/70">
               Clear answers regarding our products, wholesale purchasing, and B2B ordering.
             </p>
-          </div>
-          <Accordion type="single" collapsible className="mt-10">
-            {FAQ.map(([q = "", a]) => (
-              <AccordionItem key={q} value={q} className="border-white/10">
-                <AccordionTrigger className="text-left text-base text-white hover:text-primary transition-colors">
-                  {q}
-                </AccordionTrigger>
-                <AccordionContent className="text-sm text-white/70 leading-relaxed">
-                  {a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          </Reveal>
+          <Reveal delay={90}>
+            <Accordion type="single" collapsible className="mt-10">
+              {FAQ.map(([q = "", a]) => (
+                <AccordionItem key={q} value={q} className="border-white/10">
+                  <AccordionTrigger className="text-left text-base text-white hover:text-primary transition-colors">
+                    {q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm text-white/70 leading-relaxed">
+                    {a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Reveal>
         </div>
       </section>
     </>

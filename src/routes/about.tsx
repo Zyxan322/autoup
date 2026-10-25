@@ -90,7 +90,7 @@ function AboutPage() {
         <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-3 lg:gap-6">
           {PILLARS.map(({ icon: Icon, title, description }, n) => (
             <Reveal key={title} delay={n * 100}>
-              <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-8 transition-all hover:border-primary/40 hover:shadow-[0_0_24px_-4px_rgba(22,119,255,0.25)] flex flex-col justify-between">
+              <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_24px_-4px_rgba(22,119,255,0.25)] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-sm font-bold text-primary">0{n + 1}</span>

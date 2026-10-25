@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { ArrowLeft, Building2, MessageCircle, ShieldCheck, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/Reveal";
 import { GALLON_PRODUCTS } from "@/lib/catalog";
 import { useLocale } from "@/lib/i18n";
 import { buildInstallationPaymentInquiryMessage, whatsappUrl } from "@/lib/site";
@@ -100,7 +101,7 @@ function InstallationInquiryPage() {
         {locale === "ar" ? "العودة إلى المنتجات" : "Back to products"}
       </Link>
 
-      <div className="mt-8 rounded-3xl border border-primary/20 bg-card/70 p-6 shadow-[0_20px_40px_-24px_rgba(22,119,255,0.65)] backdrop-blur-sm sm:p-8">
+      <Reveal delay={50} direction="up" className="mt-8 rounded-3xl border border-primary/20 bg-card/70 p-6 shadow-[0_20px_40px_-24px_rgba(22,119,255,0.65)] backdrop-blur-sm sm:p-8">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow">
@@ -254,7 +255,7 @@ function InstallationInquiryPage() {
             </Button>
           </div>
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }
