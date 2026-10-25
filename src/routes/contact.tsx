@@ -115,7 +115,7 @@ function ContactPage() {
         container supply information.
       </PageHero>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[1fr_1.3fr] lg:px-8">
+      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_1.3fr] lg:gap-10 lg:py-16">
         {/* Left Column: Direct Commercial Contact */}
         <div className="space-y-4">
           <a

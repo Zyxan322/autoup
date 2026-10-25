@@ -5,6 +5,8 @@ import { CartProvider, useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { Footer } from "@/components/Footer";
+import { PolishSection } from "@/components/PolishSection";
+import { PaymentPartners } from "@/components/PaymentPartners";
 import { LocaleProvider, useLocale } from "@/lib/i18n";
 
 // Mock @tanstack/react-router Link
@@ -36,6 +38,37 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("B2B Components Functionality Verification", () => {
+  it("renders the six requested payment partners with localized copy", () => {
+    const brands = ["Tabby", "Tamara", "Neo", "Emkan", "MIS Pay", "Madfu"];
+    const { unmount } = render(
+      <LocaleProvider initialLocale="en">
+        <PaymentPartners />
+      </LocaleProvider>,
+    );
+
+    expect(screen.getByRole("heading", { name: "WE ACCEPT" })).toBeInTheDocument();
+    expect(
+      screen.getByText("Flexible Payment Options for Your Convenience"),
+    ).toBeInTheDocument();
+    for (const brand of brands) {
+      expect(screen.getAllByRole("img", { name: brand })).toHaveLength(1);
+    }
+
+    unmount();
+    render(
+      <LocaleProvider initialLocale="ar">
+        <PaymentPartners />
+      </LocaleProvider>,
+    );
+
+    expect(screen.getByRole("heading", { name: "وسائل الدفع المقبولة" })).toBeInTheDocument();
+    expect(screen.getByText("خيارات دفع مرنة لراحتك")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "وسائل الدفع المقبولة" })).toHaveAttribute(
+      "dir",
+      "rtl",
+    );
+  });
+
   it("defaults to Arabic, updates document direction, and persists a language change", () => {
     localStorage.removeItem("autoup-language");
 
@@ -107,7 +140,41 @@ describe("B2B Components Functionality Verification", () => {
     localStorage.removeItem("autoup-cart");
   });
 
+  it("adds Polish & Detailing products to the quote cart", () => {
+    localStorage.removeItem("autoup-cart");
+
+    function CartInspector() {
+      const { items, open } = useCart();
+      return (
+        <output data-testid="polish-cart">
+          {items.map((item) => `${item.slug}:${item.name}:${item.qty}`).join(",")}|{open ? "open" : "closed"}
+        </output>
+      );
+    }
+
+    render(
+      <Wrapper>
+        <PolishSection />
+        <CartInspector />
+      </Wrapper>,
+    );
+
+    const addButtons = screen.getAllByRole("button", { name: /add to cart/i });
+    expect(addButtons).toHaveLength(7);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Increase quantity for Microfiber Towel" }),
+    );
+    fireEvent.click(addButtons[0]);
+
+    expect(screen.getByTestId("polish-cart")).toHaveTextContent(
+      "microfiber-towel:Microfiber Towel:2|open",
+    );
+    localStorage.removeItem("autoup-cart");
+  });
+
   it("renders compact ProductCard with quantity stepper, View Details link, and Inquire button", () => {
+    localStorage.removeItem("autoup-cart");
+
     const testProduct = {
       slug: "lifelines-colour-wax-shampoo",
       name: "Colour Wax Shampoo",

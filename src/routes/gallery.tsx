@@ -361,7 +361,7 @@ function GalleryPage() {
         surface restoration, and professional car wash results.
       </PageHero>
 
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-14">
         {/* Filter Navigation Tabs */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-6">
           <div className="flex flex-wrap items-center gap-2">

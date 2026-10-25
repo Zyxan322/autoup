@@ -7,7 +7,7 @@ export function PageHero({ image, eyebrow, title, children, crumb }: { image?: s
       {image && <img src={image} alt="" width={1920} height={1000} className="absolute inset-0 size-full object-cover animate-kenburns" />}
       <div className="absolute inset-0 bg-hero-overlay" />
       <div className="absolute inset-0 bg-fade-bottom" />
-      <div className="relative mx-auto w-full max-w-7xl px-5 pb-16 pt-36 lg:px-8">
+      <div className="relative mx-auto w-full max-w-7xl px-4 pb-16 pt-36 sm:px-6">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Home</Link> <span className="mx-2">/</span> <span className="text-foreground">{crumb}</span>
         </nav>

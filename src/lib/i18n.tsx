@@ -255,6 +255,13 @@ const EN_TO_AR: Record<string, string> = {
   "Explore professional cleaning chemistry grouped by application surface and commercial wash requirements.":
     "تعرّف على مواد التنظيف الاحترافية المصنفة بحسب سطح الاستخدام واحتياجات الغسيل التجاري.",
   "ACTUAL PRODUCT CATALOG": "كتالوج المنتجات الفعلية",
+  "Microfiber Towel": "منشفة ألياف دقيقة",
+  "Car Polishing Cloth": "قطعة تلميع السيارات",
+  "Chenille Microfiber": "ألياف دقيقة شينيل",
+  "Blue Wash Mitt": "قفاز غسيل أزرق",
+  "Car Drying Towel": "منشفة تجفيف السيارات",
+  "Microfiber Drying Towel": "منشفة تجفيف من الألياف الدقيقة",
+  "Red Wash Mitt": "قفاز غسيل أحمر",
   "Featured Automotive Cleaning Products": "منتجات مختارة لتنظيف السيارات",
   "Authentic LifeLines commercial formulations packaged in high-capacity containers for professional vehicle cleaning operations.":
     "تركيبات LifeLines التجارية الأصلية بعبوات كبيرة لعمليات تنظيف السيارات الاحترافية.",

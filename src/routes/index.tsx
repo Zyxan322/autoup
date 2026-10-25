@@ -18,9 +18,7 @@ import {
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import hero from "@/assets/hero.jpg";
-import hero2 from "@/assets/Hero2.jpg";
-import hero3 from "@/assets/hero3.jpg";
-import hero4 from "@/assets/hero4.jpg";
+import heroVideo from "@/assets/hero section video/Untitled design (5).mp4";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { GALLON_PRODUCTS, PRODUCTS, RETAIL_PRODUCTS } from "@/lib/catalog";
@@ -35,6 +33,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { ProductCarousel } from "@/components/ProductCarousel";
+import { PolishSection } from "@/components/PolishSection";
+import { PaymentPartners } from "@/components/PaymentPartners";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -66,25 +66,21 @@ export const Route = createFileRoute("/")({
    ========================================================================= */
 const HERO_SLIDES = [
   {
-    img: hero,
     tag: "B2B Automotive Cleaning Products",
     headline: "Professional Automotive Cleaning Products for Your Business",
     text: "Discover commercial-grade cleaning products and bulk concentrates engineered for professional vehicle care.",
   },
   {
-    img: hero2,
     tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
     headline: "High-Yield Formulations for Wash Facilities",
     text: "Concentrated shampoos, waxes, and specialized chemicals packaged for high-throughput commercial operations.",
   },
   {
-    img: hero3,
     tag: "Wholesale & Business Supply",
     headline: "Reliable Chemical Supply for Detailing Studios & Dealerships",
     text: "Supplying car washes, detailing centers, automotive workshops, and fleet operators with surface-safe cleaning solutions.",
   },
   {
-    img: hero4,
     tag: "Direct Commercial Procurement",
     headline: "Equip Your Facility with Professional Auto-Care Products",
     text: "Direct wholesale inquiries, flexible container volumes, and fast quotation confirmations via WhatsApp.",
@@ -129,7 +125,21 @@ function HeroSection() {
       className="section-dark relative h-[92svh] min-h-[580px] max-h-[860px] overflow-hidden select-none"
       aria-label="Professional automotive cleaning products hero"
       onPointerDown={() => setPaused(true)}
+      style={{ backgroundImage: `url(${hero})`, backgroundPosition: "center", backgroundSize: "cover" }}
     >
+      <video
+        aria-hidden="true"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster={hero}
+        className="hero-video absolute inset-0 size-full object-cover brightness-[0.88] contrast-[1.06] saturate-[1.08]"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+
       {/* Sliding Embla Viewport */}
       <div ref={emblaRef} className="h-full w-full overflow-hidden">
         <div className="flex h-full w-full">
@@ -139,18 +149,6 @@ function HeroSection() {
               className="relative h-full w-full flex-[0_0_100%] min-w-0 overflow-hidden"
               aria-hidden={n !== activeIdx}
             >
-              <img
-                src={s.img}
-                alt=""
-                width={1920}
-                height={1088}
-                loading={n === 0 ? "eager" : "lazy"}
-                fetchPriority={n === 0 ? "high" : "auto"}
-                className={cn(
-                  "size-full object-cover brightness-[0.88] contrast-[1.06] saturate-[1.08] transition-transform duration-[7000ms] ease-out",
-                  n === activeIdx ? "scale-105" : "scale-100",
-                )}
-              />
             </div>
           ))}
         </div>
@@ -162,7 +160,7 @@ function HeroSection() {
 
       {/* Editorial Content — Compact & Focused on Left */}
       <div className="absolute inset-0 z-10 pointer-events-none flex items-center pt-12">
-        <div className="mx-auto w-full max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
           <div
             key={activeIdx}
             className="pointer-events-auto flex max-w-xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-5 duration-500"
@@ -410,23 +408,31 @@ function Index() {
       {/* 2. Hero Section */}
       <HeroSection />
 
-      {/* 3. Retail and 20L Products */}
-      <section className="section-dark page-band bg-[#080b11] border-b border-white/5">
+      {/* 3. Payment Partners */}
+      <PaymentPartners />
+
+      {/* 4. Retail and 20L Products */}
+      <section className="page-band border-b border-slate-200 bg-white text-slate-900">
         <div className="page-inner">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <Reveal className="max-w-2xl">
               <span className="eyebrow text-primary">ACTUAL PRODUCT CATALOG</span>
-              <h2 className="section-title text-white">
+              <h2 className="section-title text-slate-900">
                 {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
               </h2>
-              <p className="section-copy text-white/75">
+              <p className="section-copy text-slate-600">
                 {locale === "ar"
                   ? "منتجات أصلية للعناية اليومية بالمركبات، إلى جانب حلول تجارية موثقة بعبوات 20 لترًا."
                   : "Authentic everyday vehicle-care products alongside verified 20L commercial solutions."}
               </p>
             </Reveal>
             <Reveal>
-              <Button asChild variant="glass" size="lg" className="border-white/20 text-white">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-slate-300 text-slate-900 hover:border-primary hover:text-primary"
+              >
                 <Link to="/products">
                   {locale === "ar"
                     ? `عرض جميع المنتجات (${PRODUCTS.length})`
@@ -440,10 +446,10 @@ function Index() {
           {RETAIL_PRODUCTS.length > 0 && (
             <div className="mt-10">
               <div className="mb-4">
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-slate-900">
                   {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
                 </h3>
-                <p className="mt-1 text-sm text-white/65">
+                <p className="mt-1 text-sm text-slate-600">
                   {locale === "ar"
                     ? "منتجات التنظيف والتلميع والحماية للاستخدام اليومي."
                     : "Professional cleaning, shining and protection products for everyday vehicle care."}
@@ -452,26 +458,36 @@ function Index() {
               <ProductCarousel products={RETAIL_PRODUCTS} productType="retail" />
             </div>
           )}
-
-          {GALLON_PRODUCTS.length > 0 && (
-            <div className="mt-14">
-              <div className="mb-4">
-                <h3 className="text-xl font-bold text-white">
-                  {locale === "ar"
-                    ? "حلول احترافية بعبوات 20 لترًا"
-                    : "Professional 20L Gallon Solutions"}
-                </h3>
-                <p className="mt-1 text-sm text-white/65">
-                  {locale === "ar"
-                    ? "حلول تجارية للورش ومراكز العناية ومغاسل السيارات."
-                    : "Bulk solutions for workshops, detailing studios, car washes and commercial businesses."}
-                </p>
-              </div>
-              <ProductCarousel products={GALLON_PRODUCTS} productType="gallon" />
-            </div>
-          )}
         </div>
       </section>
+
+      {GALLON_PRODUCTS.length > 0 && (
+        <section
+          aria-labelledby="professional-gallons-title"
+          className="page-band border-b border-slate-200 bg-white text-slate-900"
+        >
+          <div className="page-inner">
+            <Reveal className="mb-8 max-w-3xl">
+              <span className="eyebrow text-primary">
+                {locale === "ar" ? "توريد تجاري" : "COMMERCIAL SUPPLY"}
+              </span>
+              <h2 id="professional-gallons-title" className="section-title text-slate-900">
+                {locale === "ar"
+                  ? "حلول احترافية بعبوات 20 لترًا"
+                  : "Professional 20L Gallon Solutions"}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                {locale === "ar"
+                  ? "حلول تجارية للورش ومراكز العناية ومغاسل السيارات."
+                  : "Bulk solutions for workshops, detailing studios, car washes and commercial businesses."}
+              </p>
+            </Reveal>
+            <ProductCarousel products={GALLON_PRODUCTS} productType="gallon" />
+          </div>
+        </section>
+      )}
+
+      <PolishSection />
 
       {/* 4. Product Categories */}
       <section id="categories" className="page-band bg-background border-b border-border/60">

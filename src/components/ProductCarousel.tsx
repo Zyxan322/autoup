@@ -41,8 +41,8 @@ export function ProductCarousel({ products, productType }: ProductCarouselProps)
 
   const itemBasis =
     productType === "gallon"
-      ? "basis-[88%] sm:basis-[70%] md:basis-1/2 lg:basis-1/3"
-      : "basis-[82%] min-[480px]:basis-1/2 md:basis-1/3 lg:basis-1/5";
+      ? "basis-[88%] sm:basis-[70%] md:basis-1/2 lg:basis-1/4 xl:basis-1/5"
+      : "basis-[82%] min-[480px]:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5";
   const PreviousIcon = locale === "ar" ? ArrowRight : ArrowLeft;
   const NextIcon = locale === "ar" ? ArrowLeft : ArrowRight;
 

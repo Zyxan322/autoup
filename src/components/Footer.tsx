@@ -11,7 +11,7 @@ export function Footer() {
 
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/10">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-5 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-5 lg:gap-10 lg:px-6 lg:py-14">
         <div>
           <Link to="/" aria-label="AutoUp" className="inline-block transition-opacity hover:opacity-90">
             <img src={logo} alt="AutoUp" width={1080} height={1350} loading="lazy" className="h-20 w-auto object-contain" />
@@ -87,7 +87,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10 bg-black/60">
-        <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-4 px-5 py-6 text-xs text-white/50 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 text-xs text-white/50 sm:flex-row sm:px-6 lg:px-6">
           <p>
             © {new Date().getFullYear()} AutoUp.{" "}
             {locale === "ar"

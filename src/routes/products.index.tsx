@@ -10,13 +10,13 @@ import { Reveal } from "@/components/Reveal";
 import {
   CATEGORIES,
   GALLON_PRODUCTS,
-  OTHER_COMMERCIAL_PRODUCTS,
   PRODUCTS,
   RETAIL_PRODUCTS,
 } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 import { useLocale, translateText } from "@/lib/i18n";
 import { ProfessionalGallonCard } from "@/components/ProfessionalGallonCard";
+import { PolishSection } from "@/components/PolishSection";
 
 export const Route = createFileRoute("/products/")({
   validateSearch: z.object({ q: z.string().optional(), cat: z.string().optional() }),
@@ -63,10 +63,6 @@ function ProductsPage() {
 
   const retailProducts = list.filter((product) => product.packageType === "retail");
   const gallonProducts = list.filter((product) => product.packageType === "gallon");
-  const otherCommercialProducts = list.filter(
-    (product) => product.packageType === "other-commercial",
-  );
-
   return (
     <>
       <PageHero
@@ -75,18 +71,21 @@ function ProductsPage() {
         title="Professional Automotive Cleaning Products"
         crumb="Products"
       >
-        Commercial-grade concentrated shampoos, waxes, cleaners, and surface chemicals supplied in bulk
-        containers (20L, 25L, 20KG) for business operations.
+        Commercial-grade concentrated shampoos, waxes, cleaners, and surface chemicals supplied in
+        bulk containers (20L, 25L, 20KG) for business operations.
       </PageHero>
 
-      <section id="categories" className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      <section id="categories" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-14">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <label className="relative block w-full md:max-w-sm">
             <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={q}
               onChange={(e) =>
-                navigate({ search: (s) => ({ ...s, q: e.target.value || undefined }), replace: true })
+                navigate({
+                  search: (s) => ({ ...s, q: e.target.value || undefined }),
+                  replace: true,
+                })
               }
               placeholder="Search products or codes (e.g. ChemX, F55, G4)..."
               className="h-12 w-full rounded-full border border-input bg-card pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
@@ -128,7 +127,9 @@ function ProductsPage() {
 
         {list.length === 0 ? (
           <div className="py-24 text-center">
-            <p className="text-muted-foreground text-base">No products match your search criteria.</p>
+            <p className="text-muted-foreground text-base">
+              No products match your search criteria.
+            </p>
             <button
               onClick={() => navigate({ search: {}, replace: true })}
               className="mt-4 text-sm font-semibold text-primary hover:underline cursor-pointer"
@@ -141,9 +142,7 @@ function ProductsPage() {
             {retailProducts.length > 0 && (
               <section aria-labelledby="car-care-products-title">
                 <div className="mb-7 max-w-3xl">
-                  <p className="eyebrow">
-                    {locale === "ar" ? "عبوات يومية" : "EVERYDAY CARE"}
-                  </p>
+                  <p className="eyebrow">{locale === "ar" ? "عبوات يومية" : "EVERYDAY CARE"}</p>
                   <h2 id="car-care-products-title" className="section-title mt-2">
                     {locale === "ar" ? "منتجات العناية بالسيارات" : "Car Care Products"}
                   </h2>
@@ -166,9 +165,7 @@ function ProductsPage() {
             {gallonProducts.length > 0 && (
               <section aria-labelledby="professional-gallons-title">
                 <div className="mb-7 max-w-3xl">
-                  <p className="eyebrow">
-                    {locale === "ar" ? "توريد تجاري" : "COMMERCIAL SUPPLY"}
-                  </p>
+                  <p className="eyebrow">{locale === "ar" ? "توريد تجاري" : "COMMERCIAL SUPPLY"}</p>
                   <h2 id="professional-gallons-title" className="section-title mt-2">
                     {locale === "ar"
                       ? "حلول احترافية بعبوات 20 لترًا"
@@ -180,7 +177,7 @@ function ProductsPage() {
                       : "Bulk car care solutions for workshops, detailing studios, car washes and commercial businesses."}
                   </p>
                 </div>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                   {gallonProducts.map((product, n) => (
                     <Reveal key={product.slug} delay={(n % 3) * 80}>
                       <ProfessionalGallonCard product={product} />
@@ -190,37 +187,15 @@ function ProductsPage() {
               </section>
             )}
 
-            {otherCommercialProducts.length > 0 && (
-              <section aria-labelledby="other-commercial-products-title">
-                <div className="mb-7 max-w-3xl">
-                  <p className="eyebrow">
-                    {locale === "ar" ? "عبوات تجارية أخرى" : "OTHER COMMERCIAL SIZES"}
-                  </p>
-                  <h2 id="other-commercial-products-title" className="section-title mt-2">
-                    {locale === "ar" ? "أحجام تجارية إضافية" : "Additional Commercial Packaging"}
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    {locale === "ar"
-                      ? "تظهر هذه المنتجات بأحجامها الأصلية المعتمدة، ولا تُصنّف ضمن عبوات 20 لترًا."
-                      : "These products retain their verified original packaging sizes and are not classified as 20 L gallons."}
-                  </p>
-                </div>
-                <div className="card-grid-5">
-                  {otherCommercialProducts.map((product, n) => (
-                    <Reveal key={product.slug} delay={(n % 5) * 60}>
-                      <ProductCard p={product} />
-                    </Reveal>
-                  ))}
-                </div>
-              </section>
-            )}
           </div>
         )}
       </section>
 
+      <PolishSection />
+
       {/* B2B Commercial Supply Strengths */}
       <section className="section-dark py-20 bg-[#090b10] border-t border-white/5">
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 md:grid-cols-3 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-12 sm:px-6 md:grid-cols-3 lg:gap-8 lg:px-6 lg:py-14">
           <Reveal delay={0} className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <Truck className="size-8 text-primary mb-3" />
             <h3 className="text-xl font-bold text-white">Commercial Bulk Packaging</h3>
@@ -234,8 +209,8 @@ function ProductsPage() {
             <Sparkles className="size-8 text-primary mb-3" />
             <h3 className="text-xl font-bold text-white">High Dilution Ratios</h3>
             <p className="mt-2 text-xs sm:text-sm text-white/70 leading-relaxed">
-              Formulated for maximum yield per container, enabling cost-effective per-wash economics in
-              both automated and manual washing systems.
+              Formulated for maximum yield per container, enabling cost-effective per-wash economics
+              in both automated and manual washing systems.
             </p>
           </Reveal>
 
@@ -243,14 +218,19 @@ function ProductsPage() {
             <ShieldCheck className="size-8 text-primary mb-3" />
             <h3 className="text-xl font-bold text-white">Surface-Safe Formulations</h3>
             <p className="mt-2 text-xs sm:text-sm text-white/70 leading-relaxed">
-              Engineered to protect customer vehicle finishes, ceramic coatings, and delicate interior
-              surfaces while thoroughly lifting grime.
+              Engineered to protect customer vehicle finishes, ceramic coatings, and delicate
+              interior surfaces while thoroughly lifting grime.
             </p>
           </Reveal>
         </div>
 
         <div className="mt-12 text-center">
-          <Button asChild variant="hero" size="xl" className="shadow-[0_0_20px_-3px_var(--electric)]">
+          <Button
+            asChild
+            variant="hero"
+            size="xl"
+            className="shadow-[0_0_20px_-3px_var(--electric)]"
+          >
             <Link to="/quote">
               Request a Wholesale Quote <ArrowRight className="size-4 ml-1.5" />
             </Link>

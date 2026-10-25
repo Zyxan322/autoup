@@ -87,7 +87,7 @@ function AboutPage() {
 
       {/* Pillars */}
       <section className="section-dark py-20 bg-[#090b10] border-y border-white/5">
-        <div className="mx-auto grid max-w-7xl gap-6 px-5 md:grid-cols-3 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-3 lg:gap-6">
           {PILLARS.map(({ icon: Icon, title, description }, n) => (
             <Reveal key={title} delay={n * 100}>
               <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-8 transition-all hover:border-primary/40 hover:shadow-[0_0_24px_-4px_rgba(22,119,255,0.25)] flex flex-col justify-between">
@@ -106,7 +106,7 @@ function AboutPage() {
       </section>
 
       {/* Who We Supply section on About */}
-      <section className="mx-auto max-w-7xl px-5 py-24 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 items-center">
           <Reveal>
             <span className="eyebrow">COMMERCIAL PARTNERSHIPS</span>
