@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, Eye, Layers, Sparkles, X } from "lucide-react";
-import galleryHero from "@/assets/detail-14.jpg";
+import galleryHero from "@/assets/detail-14.webp";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { photo } from "@/lib/media";
 import { PRODUCTS } from "@/lib/catalog";
-import hero1 from "@/assets/Hero1.jpg";
-import hero2 from "@/assets/Hero2.jpg";
+import hero1 from "@/assets/Hero1.webp";
+import hero2 from "@/assets/Hero2.webp";
 import { useLocale, translateText } from "@/lib/i18n";
 
 export const Route = createFileRoute("/gallery")({
@@ -406,7 +406,10 @@ function GalleryPage() {
                   <img
                     src={item.image}
                     alt={translateText(item.title, locale)}
+                    width={640}
+                    height={480}
                     loading="lazy"
+                    decoding="async"
                     className="size-full object-cover brightness-[0.9] contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-108"
                   />
 
@@ -470,6 +473,8 @@ function GalleryPage() {
               <img
                 src={activeItem.image}
                 alt={translateText(activeItem.title, locale)}
+                loading="lazy"
+                decoding="async"
                 className="max-h-[66vh] max-w-full object-contain rounded-lg"
               />
             </div>
@@ -498,9 +503,7 @@ function GalleryPage() {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  setLightboxIndex((prev) =>
-                    prev !== null ? (prev + 1) % filtered.length : 0,
-                  )
+                  setLightboxIndex((prev) => (prev !== null ? (prev + 1) % filtered.length : 0))
                 }
                 className="border-white/20 text-white hover:bg-white/10 hover:text-primary cursor-pointer"
               >
@@ -520,8 +523,8 @@ function GalleryPage() {
             Interested in the Products Behind These Finishes?
           </h2>
           <p className="section-copy text-white/75 mx-auto max-w-xl">
-            Explore our complete collection of commercial automotive shampoos, waxes, and chemicals, or
-            request wholesale quotations directly for your facility.
+            Explore our complete collection of commercial automotive shampoos, waxes, and chemicals,
+            or request wholesale quotations directly for your facility.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild variant="hero" size="xl">

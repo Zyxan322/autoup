@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Building, CheckCircle, Package, ShieldCheck, Truck } from "lucide-react";
-import aboutHero from "@/assets/about-hero.jpg";
+import aboutHero from "@/assets/about-hero.webp";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
@@ -76,10 +76,11 @@ function AboutPage() {
               A Dedicated Automotive Chemical & Wash Products Partner
             </h2>
             <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted-foreground">
-              AutoUp is a product supplier — we do not offer car washing, vehicle detailing, or mobile cleaning
-              services to individual consumers. Instead, we equip commercial operators with the professional
-              chemical formulations, bulk shampoo concentrates, surface glazes, and protective solutions
-              they need to run high-efficiency, premium-finish cleaning operations.
+              AutoUp is a product supplier — we do not offer car washing, vehicle detailing, or
+              mobile cleaning services to individual consumers. Instead, we equip commercial
+              operators with the professional chemical formulations, bulk shampoo concentrates,
+              surface glazes, and protective solutions they need to run high-efficiency,
+              premium-finish cleaning operations.
             </p>
           </div>
         </Reveal>
@@ -112,12 +113,15 @@ function AboutPage() {
             <span className="eyebrow">COMMERCIAL PARTNERSHIPS</span>
             <h2 className="section-title">Who AutoUp Supplies</h2>
             <p className="section-copy">
-              Our products are trusted by businesses that demand consistent cleaning performance, high
-              dilution yields, and surface safety across hundreds of vehicles each week.
+              Our products are trusted by businesses that demand consistent cleaning performance,
+              high dilution yields, and surface safety across hundreds of vehicles each week.
             </p>
             <ul className="mt-6 space-y-3">
               {INDUSTRIES.map((ind) => (
-                <li key={ind} className="flex items-center gap-3 text-sm font-medium text-foreground">
+                <li
+                  key={ind}
+                  className="flex items-center gap-3 text-sm font-medium text-foreground"
+                >
                   <CheckCircle className="size-4 text-primary shrink-0" />
                   <span>{ind}</span>
                 </li>
@@ -129,9 +133,9 @@ function AboutPage() {
             <ShieldCheck className="size-10 text-primary mb-4" />
             <h3 className="text-xl font-bold text-foreground">Bulk Inquiries & Packaging</h3>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              All core formulas are packaged in high-capacity containers (20L, 25L, 20KG) to optimize
-              shipping, storage, and per-liter dilution economics. Contact our commercial team to request
-              custom quotes and logistics details for your facility.
+              All core formulas are packaged in high-capacity containers (20L, 25L, 20KG) to
+              optimize shipping, storage, and per-liter dilution economics. Contact our commercial
+              team to request custom quotes and logistics details for your facility.
             </p>
             <div className="mt-6">
               <Button asChild variant="hero" size="lg">

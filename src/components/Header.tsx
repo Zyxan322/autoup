@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Languages, Menu, Search, ShoppingBag, X } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.webp";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
@@ -56,8 +56,10 @@ export function Header() {
           <img
             src={logo}
             alt="AutoUp — Care in Every Mile"
-            width={1080}
-            height={1350}
+            width={360}
+            height={450}
+            fetchPriority="high"
+            decoding="async"
             className="absolute left-0 top-[-2.45rem] h-auto w-full max-w-none sm:top-[-2.95rem] lg:top-[-3.3rem]"
           />
         </Link>

@@ -45,6 +45,7 @@ export function ProfessionalGallonCard({ product }: { product: Product }) {
           width={640}
           height={480}
           loading="lazy"
+          decoding="async"
           className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]"
         />
         <span className="absolute left-3 top-3 rounded-full border border-primary/20 bg-white/95 px-2.5 py-1 text-[10px] font-bold text-primary shadow-sm">

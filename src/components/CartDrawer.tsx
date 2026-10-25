@@ -58,7 +58,9 @@ export function CartDrawer() {
             <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
               <ShoppingBag className="size-12 text-primary/70" />
               <p className="text-muted-foreground text-sm">
-                {locale === "ar" ? "قائمة طلب عرض السعر فارغة." : "Your wholesale quote list is empty."}
+                {locale === "ar"
+                  ? "قائمة طلب عرض السعر فارغة."
+                  : "Your wholesale quote list is empty."}
               </p>
               <Button asChild variant="line" onClick={() => setOpen(false)}>
                 <Link to="/products">Browse products</Link>
@@ -77,11 +79,15 @@ export function CartDrawer() {
                       alt={i.name}
                       width={80}
                       height={80}
+                      loading="lazy"
+                      decoding="async"
                       className="max-h-full max-w-full object-contain"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{translateText(i.name, locale)}</p>
+                    <p className="font-semibold text-sm truncate">
+                      {translateText(i.name, locale)}
+                    </p>
                     {i.variant && <p className="text-xs text-primary font-medium">{i.variant}</p>}
                     {isTwentyLitreVariant(i.variant) && (
                       <p className="mt-1 text-xs text-muted-foreground">

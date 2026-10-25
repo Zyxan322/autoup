@@ -593,7 +593,7 @@ const EN_TO_AR: Record<string, string> = {
   "Decrease quantity": "تقليل الكمية",
   "Increase quantity": "زيادة الكمية",
   "Remove item": "إزالة المنتج",
-  "Remove": "إزالة",
+  Remove: "إزالة",
   "Open quotation inquiry list": "افتح قائمة طلب عرض السعر",
   "Concentrated foam shampoos and pre-washes formulated for automatic and manual wash systems.":
     "شامبوهات رغوية مركزة ومنتجات ما قبل الغسيل لأنظمة الغسيل الآلية واليدوية.",
@@ -605,7 +605,8 @@ const EN_TO_AR: Record<string, string> = {
     "ملمعات لوحة القيادة والزخارف (ChemX D2) المصممة للفينيل والجلد والبلاستيك الداخلي.",
   "Solvent tire dressings (O2, ChemX T1) and ammonia-free streakless glass polishes (G4).":
     "ملمعات إطارات بالمذيب (O2 وChemX T1) وملمع زجاج خالٍ من الأمونيا والخطوط (G4).",
-  "Automotive cleaning products available in bulk commercial packaging.": "منتجات تنظيف سيارات متوفرة بعبوات تجارية كبيرة.",
+  "Automotive cleaning products available in bulk commercial packaging.":
+    "منتجات تنظيف سيارات متوفرة بعبوات تجارية كبيرة.",
   "Standard commercial containers in 20L, 25L, and 20KG drums designed specifically for high-throughput business consumption.":
     "عبوات تجارية قياسية بسعة 20 و25 لتراً ووزن 20 كجم، مصممة لاحتياجات الأعمال ذات الاستهلاك المرتفع.",
   "Formulated for maximum yield per container, enabling cost-effective per-wash economics in both automated and manual washing systems.":
@@ -649,7 +650,10 @@ export function translateText(text: string, locale: Locale) {
 function translateDom(locale: Locale) {
   const root = document.body;
   const textStates = new WeakMap<Text, { source: string; translated: string }>();
-  const attributeStates = new WeakMap<Element, Map<string, { source: string; translated: string }>>();
+  const attributeStates = new WeakMap<
+    Element,
+    Map<string, { source: string; translated: string }>
+  >();
 
   const applyText = (node: Text) => {
     const current = node.nodeValue ?? "";

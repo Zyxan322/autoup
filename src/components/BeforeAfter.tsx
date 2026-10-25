@@ -1,7 +1,7 @@
-import { useRef, useState, useCallback } from 'react';
-import { ChevronsLeftRight, Sparkles } from 'lucide-react';
-import before from '@/assets/comparison-before.jpg';
-import after from '@/assets/comparison-after.jpg';
+import { useRef, useState, useCallback } from "react";
+import { ChevronsLeftRight, Sparkles } from "lucide-react";
+import before from "@/assets/comparison-before.webp";
+import after from "@/assets/comparison-after.webp";
 
 export function BeforeAfter() {
   const [position, setPosition] = useState(50);
@@ -47,6 +47,7 @@ export function BeforeAfter() {
           width={1536}
           height={1024}
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 size-full object-cover pointer-events-none"
         />
 
@@ -57,6 +58,7 @@ export function BeforeAfter() {
           width={1536}
           height={1024}
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 size-full object-cover pointer-events-none transition-none"
           style={{ clipPath: `inset(0 0 0 ${position}%)` }}
         />
@@ -73,10 +75,7 @@ export function BeforeAfter() {
         </div>
 
         {/* Draggable Divider */}
-        <div
-          className="comparison-divider"
-          style={{ left: `${position}%` }}
-        >
+        <div className="comparison-divider" style={{ left: `${position}%` }}>
           <span className="cursor-ew-resize select-none">
             <ChevronsLeftRight className="size-5 text-white" />
           </span>

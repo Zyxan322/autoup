@@ -78,7 +78,9 @@ export function buildInstallationPaymentInquiryMessage(
   const lines = [
     arabic ? "مرحباً AutoUp،" : "Hello AutoUp,",
     "",
-    arabic ? "أرغب في استشارة تجارية بشأن منتج 20 لترًا." : "I would like a commercial consultation about a 20 L product.",
+    arabic
+      ? "أرغب في استشارة تجارية بشأن منتج 20 لترًا."
+      : "I would like a commercial consultation about a 20 L product.",
     "",
     `${arabic ? "الاسم" : "Name"}: ${data.name.trim()}`,
     `${arabic ? "الشركة / المنشأة" : "Business / Workshop"}: ${data.companyName.trim()}`,
@@ -90,7 +92,11 @@ export function buildInstallationPaymentInquiryMessage(
     `${arabic ? "تفضيل الدفع" : "Payment preference"}: ${payment}`,
   ];
   if (data.requirements.trim()) {
-    lines.push("", `${arabic ? "متطلبات إضافية" : "Additional requirements"}:`, data.requirements.trim());
+    lines.push(
+      "",
+      `${arabic ? "متطلبات إضافية" : "Additional requirements"}:`,
+      data.requirements.trim(),
+    );
   }
   lines.push(
     "",
@@ -130,32 +136,36 @@ export function buildQuoteMessage(d: QuoteData, locale: Locale = "en") {
     "",
     "Please share product availability, wholesale pricing, and supply information.",
     "",
-    "Thank you."
+    "Thank you.",
   );
   if (locale === "en") return lines.join("\n");
 
-  return lines.map((line) => {
-    if (line.startsWith("Contact Name: ")) return `اسم مسؤول التواصل: ${line.slice(14)}`;
-    if (line.startsWith("Company / Business: ")) return `الشركة / المنشأة: ${line.slice(20)}`;
-    if (line.startsWith("Phone / WhatsApp: ")) return `الهاتف / واتساب: ${line.slice(18)}`;
-    if (line.startsWith("Business Email: ")) return `البريد الإلكتروني للمنشأة: ${line.slice(16)}`;
-    if (line.startsWith("Location: ")) return `الموقع: ${line.slice(10)}`;
-    if (line.startsWith("Estimated Order Volume: ")) return `حجم الطلب التقديري: ${line.slice(24)}`;
-    if (line.startsWith("Requirements & Message:\n")) {
-      return `المتطلبات والرسالة:\n${line.slice("Requirements & Message:\n".length)}`;
-    }
-    if (line.startsWith("- ") && line.includes(" × ")) {
-      const product = d.products.find((p) => line.includes(p.name));
-      if (product) {
-        const option = isTwentyLitreVariant(product.variant)
-          ? product.paymentOption === "installment-quote"
-            ? " — طلب عرض تقسيط (الشروط بانتظار التأكيد)"
-            : " — الدفع الكامل"
-          : "";
-        return `- ${translateText(product.name, locale)}${product.variant ? ` (${product.variant})` : ""} × ${product.qty}${option}`;
+  return lines
+    .map((line) => {
+      if (line.startsWith("Contact Name: ")) return `اسم مسؤول التواصل: ${line.slice(14)}`;
+      if (line.startsWith("Company / Business: ")) return `الشركة / المنشأة: ${line.slice(20)}`;
+      if (line.startsWith("Phone / WhatsApp: ")) return `الهاتف / واتساب: ${line.slice(18)}`;
+      if (line.startsWith("Business Email: "))
+        return `البريد الإلكتروني للمنشأة: ${line.slice(16)}`;
+      if (line.startsWith("Location: ")) return `الموقع: ${line.slice(10)}`;
+      if (line.startsWith("Estimated Order Volume: "))
+        return `حجم الطلب التقديري: ${line.slice(24)}`;
+      if (line.startsWith("Requirements & Message:\n")) {
+        return `المتطلبات والرسالة:\n${line.slice("Requirements & Message:\n".length)}`;
       }
-      return `- ${translateText(line.slice(2), locale)}`;
-    }
-    return translateText(line, locale);
-  }).join("\n");
+      if (line.startsWith("- ") && line.includes(" × ")) {
+        const product = d.products.find((p) => line.includes(p.name));
+        if (product) {
+          const option = isTwentyLitreVariant(product.variant)
+            ? product.paymentOption === "installment-quote"
+              ? " — طلب عرض تقسيط (الشروط بانتظار التأكيد)"
+              : " — الدفع الكامل"
+            : "";
+          return `- ${translateText(product.name, locale)}${product.variant ? ` (${product.variant})` : ""} × ${product.qty}${option}`;
+        }
+        return `- ${translateText(line.slice(2), locale)}`;
+      }
+      return translateText(line, locale);
+    })
+    .join("\n");
 }

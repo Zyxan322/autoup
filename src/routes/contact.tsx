@@ -1,10 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Building2, Clock, Globe, MapPin, MessageCircle, Phone } from "lucide-react";
-import contactHero from "@/assets/contact-hero.jpg";
+import contactHero from "@/assets/contact-hero.webp";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { useLocale } from "@/lib/i18n";
 import { Reveal } from "@/components/Reveal";
@@ -64,42 +69,48 @@ function ContactPage() {
     city: "",
     message: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<"companyName" | "name" | "phone" | "city" | "message", string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<"companyName" | "name" | "phone" | "city" | "message", string>>
+  >({});
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const er: Partial<Record<"companyName" | "name" | "phone" | "city" | "message", string>> = {};
     if (!form.companyName.trim()) er.companyName = "Please enter your business or company name.";
     if (!form.name.trim()) er.name = "Please enter contact person name.";
-    if (!/^[+\d\s()-]{7,}$/.test(form.phone)) er.phone = "Please enter a valid business phone number.";
+    if (!/^[+\d\s()-]{7,}$/.test(form.phone))
+      er.phone = "Please enter a valid business phone number.";
     if (!form.city.trim()) er.city = "Please enter your city.";
     if (form.message.trim().length < 5) er.message = "Please write a short inquiry message.";
     setErrors(er);
     if (Object.keys(er).length) return;
 
-    const b2bMsg = locale === "ar" ? [
-      "مرحباً AutoUp،",
-      "",
-      "لدي استفسار تجاري حول منتجات تنظيف السيارات لديكم.",
-      "",
-      `الشركة: ${form.companyName}`,
-      `اسم مسؤول التواصل: ${form.name}`,
-      `الهاتف: ${form.phone}`,
-      `المدينة: ${form.city}`,
-      "",
-      `الاستفسار / المتطلبات:\n${form.message}`,
-    ].join("\n") : [
-      "Hello AutoUp,",
-      "",
-      "I have a business inquiry regarding your automotive cleaning products.",
-      "",
-      `Company: ${form.companyName}`,
-      `Contact Name: ${form.name}`,
-      `Phone: ${form.phone}`,
-      `City: ${form.city}`,
-      "",
-      `Inquiry / Requirements:\n${form.message}`,
-    ].join("\n");
+    const b2bMsg =
+      locale === "ar"
+        ? [
+            "مرحباً AutoUp،",
+            "",
+            "لدي استفسار تجاري حول منتجات تنظيف السيارات لديكم.",
+            "",
+            `الشركة: ${form.companyName}`,
+            `اسم مسؤول التواصل: ${form.name}`,
+            `الهاتف: ${form.phone}`,
+            `المدينة: ${form.city}`,
+            "",
+            `الاستفسار / المتطلبات:\n${form.message}`,
+          ].join("\n")
+        : [
+            "Hello AutoUp,",
+            "",
+            "I have a business inquiry regarding your automotive cleaning products.",
+            "",
+            `Company: ${form.companyName}`,
+            `Contact Name: ${form.name}`,
+            `Phone: ${form.phone}`,
+            `City: ${form.city}`,
+            "",
+            `Inquiry / Requirements:\n${form.message}`,
+          ].join("\n");
 
     window.open(whatsappUrl(b2bMsg), "_blank", "noopener,noreferrer");
   };
@@ -112,17 +123,19 @@ function ContactPage() {
         title="Contact AutoUp Commercial Supply"
         crumb="Contact"
       >
-        Reach our B2B team for product availability, bulk purchasing inquiries, wholesale pricing, and
-        container supply information.
+        Reach our B2B team for product availability, bulk purchasing inquiries, wholesale pricing,
+        and container supply information.
       </PageHero>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_1.3fr] lg:gap-10 lg:py-16">
         {/* Left Column: Direct Commercial Contact */}
         <Reveal delay={60} direction="up" className="space-y-4">
           <a
-            href={whatsappUrl(locale === "ar"
-              ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
-              : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.")}
+            href={whatsappUrl(
+              locale === "ar"
+                ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
+                : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="card-stroke flex items-center gap-4 rounded-2xl bg-card p-6 hover:border-primary/50 transition-colors"
@@ -133,7 +146,9 @@ function ContactPage() {
             <div>
               <p className="font-semibold text-foreground">WhatsApp Business Inquiry</p>
               <p className="text-sm text-emerald-400 font-medium">{SITE.phoneDisplay}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Instant response for wholesale quotes</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Instant response for wholesale quotes
+              </p>
             </div>
           </a>
 
@@ -198,95 +213,101 @@ function ContactPage() {
 
         {/* Right Column: Commercial Inquiry Form */}
         <Reveal delay={120} direction="up">
-          <form onSubmit={submit} noValidate className="space-y-4 rounded-3xl border border-border/80 bg-card p-8 shadow-card">
-          <div className="mb-2">
-            <span className="eyebrow text-primary">BUSINESS INQUIRY</span>
-            <h2 className="text-2xl font-bold text-foreground">Send a Wholesale Inquiry</h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Submit your company details and requirements to receive pricing and availability.
+          <form
+            onSubmit={submit}
+            noValidate
+            className="space-y-4 rounded-3xl border border-border/80 bg-card p-8 shadow-card"
+          >
+            <div className="mb-2">
+              <span className="eyebrow text-primary">BUSINESS INQUIRY</span>
+              <h2 className="text-2xl font-bold text-foreground">Send a Wholesale Inquiry</h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                Submit your company details and requirements to receive pricing and availability.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium" htmlFor="companyName">
+                  Company / Business Name *
+                </label>
+                <input
+                  id="companyName"
+                  placeholder="e.g. Apex Wash Studio"
+                  value={form.companyName}
+                  onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+                  className={input}
+                />
+                {errors.companyName && (
+                  <p className="mt-1 text-xs text-destructive">{errors.companyName}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium" htmlFor="name">
+                  Contact Person Name *
+                </label>
+                <input
+                  id="name"
+                  placeholder="e.g. Alex Rahman"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className={input}
+                />
+                {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium" htmlFor="phone">
+                  Business Phone / WhatsApp *
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="e.g. +971 50 123 4567"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className={input}
+                />
+                {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium" htmlFor="city">
+                  City / Region *
+                </label>
+                <input
+                  id="city"
+                  placeholder="e.g. Dubai / Riyadh / Dammam"
+                  value={form.city}
+                  onChange={(e) => setForm({ ...form, city: e.target.value })}
+                  className={input}
+                />
+                {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium" htmlFor="message">
+                Products of Interest & Estimated Volumes *
+              </label>
+              <textarea
+                id="message"
+                rows={4}
+                placeholder="Tell us which products you need (e.g. Pre-Wash Shampoo, ChemX C2, F55 Wax) and expected container quantities or delivery city..."
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className={`${input} h-auto py-3`}
+              />
+              {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message}</p>}
+            </div>
+
+            <Button type="submit" variant="hero" size="xl" className="w-full font-semibold">
+              Send Inquiry via WhatsApp
+            </Button>
+            <p className="text-center text-xs text-muted-foreground leading-relaxed">
+              Your inquiry will open directly in WhatsApp with our commercial team.
             </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium" htmlFor="companyName">
-                Company / Business Name *
-              </label>
-              <input
-                id="companyName"
-                placeholder="e.g. Apex Wash Studio"
-                value={form.companyName}
-                onChange={(e) => setForm({ ...form, companyName: e.target.value })}
-                className={input}
-              />
-              {errors.companyName && <p className="mt-1 text-xs text-destructive">{errors.companyName}</p>}
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium" htmlFor="name">
-                Contact Person Name *
-              </label>
-              <input
-                id="name"
-                placeholder="e.g. Alex Rahman"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className={input}
-              />
-              {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium" htmlFor="phone">
-                Business Phone / WhatsApp *
-              </label>
-              <input
-                id="phone"
-                type="tel"
-                placeholder="e.g. +971 50 123 4567"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className={input}
-              />
-              {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium" htmlFor="city">
-                City / Region *
-              </label>
-              <input
-                id="city"
-                placeholder="e.g. Dubai / Riyadh / Dammam"
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-                className={input}
-              />
-              {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-xs font-medium" htmlFor="message">
-              Products of Interest & Estimated Volumes *
-            </label>
-            <textarea
-              id="message"
-              rows={4}
-              placeholder="Tell us which products you need (e.g. Pre-Wash Shampoo, ChemX C2, F55 Wax) and expected container quantities or delivery city..."
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className={`${input} h-auto py-3`}
-            />
-            {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message}</p>}
-          </div>
-
-          <Button type="submit" variant="hero" size="xl" className="w-full font-semibold">
-            Send Inquiry via WhatsApp
-          </Button>
-          <p className="text-center text-xs text-muted-foreground leading-relaxed">
-            Your inquiry will open directly in WhatsApp with our commercial team.
-          </p>
           </form>
         </Reveal>
       </section>
@@ -296,7 +317,9 @@ function ContactPage() {
         <div className="mx-auto max-w-3xl px-5">
           <Reveal className="text-center">
             <span className="eyebrow text-primary">COMMERCIAL FAQ</span>
-            <h2 className="text-3xl font-bold sm:text-4xl text-white">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl text-white">
+              Frequently Asked Questions
+            </h2>
             <p className="mt-3 text-sm text-white/70">
               Clear answers regarding our products, wholesale purchasing, and B2B ordering.
             </p>

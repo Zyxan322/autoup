@@ -1,12 +1,12 @@
 import type { CSSProperties } from "react";
 import { Reveal } from "@/components/Reveal";
 import { useLocale } from "@/lib/i18n";
-import emkanLogo from "@/assets/payments icons/images.png";
-import madfuLogo from "@/assets/payments icons/images (2).png";
-import misPayLogo from "@/assets/payments icons/images (1).png";
-import neoLogo from "@/assets/payments icons/images (3).png";
-import tabbyLogo from "@/assets/payments icons/images (1).jfif";
-import tamaraLogo from "@/assets/payments icons/images.jfif";
+import emkanLogo from "@/assets/payments icons/emkan.webp";
+import madfuLogo from "@/assets/payments icons/madfu.webp";
+import misPayLogo from "@/assets/payments icons/mispay.webp";
+import neoLogo from "@/assets/payments icons/neo.webp";
+import tabbyLogo from "@/assets/payments icons/tabby.webp";
+import tamaraLogo from "@/assets/payments icons/tamara.webp";
 
 const PAYMENT_METHODS = [
   { name: "Tabby", logo: tabbyLogo, width: 708, height: 282 },

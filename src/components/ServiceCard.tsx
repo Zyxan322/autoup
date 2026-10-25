@@ -2,7 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { Check, Eye, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { PRODUCTS, type Service } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 
@@ -91,6 +97,7 @@ export function ServiceCard({ s, index }: { s: Service; index: number }) {
           width={560}
           height={385}
           loading="lazy"
+          decoding="async"
           className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
         />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -136,6 +143,7 @@ export function ServiceCard({ s, index }: { s: Service; index: number }) {
                 width={560}
                 height={320}
                 loading="lazy"
+                decoding="async"
                 className="mt-3 aspect-[16/9] w-full rounded-lg object-cover border border-white/10 shadow-md"
               />
 
@@ -145,11 +153,15 @@ export function ServiceCard({ s, index }: { s: Service; index: number }) {
               </div>
 
               <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
-                {s.description} All formulations are tested for maximum surface safety and long-lasting optical clarity. Follow container dilution and application guidelines for optimum results.
+                {s.description} All formulations are tested for maximum surface safety and
+                long-lasting optical clarity. Follow container dilution and application guidelines
+                for optimum results.
               </DialogDescription>
 
               <div className="space-y-2 rounded-lg bg-white/5 p-4 border border-white/5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">Key Advantages & Benefits</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Key Advantages & Benefits
+                </p>
                 <ul className="space-y-2 text-sm text-foreground/90">
                   {benefits.map((b) => (
                     <li key={b} className="flex items-start gap-2.5">

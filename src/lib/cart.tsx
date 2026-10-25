@@ -48,9 +48,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, loaded]);
 
   const same = (a: CartItem, slug: string, v?: string, paymentOption?: PaymentOption) =>
-    a.slug === slug &&
-    a.variant === v &&
-    (a.paymentOption ?? "full") === (paymentOption ?? "full");
+    a.slug === slug && a.variant === v && (a.paymentOption ?? "full") === (paymentOption ?? "full");
 
   const value: Ctx = {
     items,
@@ -69,9 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       ),
     setQty: (slug, v, qty, paymentOption = "full") =>
       setItems((prev) =>
-        prev.map((p) =>
-          same(p, slug, v, paymentOption) ? { ...p, qty: Math.max(1, qty) } : p,
-        ),
+        prev.map((p) => (same(p, slug, v, paymentOption) ? { ...p, qty: Math.max(1, qty) } : p)),
       ),
     remove: (slug, v, paymentOption = "full") =>
       setItems((prev) => prev.filter((p) => !same(p, slug, v, paymentOption))),

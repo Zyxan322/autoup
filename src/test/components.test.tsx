@@ -47,9 +47,7 @@ describe("B2B Components Functionality Verification", () => {
     );
 
     expect(screen.getByRole("heading", { name: "WE ACCEPT" })).toBeInTheDocument();
-    expect(
-      screen.getByText("Flexible Payment Options for Your Convenience"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Flexible Payment Options for Your Convenience")).toBeInTheDocument();
     for (const brand of brands) {
       expect(screen.getAllByRole("img", { name: brand })).toHaveLength(1);
     }
@@ -115,12 +113,12 @@ describe("B2B Components Functionality Verification", () => {
           <button onClick={() => add({ ...product, paymentOption: "installment-quote" })}>
             Add installment
           </button>
-          <button
-            onClick={() => remove(product.slug, product.variant, "installment-quote")}
-          >
+          <button onClick={() => remove(product.slug, product.variant, "installment-quote")}>
             Remove installment
           </button>
-          <output data-testid="payments">{items.map((item) => item.paymentOption).join(",")}</output>
+          <output data-testid="payments">
+            {items.map((item) => item.paymentOption).join(",")}
+          </output>
         </div>
       );
     }
@@ -147,7 +145,8 @@ describe("B2B Components Functionality Verification", () => {
       const { items, open } = useCart();
       return (
         <output data-testid="polish-cart">
-          {items.map((item) => `${item.slug}:${item.name}:${item.qty}`).join(",")}|{open ? "open" : "closed"}
+          {items.map((item) => `${item.slug}:${item.name}:${item.qty}`).join(",")}|
+          {open ? "open" : "closed"}
         </output>
       );
     }
@@ -161,9 +160,7 @@ describe("B2B Components Functionality Verification", () => {
 
     const addButtons = screen.getAllByRole("button", { name: /add to cart/i });
     expect(addButtons).toHaveLength(7);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Increase quantity for Microfiber Towel" }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Increase quantity for Microfiber Towel" }));
     fireEvent.click(addButtons[0]);
 
     expect(screen.getByTestId("polish-cart")).toHaveTextContent(
@@ -199,7 +196,7 @@ describe("B2B Components Functionality Verification", () => {
       <Wrapper>
         <CartInspector />
         <ProductCard p={testProduct} />
-      </Wrapper>
+      </Wrapper>,
     );
 
     // Product name and code badge

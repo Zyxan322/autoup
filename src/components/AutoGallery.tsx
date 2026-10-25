@@ -1,10 +1,17 @@
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from './ui/button';
-import { Dialog,DialogTrigger,DialogContent,DialogTitle,DialogDescription } from './ui/dialog';
-import { photo } from '@/lib/media';
-import { Reveal } from './Reveal';
-const GALLERY=[['editorial-13','Burgundy classic coupe'],['detail-11','Violet sports car'],['editorial-14','Silver SUV'],['detail-12','Classic coupe in a garage'],['editorial-15','Leather interior'],['detail-14','Teal sports car on the coast']];
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "./ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
+import { photo } from "@/lib/media";
+import { Reveal } from "./Reveal";
+const GALLERY = [
+  ["editorial-13", "Burgundy classic coupe"],
+  ["detail-11", "Violet sports car"],
+  ["editorial-14", "Silver SUV"],
+  ["detail-12", "Classic coupe in a garage"],
+  ["editorial-15", "Leather interior"],
+  ["detail-14", "Teal sports car on the coast"],
+];
 export function AutoGallery() {
   const [index, setIndex] = useState(0);
   const active = GALLERY[index];
@@ -16,7 +23,8 @@ export function AutoGallery() {
           <p className="eyebrow">AUTOMOTIVE SHOWCASE</p>
           <h2 className="section-title">Good Care. Great Presence.</h2>
           <p className="section-copy">
-            A visual showcase of automotive perfection across sports coupes, luxury SUVs, and preserved classics.
+            A visual showcase of automotive perfection across sports coupes, luxury SUVs, and
+            preserved classics.
           </p>
         </Reveal>
 
@@ -37,6 +45,7 @@ export function AutoGallery() {
                       width={640}
                       height={480}
                       loading="lazy"
+                      decoding="async"
                       className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -67,6 +76,8 @@ export function AutoGallery() {
                 alt={active?.[1]}
                 width={1200}
                 height={800}
+                loading="lazy"
+                decoding="async"
                 className="max-h-[70svh] w-full object-contain mx-auto"
               />
             </div>

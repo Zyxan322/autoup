@@ -251,13 +251,24 @@
   transform: none !important;
 }
 
-.reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
-.reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
-.reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
-.reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
-.reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
-.reveal-stagger > *:nth-child(6) { transition-delay: 400ms; }
-
+.reveal-stagger > *:nth-child(1) {
+  transition-delay: 0ms;
+}
+.reveal-stagger > *:nth-child(2) {
+  transition-delay: 80ms;
+}
+.reveal-stagger > *:nth-child(3) {
+  transition-delay: 160ms;
+}
+.reveal-stagger > *:nth-child(4) {
+  transition-delay: 240ms;
+}
+.reveal-stagger > *:nth-child(5) {
+  transition-delay: 320ms;
+}
+.reveal-stagger > *:nth-child(6) {
+  transition-delay: 400ms;
+}
 
 .payment-partners-reveal .payment-partner-tile {
   opacity: 0;

@@ -14,5 +14,13 @@ export default defineConfig({
   },
   nitro: {
     preset: process.env.VERCEL || process.env.NITRO_PRESET === "vercel" ? "vercel" : undefined,
+    routeRules: {
+      "/assets/**": {
+        headers: { "cache-control": "public, max-age=31536000, immutable" },
+      },
+      "/**": {
+        headers: { "cache-control": "public, max-age=0, must-revalidate" },
+      },
+    },
   },
 });

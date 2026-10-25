@@ -55,6 +55,7 @@ function PolishProductCard({
           width={640}
           height={480}
           loading="lazy"
+          decoding="async"
           className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
         <span className="absolute start-3 top-3 rounded-full border border-white/70 bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm backdrop-blur">
@@ -114,6 +115,8 @@ function PolishProductCard({
                 alt={label}
                 width={640}
                 height={480}
+                loading="lazy"
+                decoding="async"
                 className="mt-4 aspect-[16/10] w-full rounded-md bg-slate-100 object-cover"
               />
               <div>

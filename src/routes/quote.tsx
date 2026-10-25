@@ -1,8 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { ArrowLeft, Building2, Check, Copy, MessageCircle, Minus, Plus, ShoppingBag, X } from "lucide-react";
-import quoteImg from "@/assets/quote.jpg";
+import {
+  ArrowLeft,
+  Building2,
+  Check,
+  Copy,
+  MessageCircle,
+  Minus,
+  Plus,
+  ShoppingBag,
+  X,
+} from "lucide-react";
+import quoteImg from "@/assets/quote.webp";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
@@ -96,9 +106,11 @@ function QuotePage() {
     > = {};
     if (!f.name.trim()) e.name = "Contact name is required.";
     if (!f.companyName.trim()) e.companyName = "Company or business name is required.";
-    if (!/^[+\d\s()-]{7,}$/.test(f.phone)) e.phone = "Please enter a valid business phone / WhatsApp number.";
+    if (!/^[+\d\s()-]{7,}$/.test(f.phone))
+      e.phone = "Please enter a valid business phone / WhatsApp number.";
     if (!f.city.trim()) e.city = "City is required.";
-    if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) e.email = "Please enter a valid business email.";
+    if (f.email && !/^\S+@\S+\.\S+$/.test(f.email))
+      e.email = "Please enter a valid business email.";
     if (!items.length && !f.notes.trim()) {
       e.items = "Please select at least one product or describe your required items below.";
     }
@@ -106,9 +118,10 @@ function QuotePage() {
     return !Object.keys(e).length;
   };
 
-  const set = (k: keyof typeof f) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => setF({ ...f, [k]: e.target.value });
+  const set =
+    (k: keyof typeof f) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setF({ ...f, [k]: e.target.value });
 
   const formattedMessage = buildQuoteMessage(data, locale);
 
@@ -128,6 +141,8 @@ function QuotePage() {
           alt="Automotive care products and commercial vehicle maintenance"
           width={1024}
           height={1408}
+          fetchPriority="high"
+          decoding="async"
           className="sticky top-0 h-screen w-full object-cover brightness-[0.75] contrast-[1.1]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
@@ -160,8 +175,8 @@ function QuotePage() {
             Request a Wholesale Quote
           </h1>
           <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Provide your business requirements below to receive verified wholesale pricing, container
-            availability, and volume supply terms directly from our team.
+            Provide your business requirements below to receive verified wholesale pricing,
+            container availability, and volume supply terms directly from our team.
           </p>
         </Reveal>
 
@@ -323,11 +338,15 @@ function QuotePage() {
                           alt=""
                           width={48}
                           height={48}
+                          loading="lazy"
+                          decoding="async"
                           className="max-h-full max-w-full object-contain"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{translateText(i.name, locale)}</p>
+                        <p className="font-semibold text-sm truncate">
+                          {translateText(i.name, locale)}
+                        </p>
                         <p className="text-xs text-primary/80 font-medium">{i.variant}</p>
                         {isTwentyLitreVariant(i.variant) && (
                           <p className="mt-1 text-xs text-muted-foreground">
@@ -407,7 +426,12 @@ function QuotePage() {
               and sent to you via WhatsApp / email.
             </p>
 
-            <Button type="submit" variant="hero" size="xl" className="w-full text-base font-semibold">
+            <Button
+              type="submit"
+              variant="hero"
+              size="xl"
+              className="w-full text-base font-semibold"
+            >
               Review Wholesale Quote Request
             </Button>
           </form>
@@ -430,7 +454,11 @@ function QuotePage() {
                 onClick={handleCopy}
                 className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-lg border border-border/80 bg-background/80 px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground backdrop-blur-sm transition-colors cursor-pointer"
               >
-                {copied ? <Check className="size-3.5 text-emerald-500" /> : <Copy className="size-3.5" />}
+                {copied ? (
+                  <Check className="size-3.5 text-emerald-500" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
                 {copied ? "Copied" : "Copy"}
               </button>
             </div>
@@ -460,8 +488,8 @@ function QuotePage() {
             </div>
 
             <p className="text-center text-xs text-muted-foreground leading-relaxed">
-              Your inquiry will open in WhatsApp so you can send it directly to AutoUp. Our commercial
-              representative will review product stock and send a wholesale quotation.
+              Your inquiry will open in WhatsApp so you can send it directly to AutoUp. Our
+              commercial representative will review product stock and send a wholesale quotation.
             </p>
           </div>
         )}

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MessageCircle, Phone } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.webp";
 import { SITE, whatsappUrl } from "@/lib/site";
 import { CATEGORIES } from "@/lib/catalog";
 import { useLocale } from "@/lib/i18n";
@@ -13,11 +13,24 @@ export function Footer() {
     <footer className="bg-[#05070a] text-white border-t border-white/10">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-5 lg:gap-10 lg:px-6 lg:py-14">
         <div>
-          <Link to="/" aria-label="AutoUp" className="inline-block transition-opacity hover:opacity-90">
-            <img src={logo} alt="AutoUp" width={1080} height={1350} loading="lazy" className="h-20 w-auto object-contain" />
+          <Link
+            to="/"
+            aria-label="AutoUp"
+            className="inline-block transition-opacity hover:opacity-90"
+          >
+            <img
+              src={logo}
+              alt="AutoUp"
+              width={360}
+              height={450}
+              loading="lazy"
+              decoding="async"
+              className="h-20 w-auto object-contain"
+            />
           </Link>
           <p className="mt-4 max-w-xs text-sm text-white/70 leading-relaxed">
-            B2B supplier of professional automotive cleaning products, concentrated shampoos, waxes, and specialized chemicals for commercial wash operations and detailing studios.
+            B2B supplier of professional automotive cleaning products, concentrated shampoos, waxes,
+            and specialized chemicals for commercial wash operations and detailing studios.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[0.68rem] font-medium text-white/80">
@@ -32,12 +45,39 @@ export function Footer() {
         <div>
           <h4 className="eyebrow mb-4 text-primary">Explore</h4>
           <ul className="space-y-2.5 text-sm text-white/70">
-            <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
-            <li><Link to="/products" className="hover:text-primary transition-colors">Products Catalog</Link></li>
-            <li><Link to="/gallery" className="hover:text-primary transition-colors">Visual Gallery</Link></li>
-            <li><Link to="/about" className="hover:text-primary transition-colors">About AutoUp</Link></li>
-            <li><Link to="/contact" className="hover:text-primary transition-colors">Wholesale Contact</Link></li>
-            <li><Link to="/quote" className="hover:text-primary transition-colors font-medium text-white">Request a Quote</Link></li>
+            <li>
+              <Link to="/" className="hover:text-primary transition-colors">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" className="hover:text-primary transition-colors">
+                Products Catalog
+              </Link>
+            </li>
+            <li>
+              <Link to="/gallery" className="hover:text-primary transition-colors">
+                Visual Gallery
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-primary transition-colors">
+                About AutoUp
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-primary transition-colors">
+                Wholesale Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/quote"
+                className="hover:text-primary transition-colors font-medium text-white"
+              >
+                Request a Quote
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -46,7 +86,11 @@ export function Footer() {
           <ul className="space-y-2.5 text-sm text-white/70">
             {productCategories.map((c) => (
               <li key={c}>
-                <Link to="/products" search={{ cat: c }} className="hover:text-primary transition-colors">
+                <Link
+                  to="/products"
+                  search={{ cat: c }}
+                  className="hover:text-primary transition-colors"
+                >
                   {c}
                 </Link>
               </li>
@@ -58,7 +102,10 @@ export function Footer() {
           <h4 className="eyebrow mb-4 text-primary">Direct Contact</h4>
           <ul className="space-y-3 text-sm text-white/70">
             <li>
-              <a href={`tel:${SITE.whatsappLocal}`} className="flex items-center gap-2 hover:text-white transition-colors">
+              <a
+                href={`tel:${SITE.whatsappLocal}`}
+                className="flex items-center gap-2 hover:text-white transition-colors"
+              >
                 <Phone className="size-4 text-primary shrink-0" />
                 <span>{SITE.phoneDisplay}</span>
               </a>
@@ -95,9 +142,15 @@ export function Footer() {
               : `${SITE.tagline}. All rights reserved.`}
           </p>
           <div className="flex gap-6">
-            <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
-            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link to="/quote" className="hover:text-white transition-colors">Instant Quote</Link>
+            <Link to="/about" className="hover:text-white transition-colors">
+              About Us
+            </Link>
+            <Link to="/contact" className="hover:text-white transition-colors">
+              Contact
+            </Link>
+            <Link to="/quote" className="hover:text-white transition-colors">
+              Instant Quote
+            </Link>
           </div>
         </div>
       </div>

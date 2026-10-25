@@ -2,22 +2,17 @@
 // Editorial and hero images use placement-specific files (hero-*, editorial-*, etc.).
 // Product-card photography is resolved by placement to avoid reusing images across sections.
 
-const jpgAssets = import.meta.glob<string>("../assets/*.jpg", {
+const webpAssets = import.meta.glob<string>("../assets/**/*.webp", {
   eager: true,
   query: "?url",
   import: "default",
 });
-const jpegAssets = import.meta.glob<string>("../assets/**/*.jpeg", {
+const gallonCardAssets = import.meta.glob<string>("../assets/galon/*.webp", {
   eager: true,
   query: "?url",
   import: "default",
 });
-const gallonCardAssets = import.meta.glob<string>("../assets/galon/*.jpeg", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
-const polishSectionAssets = import.meta.glob<string>("../assets/polish/*.jpeg", {
+const polishSectionAssets = import.meta.glob<string>("../assets/polish/*.webp", {
   eager: true,
   query: "?url",
   import: "default",
@@ -25,53 +20,53 @@ const polishSectionAssets = import.meta.glob<string>("../assets/polish/*.jpeg", 
 
 const gallonCardPhotos: Record<string, string | undefined> = {
   "lifelines-colour-wax-shampoo":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.47.48 AM.jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.47.48 AM.webp"],
   "lifelines-colour-wax-shampoo-rose":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (1).jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (1).webp"],
   "lifelines-waterless-car-wash":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (2).jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (2).webp"],
   "lifelines-f55-wax":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.58 AM (1).jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.58 AM (1).webp"],
   "lifelines-o2-solvent":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.23 PM.jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.23 PM.webp"],
   "lifelines-g4-glass":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.24 PM (1).jpeg"],
+    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.24 PM (1).webp"],
 };
 
 export const POLISH_SECTION_MEDIA = [
   {
     slug: "microfiber-towel",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.30 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.30 PM.webp"],
   },
   {
     slug: "car-polishing-cloth",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.31 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.31 PM.webp"],
   },
   {
     slug: "chenille-microfiber",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.53 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.53 PM.webp"],
   },
   {
     slug: "blue-wash-mitt",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.54 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.01.54 PM.webp"],
   },
   {
     slug: "car-drying-towel",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.05.07 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.05.07 PM.webp"],
   },
   {
     slug: "microfiber-drying-towel",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.05.08 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.05.08 PM.webp"],
   },
   {
     slug: "red-wash-mitt",
-    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.15.49 PM.jpeg"],
+    image: polishSectionAssets["../assets/polish/WhatsApp Image 2026-10-21 at 1.15.49 PM.webp"],
   },
 ];
 
 /** Resolve an editorial / hero / svc image by name (without extension). */
 export function photo(name: string): string {
-  return jpgAssets[`../assets/${name}.jpg`] ?? jpegAssets[`../assets/${name}.jpeg`] ?? "";
+  return webpAssets[`../assets/${name}.webp`] ?? "";
 }
 
 export function gallonProductPhoto(slug: string): string | undefined {

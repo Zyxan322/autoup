@@ -2,17 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { ArrowRight, Search, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import productsHero from "@/assets/products-hero.jpg";
+import productsHero from "@/assets/products-hero.webp";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import {
-  CATEGORIES,
-  GALLON_PRODUCTS,
-  PRODUCTS,
-  RETAIL_PRODUCTS,
-} from "@/lib/catalog";
+import { CATEGORIES, GALLON_PRODUCTS, PRODUCTS, RETAIL_PRODUCTS } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 import { useLocale, translateText } from "@/lib/i18n";
 import { ProfessionalGallonCard } from "@/components/ProfessionalGallonCard";
@@ -186,7 +181,6 @@ function ProductsPage() {
                 </div>
               </section>
             )}
-
           </div>
         )}
       </section>

@@ -26,7 +26,10 @@ export function Reveal({
     if (!el) return;
 
     // Respect user's reduced motion preference
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       setShown(true);
       return;
     }
@@ -89,4 +92,3 @@ export function Reveal({
     </div>
   );
 }
-

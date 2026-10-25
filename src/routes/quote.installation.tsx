@@ -30,7 +30,9 @@ function InstallationInquiryPage() {
   const { locale } = useLocale();
   const { product } = Route.useSearch();
   const defaultProduct = useMemo(
-    () => (product ? GALLON_PRODUCTS.find((item) => item.slug === product) : GALLON_PRODUCTS[0]) ?? GALLON_PRODUCTS[0],
+    () =>
+      (product ? GALLON_PRODUCTS.find((item) => item.slug === product) : GALLON_PRODUCTS[0]) ??
+      GALLON_PRODUCTS[0],
     [product],
   );
 
@@ -46,7 +48,9 @@ function InstallationInquiryPage() {
     requirements: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<"name" | "companyName" | "phone" | "city" | "productSlug", string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<"name" | "companyName" | "phone" | "city" | "productSlug", string>>
+  >({});
 
   useEffect(() => {
     if (defaultProduct?.slug) {
@@ -54,19 +58,38 @@ function InstallationInquiryPage() {
     }
   }, [defaultProduct]);
 
-  const selectedProduct = GALLON_PRODUCTS.find((item) => item.slug === form.productSlug) ?? defaultProduct;
+  const selectedProduct =
+    GALLON_PRODUCTS.find((item) => item.slug === form.productSlug) ?? defaultProduct;
 
-  const handleChange = (key: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm((current) => ({ ...current, [key]: event.target.value }));
-  };
+  const handleChange =
+    (key: keyof typeof form) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      setForm((current) => ({ ...current, [key]: event.target.value }));
+    };
 
   const validate = () => {
-    const nextErrors: Partial<Record<"name" | "companyName" | "phone" | "city" | "productSlug", string>> = {};
-    if (!form.name.trim()) nextErrors.name = locale === "ar" ? "يرجى إدخال الاسم." : "Please enter your name.";
-    if (!form.companyName.trim()) nextErrors.companyName = locale === "ar" ? "يرجى إدخال اسم المنشأة." : "Please enter your business or workshop name.";
-    if (!/^[+\d\s()-]{7,}$/.test(form.phone)) nextErrors.phone = locale === "ar" ? "يرجى إدخال رقم هاتف/واتساب صحيح." : "Please enter a valid mobile / WhatsApp number.";
-    if (!form.city.trim()) nextErrors.city = locale === "ar" ? "يرجى إدخال المدينة أو موقع التوصيل." : "Please enter the city or delivery location.";
-    if (!selectedProduct) nextErrors.productSlug = locale === "ar" ? "يرجى اختيار منتج." : "Please select a product.";
+    const nextErrors: Partial<
+      Record<"name" | "companyName" | "phone" | "city" | "productSlug", string>
+    > = {};
+    if (!form.name.trim())
+      nextErrors.name = locale === "ar" ? "يرجى إدخال الاسم." : "Please enter your name.";
+    if (!form.companyName.trim())
+      nextErrors.companyName =
+        locale === "ar"
+          ? "يرجى إدخال اسم المنشأة."
+          : "Please enter your business or workshop name.";
+    if (!/^[+\d\s()-]{7,}$/.test(form.phone))
+      nextErrors.phone =
+        locale === "ar"
+          ? "يرجى إدخال رقم هاتف/واتساب صحيح."
+          : "Please enter a valid mobile / WhatsApp number.";
+    if (!form.city.trim())
+      nextErrors.city =
+        locale === "ar"
+          ? "يرجى إدخال المدينة أو موقع التوصيل."
+          : "Please enter the city or delivery location.";
+    if (!selectedProduct)
+      nextErrors.productSlug = locale === "ar" ? "يرجى اختيار منتج." : "Please select a product.";
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -101,7 +124,11 @@ function InstallationInquiryPage() {
         {locale === "ar" ? "العودة إلى المنتجات" : "Back to products"}
       </Link>
 
-      <Reveal delay={50} direction="up" className="mt-8 rounded-3xl border border-primary/20 bg-card/70 p-6 shadow-[0_20px_40px_-24px_rgba(22,119,255,0.65)] backdrop-blur-sm sm:p-8">
+      <Reveal
+        delay={50}
+        direction="up"
+        className="mt-8 rounded-3xl border border-primary/20 bg-card/70 p-6 shadow-[0_20px_40px_-24px_rgba(22,119,255,0.65)] backdrop-blur-sm sm:p-8"
+      >
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow">
@@ -126,7 +153,12 @@ function InstallationInquiryPage() {
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "اسم العميل" : "Customer name"}
                 </label>
-                <input value={form.name} onChange={handleChange("name")} className={field} placeholder={locale === "ar" ? "مثل: علي محمد" : "e.g. Ali Mohammed"} />
+                <input
+                  value={form.name}
+                  onChange={handleChange("name")}
+                  className={field}
+                  placeholder={locale === "ar" ? "مثل: علي محمد" : "e.g. Ali Mohammed"}
+                />
                 {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
               </div>
 
@@ -134,15 +166,27 @@ function InstallationInquiryPage() {
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "اسم المنشأة أو الورشة" : "Business / workshop name"}
                 </label>
-                <input value={form.companyName} onChange={handleChange("companyName")} className={field} placeholder={locale === "ar" ? "اسم المنشأة" : "Business name"} />
-                {errors.companyName && <p className="mt-1 text-xs text-destructive">{errors.companyName}</p>}
+                <input
+                  value={form.companyName}
+                  onChange={handleChange("companyName")}
+                  className={field}
+                  placeholder={locale === "ar" ? "اسم المنشأة" : "Business name"}
+                />
+                {errors.companyName && (
+                  <p className="mt-1 text-xs text-destructive">{errors.companyName}</p>
+                )}
               </div>
 
               <div>
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "الهاتف / واتساب" : "Mobile / WhatsApp"}
                 </label>
-                <input value={form.phone} onChange={handleChange("phone")} className={field} placeholder={locale === "ar" ? "+966500000000" : "+966500000000"} />
+                <input
+                  value={form.phone}
+                  onChange={handleChange("phone")}
+                  className={field}
+                  placeholder={locale === "ar" ? "+966500000000" : "+966500000000"}
+                />
                 {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
               </div>
 
@@ -150,7 +194,12 @@ function InstallationInquiryPage() {
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "المدينة أو موقع التوصيل" : "City / delivery location"}
                 </label>
-                <input value={form.city} onChange={handleChange("city")} className={field} placeholder={locale === "ar" ? "الرياض" : "Riyadh"} />
+                <input
+                  value={form.city}
+                  onChange={handleChange("city")}
+                  className={field}
+                  placeholder={locale === "ar" ? "الرياض" : "Riyadh"}
+                />
                 {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
               </div>
             </div>
@@ -160,21 +209,33 @@ function InstallationInquiryPage() {
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "المنتج المختار" : "Selected 20L product"}
                 </label>
-                <select value={form.productSlug} onChange={handleChange("productSlug")} className={field}>
+                <select
+                  value={form.productSlug}
+                  onChange={handleChange("productSlug")}
+                  className={field}
+                >
                   {GALLON_PRODUCTS.map((item) => (
                     <option key={item.slug} value={item.slug}>
                       {item.name}
                     </option>
                   ))}
                 </select>
-                {errors.productSlug && <p className="mt-1 text-xs text-destructive">{errors.productSlug}</p>}
+                {errors.productSlug && (
+                  <p className="mt-1 text-xs text-destructive">{errors.productSlug}</p>
+                )}
               </div>
 
               <div>
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "الكمية المطلوبة" : "Required quantity"}
                 </label>
-                <input type="number" min={1} value={form.quantity} onChange={handleChange("quantity")} className={field} />
+                <input
+                  type="number"
+                  min={1}
+                  value={form.quantity}
+                  onChange={handleChange("quantity")}
+                  className={field}
+                />
               </div>
             </div>
 
@@ -183,10 +244,16 @@ function InstallationInquiryPage() {
                 <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   {locale === "ar" ? "هل تحتاج تركيب؟" : "Installation required"}
                 </label>
-                <select value={form.installation} onChange={handleChange("installation")} className={field}>
+                <select
+                  value={form.installation}
+                  onChange={handleChange("installation")}
+                  className={field}
+                >
                   <option value="yes">{locale === "ar" ? "نعم" : "Yes"}</option>
                   <option value="no">{locale === "ar" ? "لا" : "No"}</option>
-                  <option value="consultation">{locale === "ar" ? "أحتاج إلى استشارة" : "Need consultation"}</option>
+                  <option value="consultation">
+                    {locale === "ar" ? "أحتاج إلى استشارة" : "Need consultation"}
+                  </option>
                 </select>
               </div>
 
@@ -196,8 +263,12 @@ function InstallationInquiryPage() {
                 </label>
                 <select value={form.payment} onChange={handleChange("payment")} className={field}>
                   <option value="full">{locale === "ar" ? "الدفع الكامل" : "Full payment"}</option>
-                  <option value="installments">{locale === "ar" ? "خطة تقسيط" : "Installment plan"}</option>
-                  <option value="discuss">{locale === "ar" ? "مناقشة الخيارات المتاحة" : "Discuss available options"}</option>
+                  <option value="installments">
+                    {locale === "ar" ? "خطة تقسيط" : "Installment plan"}
+                  </option>
+                  <option value="discuss">
+                    {locale === "ar" ? "مناقشة الخيارات المتاحة" : "Discuss available options"}
+                  </option>
                 </select>
               </div>
             </div>
@@ -210,7 +281,11 @@ function InstallationInquiryPage() {
                 value={form.requirements}
                 onChange={handleChange("requirements")}
                 className={`${field} min-h-[120px] py-3`}
-                placeholder={locale === "ar" ? "أضف أي تفاصيل مثل الموقع أو التوزيع أو مواعيد التوصيل..." : "Add any details such as delivery timing, installation notes, or quantity requirements..."}
+                placeholder={
+                  locale === "ar"
+                    ? "أضف أي تفاصيل مثل الموقع أو التوزيع أو مواعيد التوصيل..."
+                    : "Add any details such as delivery timing, installation notes, or quantity requirements..."
+                }
               />
             </div>
           </div>
@@ -222,7 +297,9 @@ function InstallationInquiryPage() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">20L</p>
-                <p className="font-semibold text-foreground">{selectedProduct?.name ?? "20L commercial product"}</p>
+                <p className="font-semibold text-foreground">
+                  {selectedProduct?.name ?? "20L commercial product"}
+                </p>
               </div>
             </div>
 
@@ -230,6 +307,10 @@ function InstallationInquiryPage() {
               <img
                 src={selectedProduct?.image}
                 alt={selectedProduct?.name ?? "20L product"}
+                width={500}
+                height={500}
+                loading="lazy"
+                decoding="async"
                 className="h-64 w-full rounded-xl object-contain"
               />
             </div>

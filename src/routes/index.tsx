@@ -17,7 +17,7 @@ import {
   Warehouse,
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import hero from "@/assets/hero.jpg";
+import hero from "@/assets/hero.webp";
 import heroVideo from "@/assets/hero section video/Untitled design (5).mp4";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
@@ -125,7 +125,11 @@ function HeroSection() {
       className="section-dark relative h-[92svh] min-h-[580px] max-h-[860px] overflow-hidden select-none"
       aria-label="Professional automotive cleaning products hero"
       onPointerDown={() => setPaused(true)}
-      style={{ backgroundImage: `url(${hero})`, backgroundPosition: "center", backgroundSize: "cover" }}
+      style={{
+        backgroundImage: `url(${hero})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+      }}
     >
       <video
         aria-hidden="true"
@@ -148,8 +152,7 @@ function HeroSection() {
               key={n}
               className="relative h-full w-full flex-[0_0_100%] min-w-0 overflow-hidden"
               aria-hidden={n !== activeIdx}
-            >
-            </div>
+            ></div>
           ))}
         </div>
       </div>
@@ -515,6 +518,7 @@ function Index() {
                     width={560}
                     height={400}
                     loading="lazy"
+                    decoding="async"
                     className="size-full object-cover brightness-[0.7] contrast-[1.1] transition-transform duration-700 ease-out group-hover:scale-106"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
@@ -574,6 +578,7 @@ function Index() {
                 width={720}
                 height={580}
                 loading="lazy"
+                decoding="async"
                 className="aspect-[5/4] w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
@@ -750,6 +755,7 @@ function Index() {
                 width={720}
                 height={580}
                 loading="lazy"
+                decoding="async"
                 className="aspect-[5/4] w-full object-cover brightness-[0.8] contrast-[1.1]"
               />
             </Reveal>
@@ -792,6 +798,7 @@ function Index() {
           width={1920}
           height={1080}
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 size-full object-cover brightness-[0.4] contrast-[1.15]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/85 to-black/60" />

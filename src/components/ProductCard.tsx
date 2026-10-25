@@ -42,6 +42,7 @@ export function ProductCard({
             width={480}
             height={540}
             loading="lazy"
+            decoding="async"
             className="product-card-img"
           />
           {/* Category badge */}

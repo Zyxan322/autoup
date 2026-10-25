@@ -19,7 +19,6 @@ import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { LocaleProvider } from "@/lib/i18n";
-import logo from "@/assets/logo.png";
 
 function NotFoundComponent() {
   return (
@@ -87,17 +86,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "AutoUp — Professional Automotive Cleaning Products Supplier" },
-      { name: "description", content: "AutoUp supplies professional automotive cleaning products, concentrated shampoos, waxes, and chemicals to businesses, car washes, and detailing studios." },
+      {
+        name: "description",
+        content:
+          "AutoUp supplies professional automotive cleaning products, concentrated shampoos, waxes, and chemicals to businesses, car washes, and detailing studios.",
+      },
       { name: "author", content: "AutoUp" },
-      { property: "og:title", content: "AutoUp — Professional Automotive Cleaning Products Supplier" },
-      { property: "og:description", content: "B2B supplier of professional automotive cleaning products, concentrates, and chemicals." },
+      {
+        property: "og:title",
+        content: "AutoUp — Professional Automotive Cleaning Products Supplier",
+      },
+      {
+        property: "og:description",
+        content:
+          "B2B supplier of professional automotive cleaning products, concentrates, and chemicals.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,

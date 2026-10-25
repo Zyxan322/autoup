@@ -23,6 +23,7 @@ export function PageHero({
           alt=""
           width={1920}
           height={1000}
+          fetchPriority="high"
           className="absolute inset-0 size-full object-cover animate-kenburns"
         />
       )}
@@ -50,4 +51,3 @@ export function PageHero({
     </section>
   );
 }
-

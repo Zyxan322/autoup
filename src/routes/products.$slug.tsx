@@ -98,6 +98,8 @@ function ProductPage() {
                 alt={p.name}
                 width={640}
                 height={853}
+                fetchPriority="high"
+                decoding="async"
                 className="max-h-full max-w-full object-contain transition-transform duration-700 hover:scale-105"
               />
             </div>

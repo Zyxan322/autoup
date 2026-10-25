@@ -17,7 +17,8 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground hover:translate-y-0",
         link: "text-primary underline-offset-4 hover:underline hover:translate-y-0 active:scale-100",
         hero: "sweep rounded-full bg-primary text-primary-foreground font-semibold tracking-wide shadow-[0_10px_30px_-10px_var(--electric)] hover:brightness-110",
-        glass: "sweep rounded-full border border-snow/30 bg-snow/10 text-snow font-semibold backdrop-blur-md hover:bg-snow/20",
+        glass:
+          "sweep rounded-full border border-snow/30 bg-snow/10 text-snow font-semibold backdrop-blur-md hover:bg-snow/20",
         line: "sweep rounded-full border border-primary/50 text-foreground font-semibold hover:border-primary hover:bg-primary/10",
       },
       size: {
