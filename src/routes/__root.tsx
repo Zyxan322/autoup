@@ -19,6 +19,7 @@ import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { LocaleProvider } from "@/lib/i18n";
+import logo from "@/assets/logo.webp";
 
 function NotFoundComponent() {
   return (
@@ -115,7 +116,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: logo, type: "image/png" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: logo },
     ],
   }),
   shellComponent: RootShell,
