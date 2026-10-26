@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Building2, Check, Copy, Landmark, MapPin, Phone, ReceiptText } from "lucide-react";
-import logo from "@/assets/logo.webp";
+import logo from "@/assets/autoup-final-logo.webp";
 import whatsappIcon from "@/assets/products/download (41).svg";
 import { PAYMENT_METHODS } from "@/components/PaymentPartners";
 import { SITE } from "@/lib/site";
@@ -50,11 +50,11 @@ export function Footer() {
             <img
               src={logo}
               alt="AutoUp"
-              width={360}
-              height={450}
+              width={900}
+              height={650}
               loading="lazy"
               decoding="async"
-              className="h-14 w-auto object-contain"
+              className="h-16 w-auto object-contain"
             />
           </Link>
           <h2 id="footer-brand-heading" className="sr-only">

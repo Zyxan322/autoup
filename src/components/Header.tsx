@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Languages, Menu, Search, ShoppingBag, X } from "lucide-react";
-import logo from "@/assets/logo.webp";
+import logo from "@/assets/autoup-final-logo.webp";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
@@ -51,16 +51,16 @@ export function Header() {
         <Link
           to="/"
           aria-label="AutoUp home"
-          className="relative h-16 w-28 shrink-0 overflow-hidden transition-opacity hover:opacity-95 sm:h-20 sm:w-36 lg:w-40"
+          className="relative h-16 w-28 shrink-0 transition-opacity hover:opacity-95 sm:h-20 sm:w-36 lg:w-40"
         >
           <img
             src={logo}
-            alt="AutoUp — Care in Every Mile"
-            width={360}
-            height={450}
+            alt="AutoUp — Automotive Care Products"
+            width={900}
+            height={650}
             fetchPriority="high"
             decoding="async"
-            className="absolute left-0 top-[-2.45rem] h-auto w-full max-w-none sm:top-[-2.95rem] lg:top-[-3.3rem]"
+            className="h-full w-full object-contain"
           />
         </Link>
 

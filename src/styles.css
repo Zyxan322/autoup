@@ -336,6 +336,296 @@
   }
 }
 
+@property --quote-aurora-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes quote-aurora-drift {
+  0% {
+    background-position:
+      0% 50%,
+      100% 0%,
+      40% 100%;
+  }
+  50% {
+    background-position:
+      100% 50%,
+      0% 100%,
+      60% 0%;
+  }
+  100% {
+    background-position:
+      0% 50%,
+      100% 0%,
+      40% 100%;
+  }
+}
+
+@keyframes quote-stroke-flow {
+  to {
+    --quote-aurora-angle: 360deg;
+  }
+}
+
+.quote-page {
+  --background: #070b13;
+  --foreground: #f4f8ff;
+  --card: rgba(12, 20, 33, 0.94);
+  --card-foreground: #f4f8ff;
+  --popover: #0c1421;
+  --popover-foreground: #f4f8ff;
+  --muted: rgba(169, 190, 215, 0.1);
+  --muted-foreground: #a5b3c6;
+  --secondary: rgba(27, 41, 61, 0.82);
+  --secondary-foreground: #f4f8ff;
+  --accent: rgba(28, 52, 76, 0.8);
+  --accent-foreground: #f4f8ff;
+  --border: rgba(144, 176, 209, 0.22);
+  --input: rgba(144, 176, 209, 0.3);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #070b13;
+  color: var(--foreground);
+}
+
+.quote-page::before,
+.quote-page::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.quote-page::before {
+  z-index: -1;
+  background-image:
+    radial-gradient(ellipse at 16% 18%, rgba(12, 105, 200, 0.31), transparent 42%),
+    radial-gradient(ellipse at 84% 28%, rgba(15, 176, 184, 0.2), transparent 38%),
+    radial-gradient(ellipse at 54% 76%, rgba(91, 59, 175, 0.17), transparent 44%);
+  background-size:
+    180% 180%,
+    170% 170%,
+    190% 190%;
+  animation: quote-aurora-drift 32s ease-in-out infinite;
+}
+
+.quote-page::after {
+  z-index: -1;
+  background:
+    linear-gradient(135deg, rgba(7, 11, 19, 0.26), transparent 34%, rgba(7, 11, 19, 0.34)),
+    radial-gradient(ellipse at 50% 0%, rgba(113, 209, 255, 0.08), transparent 48%);
+}
+
+.quote-page > .quote-hero,
+.quote-page > .quote-form-area {
+  position: relative;
+  z-index: 0;
+  border-color: rgba(164, 192, 224, 0.12);
+  background: transparent;
+}
+
+.quote-page .quote-back-link {
+  color: #b4c1d2;
+}
+
+.quote-page .quote-back-link:hover {
+  color: #ffffff;
+}
+
+.quote-page .quote-heading {
+  color: #f8fbff;
+  text-wrap: balance;
+}
+
+.quote-page .quote-description {
+  color: #b4c1d2;
+}
+
+.quote-page .quote-intro {
+  border-color: rgba(84, 197, 238, 0.56);
+}
+
+.quote-page .quote-intro-title {
+  color: #e4effb;
+}
+
+.quote-page .quote-hero-image {
+  border-color: rgba(108, 198, 255, 0.32);
+  background: #0d1724;
+  box-shadow:
+    0 24px 65px -36px rgba(0, 0, 0, 0.9),
+    0 0 44px -26px rgba(34, 193, 235, 0.65);
+}
+
+.quote-page .quote-form-card {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    conic-gradient(
+        from var(--quote-aurora-angle),
+        rgba(50, 145, 255, 0.72),
+        rgba(30, 220, 218, 0.72),
+        rgba(128, 102, 233, 0.62),
+        rgba(50, 145, 255, 0.72)
+      )
+      border-box;
+  box-shadow:
+    0 28px 90px -52px rgba(0, 0, 0, 0.95),
+    0 0 55px -40px rgba(32, 170, 235, 0.55);
+  animation: quote-stroke-flow 24s linear infinite;
+}
+
+.quote-page .quote-form-section {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: 0 4px 16px -14px rgba(15, 23, 42, 0.32);
+}
+
+.quote-page .quote-form-card .quote-form-section h2 {
+  color: #111827;
+}
+
+.quote-page .quote-form-card label {
+  color: #172033;
+}
+
+.quote-page .quote-field {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  color: #111827;
+  color-scheme: light;
+}
+
+.quote-page .quote-field::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
+.quote-page .quote-field:focus {
+  border-color: rgba(22, 119, 255, 0.8);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(22, 119, 255, 0.12),
+    0 0 18px -12px rgba(22, 119, 255, 0.65);
+}
+
+.quote-page .quote-field:disabled {
+  color: #64748b;
+  opacity: 0.72;
+}
+
+.quote-page select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+.quote-page .quote-form-card .bg-slate-50\/80,
+.quote-page .quote-form-card .bg-white,
+.quote-page .quote-form-card .bg-card,
+.quote-page .quote-form-card .bg-background,
+.quote-page .quote-form-card .bg-background\/60 {
+  border-color: #e2e8f0;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+.quote-page .quote-form-card .text-slate-950,
+.quote-page .quote-form-card .text-slate-900,
+.quote-page .quote-form-card .text-slate-800,
+.quote-page .quote-form-card .text-foreground {
+  color: #111827;
+}
+
+.quote-page .quote-form-card .text-slate-600,
+.quote-page .quote-form-card .text-slate-500,
+.quote-page .quote-form-card .text-muted-foreground {
+  color: #475569;
+}
+
+.quote-page .quote-form-card .text-primary {
+  color: #1468d4;
+}
+
+.quote-page .quote-form-card .divide-border\/60 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0;
+}
+
+.quote-page .quote-form-card input[type="checkbox"],
+.quote-page .quote-form-card input[type="radio"] {
+  accent-color: #1677ff;
+}
+
+.quote-page .quote-form-card .border-border,
+.quote-page .quote-form-card .border-border\/80 {
+  border-color: #dbe3ed;
+}
+
+.quote-page form button[type="submit"],
+.quote-page a[href^="https://wa.me/"] {
+  border: 1px solid rgba(119, 220, 255, 0.42);
+  background: linear-gradient(110deg, #146de0, #158ed8 48%, #12a9b8);
+  color: #ffffff;
+  box-shadow:
+    0 12px 28px -16px rgba(14, 159, 224, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    transform 220ms var(--ease-cinematic),
+    box-shadow 220ms var(--ease-cinematic),
+    filter 220ms var(--ease-cinematic);
+}
+
+.quote-page form button[type="submit"]:hover,
+.quote-page a[href^="https://wa.me/"]:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 34px -16px rgba(14, 185, 235, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+body:has(.quote-page) footer {
+  position: relative;
+  border-top: 1px solid rgba(104, 172, 221, 0.2);
+  background: radial-gradient(ellipse at 16% 0%, rgba(18, 91, 157, 0.16), transparent 40%), #080b11;
+}
+
+body:has(.quote-page) footer::before {
+  position: absolute;
+  top: -1px;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(42, 191, 231, 0.7),
+    rgba(96, 91, 212, 0.48),
+    transparent
+  );
+  content: "";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-page::before,
+  .quote-page .quote-form-card {
+    animation: none;
+  }
+
+  .quote-page .quote-form-card {
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      linear-gradient(
+          120deg,
+          rgba(50, 145, 255, 0.72),
+          rgba(30, 220, 218, 0.72),
+          rgba(128, 102, 233, 0.62)
+        )
+        border-box;
+  }
+}
+
 /* Page section bands & container typography */
 .page-band {
   padding-top: 4rem;
