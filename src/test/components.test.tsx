@@ -480,19 +480,67 @@ describe("B2B Components Functionality Verification", () => {
     expect(href).toContain(encodeURIComponent("automotive cleaning products for business use"));
   });
 
-  it("renders B2B Footer with commercial attributes and product categories, without a duplicate WhatsApp link", () => {
+  it("renders the bilingual business footer with supplied contact, legal and payment details", () => {
     render(
       <Wrapper>
         <Footer />
       </Wrapper>,
     );
 
-    expect(screen.getByText(/care in every mile/i)).toBeInTheDocument();
-    expect(screen.getByText(/commercial bulk supply/i)).toBeInTheDocument();
-    expect(screen.getByText(/professional formulations/i)).toBeInTheDocument();
-    expect(screen.queryByText(/chat on whatsapp/i)).not.toBeInTheDocument();
-    expect(screen.getByText("Car Shampoo")).toBeInTheDocument();
-    expect(screen.getByText("Cleaning Chemicals")).toBeInTheDocument();
-    expect(screen.getByText("Car Wax & Polish")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Important Links" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Contact Us" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sales Department" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "+966 54 884 3368" })).toHaveAttribute(
+      "href",
+      "https://wa.me/966548843368",
+    );
+    expect(screen.getByRole("link", { name: "0548843368" })).toHaveAttribute(
+      "href",
+      "tel:+966548843368",
+    );
+    expect(screen.getByText("7054513028")).toBeInTheDocument();
+    expect(screen.getByText("314834518600003")).toBeInTheDocument();
+    expect(screen.getByText("SA1305000068207583708000")).toBeInTheDocument();
+    for (const brand of ["Tabby", "Tamara", "Neo", "Emkan", "MIS Pay", "Madfu"]) {
+      expect(screen.getByRole("img", { name: brand })).toBeInTheDocument();
+    }
+  });
+
+  it("copies the business IBAN and displays a success message", async () => {
+    const clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, "clipboard");
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(
+      <Wrapper>
+        <Footer />
+      </Wrapper>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy IBAN" }));
+    expect(await screen.findByRole("status")).toHaveTextContent("IBAN copied");
+    expect(writeText).toHaveBeenCalledWith("SA1305000068207583708000");
+
+    if (clipboardDescriptor) {
+      Object.defineProperty(navigator, "clipboard", clipboardDescriptor);
+    } else {
+      Reflect.deleteProperty(navigator, "clipboard");
+    }
+  });
+
+  it("uses Arabic labels and right-to-left layout in the footer", () => {
+    render(
+      <Wrapper locale="ar">
+        <Footer />
+      </Wrapper>,
+    );
+
+    expect(screen.getByRole("contentinfo")).toHaveAttribute("dir", "rtl");
+    expect(screen.getByRole("heading", { name: "روابط مهمة" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "تواصل معنا" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "نسخ رقم الآيبان" })).toBeInTheDocument();
   });
 });

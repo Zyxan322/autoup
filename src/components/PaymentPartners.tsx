@@ -8,7 +8,7 @@ import neoLogo from "@/assets/payments icons/neo.webp";
 import tabbyLogo from "@/assets/payments icons/tabby.webp";
 import tamaraLogo from "@/assets/payments icons/tamara.webp";
 
-const PAYMENT_METHODS = [
+export const PAYMENT_METHODS = [
   { name: "Tabby", logo: tabbyLogo, width: 708, height: 282 },
   { name: "Tamara", logo: tamaraLogo, width: 738, height: 240 },
   { name: "Neo", logo: neoLogo, width: 600, height: 300 },
