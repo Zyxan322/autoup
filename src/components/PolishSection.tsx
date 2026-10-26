@@ -177,7 +177,8 @@ export function PolishSection() {
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {POLISH_SECTION_MEDIA.map(({ slug, image }, index) => {
-            const title = polishCardTitles[slug];
+            const title =
+              polishCardTitles[slug as keyof typeof polishCardTitles] ?? { en: slug, ar: slug };
 
             return (
               <Reveal key={slug} delay={(index % 4) * 60}>

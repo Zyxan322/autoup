@@ -42,6 +42,7 @@ export type QuoteData = {
     qty: number;
     variant?: string | undefined;
     paymentOption?: "full" | "installment-quote" | undefined;
+    installmentMonths?: 3 | 5 | undefined;
   }[];
   services?: string[];
   notes?: string;
@@ -57,6 +58,7 @@ export type InstallationPaymentInquiry = {
   quantity: number;
   installation: "yes" | "no" | "consultation";
   payment: "full" | "installments" | "discuss";
+  installmentMonths?: 3 | 5;
   requirements: string;
 };
 
@@ -70,11 +72,15 @@ export function buildInstallationPaymentInquiryMessage(
     no: arabic ? "لا" : "No",
     consultation: arabic ? "أحتاج إلى استشارة" : "Need consultation",
   }[data.installation];
-  const payment = {
-    full: arabic ? "الدفع الكامل" : "Full payment",
-    installments: arabic ? "خطة تقسيط" : "Installment plan",
-    discuss: arabic ? "مناقشة الخيارات المتاحة" : "Discuss available options",
-  }[data.payment];
+  const payment =
+    data.payment === "installments"
+      ? arabic
+        ? `خطة تقسيط لمدة ${data.installmentMonths ?? 3} أشهر`
+        : `${data.installmentMonths ?? 3}-month installment plan requested`
+      : {
+          full: arabic ? "الدفع الكامل" : "Full payment",
+          discuss: arabic ? "مناقشة الخيارات المتاحة" : "Discuss available options",
+        }[data.payment];
   const lines = [
     arabic ? "مرحباً AutoUp،" : "Hello AutoUp,",
     "",
@@ -124,7 +130,13 @@ export function buildQuoteMessage(d: QuoteData, locale: Locale = "en") {
   lines.push("", "Requested Products:");
   lines.push(
     ...(d.products.length
-      ? d.products.map((p) => `- ${p.name}${p.variant ? ` (${p.variant})` : ""} × ${p.qty}`)
+      ? d.products.map((p) => {
+          const base = `- ${p.name}${p.variant ? ` (${p.variant})` : ""} × ${p.qty}`;
+          if (!isTwentyLitreVariant(p.variant)) return base;
+          return p.paymentOption === "installment-quote"
+            ? `${base} — Installment quote requested${p.installmentMonths ? ` (${p.installmentMonths} months)` : " (terms to be confirmed)"}`
+            : `${base} — Full payment`;
+        })
       : ["General Product Inquiry"]),
   );
 
@@ -140,6 +152,7 @@ export function buildQuoteMessage(d: QuoteData, locale: Locale = "en") {
   );
   if (locale === "en") return lines.join("\n");
 
+  let productLineIndex = 0;
   return lines
     .map((line) => {
       if (line.startsWith("Contact Name: ")) return `اسم مسؤول التواصل: ${line.slice(14)}`;
@@ -153,12 +166,12 @@ export function buildQuoteMessage(d: QuoteData, locale: Locale = "en") {
       if (line.startsWith("Requirements & Message:\n")) {
         return `المتطلبات والرسالة:\n${line.slice("Requirements & Message:\n".length)}`;
       }
-      if (line.startsWith("- ") && line.includes(" × ")) {
-        const product = d.products.find((p) => line.includes(p.name));
+      if (productLineIndex < d.products.length && line.startsWith("- ") && line.includes(" × ")) {
+        const product = d.products[productLineIndex++];
         if (product) {
           const option = isTwentyLitreVariant(product.variant)
             ? product.paymentOption === "installment-quote"
-              ? " — طلب عرض تقسيط (الشروط بانتظار التأكيد)"
+              ? ` — طلب عرض تقسيط${product.installmentMonths ? ` لمدة ${product.installmentMonths} أشهر` : " (الشروط بانتظار التأكيد)"}`
               : " — الدفع الكامل"
             : "";
           return `- ${translateText(product.name, locale)}${product.variant ? ` (${product.variant})` : ""} × ${product.qty}${option}`;

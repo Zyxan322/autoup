@@ -1,13 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import logo from "@/assets/logo.webp";
-import { SITE, whatsappUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
 import { CATEGORIES } from "@/lib/catalog";
 import { useLocale } from "@/lib/i18n";
 
 export function Footer() {
   const { locale } = useLocale();
   const productCategories = CATEGORIES.filter((c) => c !== "All Products");
+  const businessValueAlignment = locale === "ar" ? "right" : "left";
 
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/10">
@@ -110,17 +111,6 @@ export function Footer() {
                 <span>{SITE.phoneDisplay}</span>
               </a>
             </li>
-            <li>
-              <a
-                href={whatsappUrl()}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-250"
-              >
-                <MessageCircle className="size-4 shrink-0" />
-                <span>Chat on WhatsApp</span>
-              </a>
-            </li>
             <li className="text-xs text-white/60">{SITE.hours}</li>
           </ul>
         </div>
@@ -154,6 +144,81 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      <section
+        aria-labelledby="footer-business-details"
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        className="border-t border-white/10 bg-[#05070a]"
+      >
+        <div className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 sm:pb-28 lg:px-6">
+          <h2 id="footer-business-details" className="eyebrow mb-6 text-primary">
+            {locale === "ar" ? "معلومات المنشأة والدفع" : "Business Information & Payment Details"}
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="border-t border-white/10 pt-4">
+              <h3 className="text-sm font-semibold text-white">
+                {locale === "ar" ? "قسم المبيعات" : "Sales Department"}
+              </h3>
+              <a
+                href="tel:+966548843368"
+                dir="ltr"
+                style={{ textAlign: businessValueAlignment }}
+                className="mt-3 block w-fit text-sm text-white/80 transition-colors hover:text-primary"
+              >
+                +966 54 884 3368
+              </a>
+              <p
+                dir="ltr"
+                style={{ textAlign: businessValueAlignment }}
+                className="mt-1 text-sm text-white/60"
+              >
+                0548843368
+              </p>
+            </div>
+
+            <div className="border-t border-white/10 pt-4">
+              <h3 className="text-sm font-semibold text-white">
+                {locale === "ar" ? "السجل التجاري" : "Commercial Registration"}
+              </h3>
+              <p
+                dir="ltr"
+                style={{ textAlign: businessValueAlignment }}
+                className="mt-3 text-sm text-white/70"
+              >
+                7054513028
+              </p>
+            </div>
+
+            <div className="border-t border-white/10 pt-4">
+              <h3 className="text-sm font-semibold text-white">
+                {locale === "ar" ? "الرقم الضريبي" : "VAT Registration"}
+              </h3>
+              <p
+                dir="ltr"
+                style={{ textAlign: businessValueAlignment }}
+                className="mt-3 text-sm text-white/70"
+              >
+                314834518600003
+              </p>
+            </div>
+
+            <div className="border-t border-white/10 pt-4 sm:col-span-2 lg:col-span-1">
+              <h3 className="text-sm font-semibold text-white">
+                {locale === "ar" ? "تفاصيل التحويل البنكي" : "Bank Transfer Details"}
+              </h3>
+              <p className="mt-3 text-sm text-white/70">Alinma Bank</p>
+              <p className="mt-1 text-xs text-white/50">IBAN</p>
+              <p
+                dir="ltr"
+                style={{ textAlign: businessValueAlignment }}
+                className="mt-1 select-all break-all font-mono text-sm text-white/80"
+              >
+                SA1305000068207583708000
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </footer>
   );
 }

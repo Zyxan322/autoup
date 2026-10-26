@@ -4,7 +4,12 @@ import { describe, expect, it } from "vitest";
 
 import { routeTree } from "@/routeTree.gen";
 import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
-import { SITE, whatsappUrl, buildQuoteMessage } from "@/lib/site";
+import {
+  SITE,
+  whatsappUrl,
+  buildInstallationPaymentInquiryMessage,
+  buildQuoteMessage,
+} from "@/lib/site";
 import { configuredInstallmentPlan, isTwentyLitreVariant } from "@/lib/installments";
 import { translateText } from "@/lib/i18n";
 import { DISPLAY_GALLERY_ITEMS } from "@/routes/gallery";
@@ -63,6 +68,30 @@ describe("AutoUp B2B Product-Focused Verification", () => {
     ).toBe(true);
   });
 
+  it("includes selected installment duration in the 20L inquiry in English and Arabic", () => {
+    const inquiry = {
+      name: "Alex",
+      companyName: "Apex Car Wash",
+      phone: "+966500000000",
+      city: "Riyadh",
+      productName: "Colour Wax Shampoo",
+      quantity: 2,
+      installation: "no" as const,
+      payment: "installments" as const,
+      requirements: "",
+    };
+
+    expect(
+      buildInstallationPaymentInquiryMessage({ ...inquiry, installmentMonths: 3 }, "en"),
+    ).toContain("Payment preference: 3-month installment plan requested");
+    expect(
+      buildInstallationPaymentInquiryMessage({ ...inquiry, installmentMonths: 5 }, "en"),
+    ).toContain("Payment preference: 5-month installment plan requested");
+    expect(
+      buildInstallationPaymentInquiryMessage({ ...inquiry, installmentMonths: 5 }, "ar"),
+    ).toContain("تفضيل الدفع: خطة تقسيط لمدة 5 أشهر");
+  });
+
   it("uses Arabic by default in translations and keeps the gallery curated", () => {
     expect(translateText("Request a Quote", "ar")).toBe("اطلب عرض سعر");
     expect(translateText("اطلب عرض سعر", "en")).toBe("Request a Quote");
@@ -100,6 +129,33 @@ describe("AutoUp B2B Product-Focused Verification", () => {
     expect(message).toContain("شامبو الشمع الملون (20 L) × 1 — طلب عرض تقسيط");
     expect(message).toContain("ChemX C2 (25 L) × 1");
     expect(message).not.toContain("ChemX C2 (25 L) × 1 — الدفع الكامل");
+  });
+
+  it("includes the selected 3- or 5-month installment preference in the wholesale quote message", () => {
+    const products = [
+      {
+        name: "Colour Wax Shampoo",
+        qty: 2,
+        variant: "20 L",
+        paymentOption: "installment-quote" as const,
+        installmentMonths: 5 as const,
+      },
+      { name: "ChemX C2", qty: 1, variant: "25 L" },
+    ];
+    const english = buildQuoteMessage(
+      { name: "Alex", phone: "+966500000000", city: "Riyadh", products },
+      "en",
+    );
+    const arabic = buildQuoteMessage(
+      { name: "Alex", phone: "+966500000000", city: "الرياض", products },
+      "ar",
+    );
+
+    expect(english).toContain(
+      "Colour Wax Shampoo (20 L) × 2 — Installment quote requested (5 months)",
+    );
+    expect(arabic).toContain("شامبو الشمع الملون (20 L) × 2 — طلب عرض تقسيط لمدة 5 أشهر");
+    expect(english).not.toContain("ChemX C2 (25 L) × 1 — Full payment");
   });
 
   it("verifies B2B wholesale quotation message generation with company details and WhatsApp URL", () => {

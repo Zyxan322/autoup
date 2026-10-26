@@ -45,6 +45,7 @@ function InstallationInquiryPage() {
     quantity: "1",
     installation: "consultation",
     payment: "discuss",
+    installmentMonths: 3 as 3 | 5,
     requirements: "",
   });
 
@@ -104,6 +105,7 @@ function InstallationInquiryPage() {
       quantity: Number(form.quantity) || 1,
       installation: form.installation as "yes" | "no" | "consultation",
       payment: form.payment as "full" | "installments" | "discuss",
+      installmentMonths: form.installmentMonths,
       requirements: form.requirements,
     },
     locale,
@@ -272,6 +274,38 @@ function InstallationInquiryPage() {
                 </select>
               </div>
             </div>
+
+            {form.payment === "installments" && (
+              <fieldset className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+                <legend className="px-1 text-xs font-medium text-foreground">
+                  {locale === "ar" ? "مدة خطة التقسيط المطلوبة" : "Requested installment plan"}
+                </legend>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  {([3, 5] as const).map((months) => (
+                    <button
+                      key={months}
+                      type="button"
+                      aria-pressed={form.installmentMonths === months}
+                      onClick={() =>
+                        setForm((current) => ({ ...current, installmentMonths: months }))
+                      }
+                      className={`rounded-lg border px-4 py-3 text-sm font-semibold transition-colors ${
+                        form.installmentMonths === months
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-background text-foreground hover:border-primary/50"
+                      }`}
+                    >
+                      {locale === "ar" ? `${months} أشهر` : `${months} months`}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  {locale === "ar"
+                    ? "هذا تفضيل لطلب عرض سعر فقط. سيؤكد فريق AutoUp التوفر والشروط النهائية."
+                    : "This is a quote preference only. AutoUp will confirm availability and final terms."}
+                </p>
+              </fieldset>
+            )}
 
             <div>
               <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">

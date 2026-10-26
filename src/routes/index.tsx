@@ -22,7 +22,6 @@ import heroVideo from "@/assets/hero section video/Untitled design (5).mp4";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { GALLON_PRODUCTS, PRODUCTS, RETAIL_PRODUCTS } from "@/lib/catalog";
-import { SITE, whatsappUrl } from "@/lib/site";
 import { photo } from "@/lib/media";
 import {
   Accordion,
@@ -599,8 +598,18 @@ function Index() {
       </section>
 
       {/* 6. Who We Supply */}
-      <section className="section-dark page-band bg-[#090c12] border-b border-white/5">
-        <div className="page-inner">
+      <section className="section-dark page-band relative isolate overflow-hidden bg-[#090c12] border-b border-white/5">
+        <img
+          src={photo("editorial-6")}
+          alt="Commercial vehicle wash in progress"
+          width={474}
+          height={474}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#090c12]/80 via-[#090c12]/75 to-[#090c12]/85" />
+        <div className="page-inner relative">
           <Reveal className="text-center max-w-3xl mx-auto">
             <span className="eyebrow text-primary">TARGET BUSINESS CLIENTELE</span>
             <h2 className="section-title text-white">Who AutoUp Supplies</h2>
@@ -656,20 +665,6 @@ function Index() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild variant="hero" size="lg">
                   <Link to="/quote">Request a Wholesale Quote</Link>
-                </Button>
-                <Button asChild variant="line" size="lg">
-                  <a
-                    href={whatsappUrl(
-                      locale === "ar"
-                        ? "مرحباً AutoUp، أود الاستفسار عن شراء منتجات تنظيف السيارات بالجملة."
-                        : "Hello AutoUp, I would like to inquire about bulk wholesale purchasing for automotive cleaning products.",
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <MessageCircle className="size-4 mr-2" />
-                    Chat on WhatsApp
-                  </a>
                 </Button>
               </div>
             </Reveal>
@@ -793,15 +788,15 @@ function Index() {
       {/* 10. Final CTA Banner */}
       <section className="section-dark relative overflow-hidden py-24 sm:py-32">
         <img
-          src={photo("detail-4")}
-          alt="Automotive product supply for businesses"
+          src={photo("detail-7")}
+          alt="Automotive specialist polishing a red vehicle"
           width={1920}
           height={1080}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 size-full object-cover brightness-[0.4] contrast-[1.15]"
+          className="absolute inset-0 size-full object-cover brightness-[0.78] contrast-[1.05]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/85 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/40" />
 
         <Reveal className="page-inner relative">
           <span className="eyebrow text-primary">COMMERCIAL VEHICLE CARE</span>
@@ -823,25 +818,6 @@ function Index() {
               <Link to="/quote">
                 Request a Quote <ArrowRight className="ml-1.5 size-4" />
               </Link>
-            </Button>
-            <Button
-              asChild
-              variant="glass"
-              size="xl"
-              className="bg-emerald-500/20 hover:bg-emerald-500/30 border-emerald-500/40 text-emerald-300 font-semibold"
-            >
-              <a
-                href={whatsappUrl(
-                  locale === "ar"
-                    ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
-                    : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="size-4 mr-2" />
-                Contact on WhatsApp
-              </a>
             </Button>
           </div>
         </Reveal>

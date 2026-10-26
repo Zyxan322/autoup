@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -6,11 +6,78 @@ import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 import { useLocale, translateText } from "@/lib/i18n";
 import { isTwentyLitreVariant } from "@/lib/installments";
+import { PRODUCTS } from "@/lib/catalog";
+import { whatsappUrl } from "@/lib/site";
+
+function buildCartCheckoutMessage(items: ReturnType<typeof useCart>["items"], locale: "ar" | "en") {
+  const arabic = locale === "ar";
+  const formatAmount = (amount: number) =>
+    new Intl.NumberFormat(arabic ? "ar" : "en").format(amount);
+  const itemsWithPrices = items.map((item) => ({
+    item,
+    price: PRODUCTS.find((product) => product.slug === item.slug)?.price,
+  }));
+  const hasCompletePricing = itemsWithPrices.every(
+    ({ price }) => typeof price === "number" && Number.isFinite(price) && price >= 0,
+  );
+  const lines = itemsWithPrices.flatMap(({ item, price }, index) => {
+    const name = translateText(item.name, locale);
+    const paymentLine = isTwentyLitreVariant(item.variant)
+      ? arabic
+        ? `طريقة الدفع: ${item.paymentOption === "installment-quote" ? "طلب عرض تقسيط" : "الدفع الكامل"}`
+        : `Payment option: ${item.paymentOption === "installment-quote" ? "Installment quote requested" : "Full payment"}`
+      : undefined;
+
+    return [
+      `${index + 1}. ${arabic ? "المنتج" : "Product"}: ${name}${item.variant ? ` (${item.variant})` : ""}`,
+      `${arabic ? "الكمية" : "Quantity"}: ${item.qty}`,
+      ...(typeof price === "number" && Number.isFinite(price) && price >= 0
+        ? [
+            `${arabic ? "سعر الوحدة" : "Unit Price"}: ${formatAmount(price)}`,
+            `${arabic ? "الإجمالي" : "Total"}: ${formatAmount(price * item.qty)}`,
+          ]
+        : []),
+      ...(paymentLine ? [paymentLine] : []),
+    ];
+  });
+  const subtotal = hasCompletePricing
+    ? itemsWithPrices.reduce(
+        (sum, { item, price }) =>
+          sum +
+          (typeof price === "number" && Number.isFinite(price) && price >= 0
+            ? price * item.qty
+            : 0),
+        0,
+      )
+    : undefined;
+
+  return arabic
+    ? [
+        "مرحباً فريق Auto Up!",
+        "",
+        "أود طلب عرض سعر للمنتجات التالية:",
+        "",
+        ...lines,
+        ...(subtotal !== undefined ? [`إجمالي المنتجات: ${formatAmount(subtotal)}`] : []),
+        "",
+        "يرجى تأكيد توفر المنتجات والأسعار النهائية وتفاصيل التوصيل.",
+        "شكراً لكم!",
+      ].join("\n")
+    : [
+        "Hello Auto Up Team!",
+        "",
+        "I would like to request a quotation for the following products:",
+        "",
+        ...lines,
+        ...(subtotal !== undefined ? [`Cart Subtotal: ${formatAmount(subtotal)}`] : []),
+        "",
+        "Please confirm product availability, final pricing, and delivery details. Thank you!",
+      ].join("\n");
+}
 
 export function CartDrawer() {
   const { items, open, setOpen, setQty, remove, clear, count } = useCart();
   const { locale } = useLocale();
-  const navigate = useNavigate();
 
   return (
     <div
@@ -139,16 +206,24 @@ export function CartDrawer() {
             variant="hero"
             size="xl"
             className="w-full font-semibold cursor-pointer"
+            disabled={!items.length}
             onClick={() => {
               if (!items.length) {
-                toast.error("Your quote list is empty — add a product first.");
+                toast.error(
+                  locale === "ar"
+                    ? "قائمة عروض الأسعار فارغة — أضف منتجاً أولاً."
+                    : "Your quote list is empty — add a product first.",
+                );
                 return;
               }
-              setOpen(false);
-              navigate({ to: "/quote", search: { from: "cart" } });
+              window.open(
+                whatsappUrl(buildCartCheckoutMessage(items, locale)),
+                "_blank",
+                "noopener,noreferrer",
+              );
             }}
           >
-            Request Wholesale Quote
+            {locale === "ar" ? "المتابعة إلى واتساب" : "Proceed to Checkout"}
           </Button>
           {items.length > 0 && (
             <button

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Building2, Clock, Globe, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Building2, Clock, Globe, MapPin, Phone } from "lucide-react";
 import contactHero from "@/assets/contact-hero.webp";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/PageHero";
@@ -130,28 +130,6 @@ function ContactPage() {
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_1.3fr] lg:gap-10 lg:py-16">
         {/* Left Column: Direct Commercial Contact */}
         <Reveal delay={60} direction="up" className="space-y-4">
-          <a
-            href={whatsappUrl(
-              locale === "ar"
-                ? "مرحباً AutoUp، أهتم بمنتجات تنظيف السيارات للاستخدام التجاري. يرجى تزويدي بمعلومات توفر المنتجات والأسعار."
-                : "Hello AutoUp, I am interested in your automotive cleaning products for business use. Please share product availability and pricing information.",
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card-stroke flex items-center gap-4 rounded-2xl bg-card p-6 hover:border-primary/50 transition-colors"
-          >
-            <div className="size-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-              <MessageCircle className="size-6" />
-            </div>
-            <div>
-              <p className="font-semibold text-foreground">WhatsApp Business Inquiry</p>
-              <p className="text-sm text-emerald-400 font-medium">{SITE.phoneDisplay}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Instant response for wholesale quotes
-              </p>
-            </div>
-          </a>
-
           <a
             href={`tel:${SITE.whatsappLocal}`}
             className="card-stroke flex items-center gap-4 rounded-2xl bg-card p-6 hover:border-primary/50 transition-colors"

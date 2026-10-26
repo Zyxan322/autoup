@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { FileText, MessageCircle, Wrench } from "lucide-react";
+import { FileText, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/catalog";
@@ -11,7 +11,7 @@ export function ProfessionalGallonCard({ product }: { product: Product }) {
   const { add, setOpen } = useCart();
   const { locale } = useLocale();
 
-  const addToQuote = () => {
+  const addToCart = () => {
     add({
       slug: product.slug,
       name: product.name,
@@ -21,8 +21,8 @@ export function ProfessionalGallonCard({ product }: { product: Product }) {
     });
     toast.success(
       locale === "ar"
-        ? `تمت إضافة ${translateText(product.name, locale)} إلى قائمة عرض السعر`
-        : `${product.name} added to the quote list`,
+        ? `تمت إضافة ${translateText(product.name, locale)} إلى السلة`
+        : `${product.name} added to cart`,
     );
     setOpen(true);
   };
@@ -89,28 +89,20 @@ export function ProfessionalGallonCard({ product }: { product: Product }) {
             </Link>
           </Button>
           <Button
-            variant="line"
+            variant="hero"
             size="sm"
-            className="h-9 min-w-0 border-primary/30 px-1.5 text-[10px] text-primary hover:border-primary/60 hover:bg-primary/5 xl:px-1"
-            onClick={addToQuote}
+            className="h-9 min-w-0 px-1.5 text-[10px] xl:px-1"
+            onClick={addToCart}
           >
-            <MessageCircle className="mr-1 size-3 xl:hidden" />
-            {locale === "ar" ? "اطلب عرض سعر" : "Request a Quote"}
+            <ShoppingBag className="mr-1 size-3 xl:hidden" />
+            {locale === "ar" ? "أضف إلى السلة" : "Add to Cart"}
           </Button>
         </div>
-        <Button
-          asChild
-          variant="hero"
-          size="sm"
-          className="mt-1.5 min-h-9 h-auto w-full whitespace-normal py-2 text-[10px] leading-tight xl:px-1.5"
-        >
-          <Link to="/quote/installation" search={{ product: product.slug }}>
-            <Wrench className="mr-1 size-3 xl:hidden" />
-            {locale === "ar"
-              ? "طلب استشارة للتركيب وخيارات الدفع"
-              : "Request Installation & Payment Plan"}
-          </Link>
-        </Button>
+        <div className="mt-2 rounded-lg border border-primary/20 bg-primary/5 px-2.5 py-2 text-center text-[10px] leading-relaxed text-muted-foreground">
+          {locale === "ar"
+            ? "تتوفر خيارات التقسيط — اطلب عرض سعر للتفاصيل"
+            : "Installment options available — request a quote for details"}
+        </div>
       </div>
     </article>
   );

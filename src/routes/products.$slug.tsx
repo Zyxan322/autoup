@@ -1,13 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { MessageCircle, Minus, Plus, Wrench } from "lucide-react";
+import { Minus, Plus, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import { PRODUCTS, productBySlug } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
-import { whatsappUrl } from "@/lib/site";
 import {
   configuredInstallmentPlan,
   installmentAmount,
@@ -56,16 +55,6 @@ function ProductPage() {
   const installmentPlan = configuredInstallmentPlan(p, variant);
   const detailImage = gallonProductPhoto(p.slug) ?? p.image;
   const related = PRODUCTS.filter((x) => x.slug !== p.slug).slice(0, 5);
-  const paymentInquiry = eligibleForInstallments
-    ? locale === "ar"
-      ? `\n\nطريقة الدفع المفضلة: ${paymentOption === "installment-quote" ? "طلب عرض تقسيط (الشروط بانتظار التأكيد)." : "الدفع الكامل."}`
-      : `\n\nPayment preference: ${paymentOption === "installment-quote" ? "installment quotation requested (terms to be confirmed)." : "full payment."}`
-    : "";
-  const whatsappInquiry =
-    locale === "ar"
-      ? `مرحباً AutoUp،\n\nأستفسر عن توريد ${translateText(p.name, locale)} بالجملة للمنشآت (${variant}) × ${qty} عبوات.${paymentInquiry}\n\nيرجى تأكيد التوفر وأسعار الجملة.\n\nشكراً لكم.`
-      : `Hello AutoUp,\n\nI am inquiring about commercial wholesale supply for ${p.name} (${variant}) × ${qty} containers.${paymentInquiry}\n\nPlease share availability and wholesale pricing.\n\nThank you.`;
-
   return (
     <>
       <section className="mx-auto max-w-7xl px-4 pb-14 pt-28 sm:px-6 lg:pb-16">
@@ -255,13 +244,6 @@ function ProductPage() {
                 Add to Quote List
               </Button>
             </div>
-
-            <Button asChild variant="line" size="xl" className="mt-3 h-11 cursor-pointer">
-              <a href={whatsappUrl(whatsappInquiry)} target="_blank" rel="noreferrer">
-                <MessageCircle className="size-4 mr-2" />
-                Request Wholesale Quote on WhatsApp
-              </a>
-            </Button>
 
             {eligibleForInstallments && (
               <Button asChild variant="hero" size="xl" className="mt-3 h-11 cursor-pointer">

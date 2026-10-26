@@ -69,7 +69,7 @@ const SERVICE_BENEFITS: Record<string, string[]> = {
 export function ServiceCard({ s, index }: { s: Service; index: number }) {
   const { add } = useCart();
   const recSlug = SERVICE_RECOMMENDATIONS[s.slug] ?? "foam-car-shampoo";
-  const recProduct = PRODUCTS.find((p) => p.slug === recSlug) ?? PRODUCTS[0];
+  const recProduct = PRODUCTS.find((p) => p.slug === recSlug) ?? PRODUCTS[0]!;
 
   const handleAdd = () => {
     add({

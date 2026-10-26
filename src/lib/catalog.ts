@@ -94,7 +94,7 @@ export const CATEGORIES = [
 export type Product = {
   slug: string;
   name: string;
-  code?: string; // product code printed on label, if readable
+  code?: string | undefined; // product code printed on label, if readable
   packageType: "retail" | "gallon" | "other-commercial";
   category: (typeof CATEGORIES)[number];
   short: string;
@@ -102,7 +102,7 @@ export type Product = {
   variants: string[];
   usage: string;
   image: string;
-  price?: number; // only set when a verified price exists
+  price?: number | undefined; // only set when a verified price exists
   featured: number;
 };
 

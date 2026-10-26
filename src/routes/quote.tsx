@@ -23,7 +23,11 @@ import { isTwentyLitreVariant } from "@/lib/installments";
 import { Reveal } from "@/components/Reveal";
 
 export const Route = createFileRoute("/quote")({
-  validateSearch: z.object({ from: z.string().optional(), product: z.string().optional() }),
+  validateSearch: z.object({
+    from: z.string().optional(),
+    product: z.string().optional(),
+    service: z.string().optional(),
+  }),
   head: () => ({
     meta: [
       { title: "Request Wholesale Quote — AutoUp B2B Supply" },
@@ -46,6 +50,74 @@ export const Route = createFileRoute("/quote")({
 const field =
   "h-12 w-full rounded-xl border border-input bg-card px-4 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary";
 const DRAFT = "autoup-b2b-quote-draft";
+const COUNTRIES = [
+  { value: "Saudi Arabia", ar: "المملكة العربية السعودية" },
+  { value: "United Arab Emirates", ar: "الإمارات العربية المتحدة" },
+  { value: "Bahrain", ar: "البحرين" },
+  { value: "Kuwait", ar: "الكويت" },
+  { value: "Oman", ar: "عُمان" },
+  { value: "Qatar", ar: "قطر" },
+] as const;
+const CITIES: Record<string, string[]> = {
+  "Saudi Arabia": [
+    "Riyadh",
+    "Jeddah",
+    "Buraydah",
+    "Dammam",
+    "Al Khobar",
+    "Mecca",
+    "Medina",
+    "Abha",
+    "Tabuk",
+    "Other",
+  ],
+  "United Arab Emirates": [
+    "Dubai",
+    "Abu Dhabi",
+    "Sharjah",
+    "Ajman",
+    "Ras Al Khaimah",
+    "Fujairah",
+    "Umm Al Quwain",
+    "Other",
+  ],
+  Bahrain: ["Manama", "Muharraq", "Riffa", "Other"],
+  Kuwait: ["Kuwait City", "Hawalli", "Salmiya", "Other"],
+  Oman: ["Muscat", "Salalah", "Sohar", "Other"],
+  Qatar: ["Doha", "Al Rayyan", "Al Wakrah", "Other"],
+  Other: ["Other"],
+};
+const ARABIC_CITIES: Record<string, string> = {
+  Riyadh: "الرياض",
+  Jeddah: "جدة",
+  Buraydah: "بريدة",
+  Dammam: "الدمام",
+  "Al Khobar": "الخبر",
+  Mecca: "مكة المكرمة",
+  Medina: "المدينة المنورة",
+  Abha: "أبها",
+  Tabuk: "تبوك",
+  Dubai: "دبي",
+  "Abu Dhabi": "أبوظبي",
+  Sharjah: "الشارقة",
+  Ajman: "عجمان",
+  "Ras Al Khaimah": "رأس الخيمة",
+  Fujairah: "الفجيرة",
+  "Umm Al Quwain": "أم القيوين",
+  Manama: "المنامة",
+  Muharraq: "المحرق",
+  Riffa: "الرفاع",
+  "Kuwait City": "مدينة الكويت",
+  Hawalli: "حولي",
+  Salmiya: "السالمية",
+  Muscat: "مسقط",
+  Salalah: "صلالة",
+  Sohar: "صحار",
+  Doha: "الدوحة",
+  "Al Rayyan": "الريان",
+  "Al Wakrah": "الوكرة",
+  Other: "أخرى",
+};
 
 function QuotePage() {
   const { product } = Route.useSearch();
@@ -58,9 +130,14 @@ function QuotePage() {
     email: "",
     city: "",
     country: "",
+    countryOther: "",
+    cityOther: "",
     orderVolume: "",
     notes: "",
   });
+  const [installmentPreferences, setInstallmentPreferences] = useState<
+    Record<string, { enabled: boolean; months: 3 | 5 }>
+  >({});
   const [errors, setErrors] = useState<
     Partial<Record<"name" | "companyName" | "phone" | "city" | "email" | "items", string>>
   >({});
@@ -92,23 +169,57 @@ function QuotePage() {
 
   const data = {
     ...f,
+    country:
+      locale === "ar"
+        ? (COUNTRIES.find((country) => country.value === f.country)?.ar ??
+          (f.country === "Other" ? f.countryOther : f.country))
+        : f.country === "Other"
+          ? f.countryOther
+          : f.country,
+    city:
+      f.city === "Other"
+        ? f.cityOther
+        : locale === "ar"
+          ? (ARABIC_CITIES[f.city] ?? f.city)
+          : f.city,
     products: items.map((i) => ({
       name: i.name,
       qty: i.qty,
       variant: i.variant,
-      paymentOption: i.paymentOption,
+      paymentOption: isTwentyLitreVariant(i.variant)
+        ? installmentPreferences[`${i.slug}::${i.variant ?? ""}::${i.paymentOption ?? "full"}`]
+            ?.enabled
+          ? "installment-quote"
+          : "full"
+        : i.paymentOption,
+      installmentMonths:
+        installmentPreferences[`${i.slug}::${i.variant ?? ""}::${i.paymentOption ?? "full"}`]
+          ?.months,
     })),
   };
+  const selectedCountry = COUNTRIES.some((country) => country.value === f.country)
+    ? f.country
+    : f.country
+      ? "Other"
+      : "";
+  const selectedCities = CITIES[selectedCountry] ?? CITIES.Other;
+  const selectedCity = selectedCities.includes(f.city) ? f.city : f.city ? "Other" : "";
+  const otherCountryValue =
+    f.country === "Other" ? f.countryOther : selectedCountry === "Other" ? f.country : "";
+  const otherCityValue = f.city === "Other" ? f.cityOther : selectedCity === "Other" ? f.city : "";
 
   const validate = () => {
     const e: Partial<
-      Record<"name" | "companyName" | "phone" | "city" | "email" | "items", string>
+      Record<"name" | "companyName" | "phone" | "city" | "country" | "email" | "items", string>
     > = {};
     if (!f.name.trim()) e.name = "Contact name is required.";
     if (!f.companyName.trim()) e.companyName = "Company or business name is required.";
     if (!/^[+\d\s()-]{7,}$/.test(f.phone))
       e.phone = "Please enter a valid business phone / WhatsApp number.";
-    if (!f.city.trim()) e.city = "City is required.";
+    if (!f.country.trim() || (f.country === "Other" && !f.countryOther.trim()))
+      e.country = locale === "ar" ? "يرجى اختيار الدولة." : "Please select a country.";
+    if (!f.city.trim() || (f.city === "Other" && !f.cityOther.trim()))
+      e.city = locale === "ar" ? "يرجى اختيار المدينة." : "Please select a city.";
     if (f.email && !/^\S+@\S+\.\S+$/.test(f.email))
       e.email = "Please enter a valid business email.";
     if (!items.length && !f.notes.trim()) {
@@ -255,31 +366,92 @@ function QuotePage() {
                   {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
                 </div>
 
-                <div>
+                <div className="order-6">
                   <label htmlFor="city" className="mb-1.5 block text-xs font-medium">
-                    City / Region *
+                    {locale === "ar" ? "المدينة / المنطقة *" : "City / Region *"}
                   </label>
-                  <input
+                  <select
                     id="city"
-                    placeholder="e.g. Dubai / Riyadh / Sharjah"
-                    value={f.city}
-                    onChange={set("city")}
+                    value={selectedCity}
+                    disabled={!selectedCountry}
+                    onChange={(event) =>
+                      setF((current) => ({
+                        ...current,
+                        city: event.target.value,
+                        cityOther: "",
+                      }))
+                    }
                     className={field}
-                  />
+                  >
+                    <option value="">{locale === "ar" ? "اختر المدينة" : "Select a city"}</option>
+                    {selectedCities.map((city) => (
+                      <option key={city} value={city}>
+                        {locale === "ar" ? (ARABIC_CITIES[city] ?? city) : city}
+                      </option>
+                    ))}
+                  </select>
                   {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
+                  {selectedCity === "Other" && (
+                    <input
+                      id="otherCity"
+                      className={`${field} mt-2`}
+                      value={otherCityValue}
+                      onChange={(event) =>
+                        setF((current) => ({
+                          ...current,
+                          city: "Other",
+                          cityOther: event.target.value,
+                        }))
+                      }
+                      placeholder={locale === "ar" ? "أدخل اسم المدينة" : "Enter city"}
+                    />
+                  )}
                 </div>
 
-                <div>
+                <div className="order-5">
                   <label htmlFor="country" className="mb-1.5 block text-xs font-medium">
-                    Country (optional)
+                    {locale === "ar" ? "الدولة *" : "Country *"}
                   </label>
-                  <input
+                  <select
                     id="country"
-                    placeholder="e.g. United Arab Emirates"
-                    value={f.country}
-                    onChange={set("country")}
+                    value={selectedCountry}
+                    onChange={(event) =>
+                      setF((current) => ({
+                        ...current,
+                        country: event.target.value,
+                        countryOther: "",
+                        city: "",
+                        cityOther: "",
+                      }))
+                    }
                     className={field}
-                  />
+                  >
+                    <option value="">{locale === "ar" ? "اختر الدولة" : "Select a country"}</option>
+                    {COUNTRIES.map((country) => (
+                      <option key={country.value} value={country.value}>
+                        {locale === "ar" ? country.ar : country.value}
+                      </option>
+                    ))}
+                    <option value="Other">{locale === "ar" ? "أخرى" : "Other"}</option>
+                  </select>
+                  {errors.country && (
+                    <p className="mt-1 text-xs text-destructive">{errors.country}</p>
+                  )}
+                  {selectedCountry === "Other" && (
+                    <input
+                      id="otherCountry"
+                      className={`${field} mt-2`}
+                      value={otherCountryValue}
+                      onChange={(event) =>
+                        setF((current) => ({
+                          ...current,
+                          country: "Other",
+                          countryOther: event.target.value,
+                        }))
+                      }
+                      placeholder={locale === "ar" ? "أدخل اسم الدولة" : "Enter country"}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -327,68 +499,111 @@ function QuotePage() {
                 </div>
               ) : (
                 <ul className="divide-y divide-border/60 rounded-xl border border-border/80 bg-card">
-                  {items.map((i) => (
-                    <li
-                      key={`${i.slug}${i.variant ?? ""}${i.paymentOption ?? "full"}`}
-                      className="flex items-center gap-3 p-3.5"
-                    >
-                      <div className="size-12 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1 flex items-center justify-center">
-                        <img
-                          src={i.image}
-                          alt=""
-                          width={48}
-                          height={48}
-                          loading="lazy"
-                          decoding="async"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">
-                          {translateText(i.name, locale)}
-                        </p>
-                        <p className="text-xs text-primary/80 font-medium">{i.variant}</p>
-                        {isTwentyLitreVariant(i.variant) && (
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {i.paymentOption === "installment-quote"
-                              ? locale === "ar"
-                                ? "طلب عرض تقسيط"
-                                : "Installment quote requested"
-                              : locale === "ar"
-                                ? "الدفع الكامل"
-                                : "Full payment"}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 border border-border/80 rounded-lg bg-background px-1.5 py-0.5">
-                        <button
-                          type="button"
-                          aria-label="Decrease quantity"
-                          onClick={() => setQty(i.slug, i.variant, i.qty - 1, i.paymentOption)}
-                          className="p-1 text-muted-foreground hover:text-foreground"
-                        >
-                          <Minus className="size-3" />
-                        </button>
-                        <span className="w-6 text-center text-xs font-semibold">{i.qty}</span>
-                        <button
-                          type="button"
-                          aria-label="Increase quantity"
-                          onClick={() => setQty(i.slug, i.variant, i.qty + 1, i.paymentOption)}
-                          className="p-1 text-muted-foreground hover:text-foreground"
-                        >
-                          <Plus className="size-3" />
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        aria-label="Remove item"
-                        onClick={() => remove(i.slug, i.variant, i.paymentOption)}
-                        className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                  {items.map((i) => {
+                    const preferenceKey = `${i.slug}::${i.variant ?? ""}::${i.paymentOption ?? "full"}`;
+                    const preference = installmentPreferences[preferenceKey];
+                    const installmentEnabled =
+                      preference?.enabled ?? i.paymentOption === "installment-quote";
+
+                    return (
+                      <li
+                        key={`${i.slug}${i.variant ?? ""}${i.paymentOption ?? "full"}`}
+                        className="flex items-center gap-3 p-3.5"
                       >
-                        <X className="size-4" />
-                      </button>
-                    </li>
-                  ))}
+                        <div className="size-12 shrink-0 rounded-lg bg-black/40 border border-white/5 p-1 flex items-center justify-center">
+                          <img
+                            src={i.image}
+                            alt=""
+                            width={48}
+                            height={48}
+                            loading="lazy"
+                            decoding="async"
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">
+                            {translateText(i.name, locale)}
+                          </p>
+                          <p className="text-xs text-primary/80 font-medium">{i.variant}</p>
+                          {isTwentyLitreVariant(i.variant) && (
+                            <div className="mt-2 space-y-2">
+                              <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <input
+                                  type="checkbox"
+                                  checked={installmentEnabled}
+                                  onChange={(event) =>
+                                    setInstallmentPreferences((current) => ({
+                                      ...current,
+                                      [preferenceKey]: {
+                                        enabled: event.target.checked,
+                                        months: preference?.months ?? 3,
+                                      },
+                                    }))
+                                  }
+                                  className="size-4 accent-primary"
+                                />
+                                {locale === "ar"
+                                  ? "طلب عرض سعر بالتقسيط"
+                                  : "Request an installment quote"}
+                              </label>
+                              {installmentEnabled && (
+                                <div className="flex flex-wrap gap-2">
+                                  {([3, 5] as const).map((months) => (
+                                    <button
+                                      key={months}
+                                      type="button"
+                                      aria-pressed={(preference?.months ?? 3) === months}
+                                      onClick={() =>
+                                        setInstallmentPreferences((current) => ({
+                                          ...current,
+                                          [preferenceKey]: { enabled: true, months },
+                                        }))
+                                      }
+                                      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                                        (preference?.months ?? 3) === months
+                                          ? "border-primary bg-primary/10 text-primary"
+                                          : "border-border text-muted-foreground hover:border-primary/50"
+                                      }`}
+                                    >
+                                      {locale === "ar" ? `${months} أشهر` : `${months} months`}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 border border-border/80 rounded-lg bg-background px-1.5 py-0.5">
+                          <button
+                            type="button"
+                            aria-label="Decrease quantity"
+                            onClick={() => setQty(i.slug, i.variant, i.qty - 1, i.paymentOption)}
+                            className="p-1 text-muted-foreground hover:text-foreground"
+                          >
+                            <Minus className="size-3" />
+                          </button>
+                          <span className="w-6 text-center text-xs font-semibold">{i.qty}</span>
+                          <button
+                            type="button"
+                            aria-label="Increase quantity"
+                            onClick={() => setQty(i.slug, i.variant, i.qty + 1, i.paymentOption)}
+                            className="p-1 text-muted-foreground hover:text-foreground"
+                          >
+                            <Plus className="size-3" />
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          aria-label="Remove item"
+                          onClick={() => remove(i.slug, i.variant, i.paymentOption)}
+                          className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
               {errors.items && <p className="text-xs text-destructive">{errors.items}</p>}
