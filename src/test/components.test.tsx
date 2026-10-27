@@ -542,5 +542,11 @@ describe("B2B Components Functionality Verification", () => {
     expect(screen.getByRole("heading", { name: "روابط مهمة" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "تواصل معنا" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "نسخ رقم الآيبان" })).toBeInTheDocument();
+
+    const importantLinks = screen.getByRole("navigation", { name: "روابط مهمة" });
+    expect(importantLinks.querySelector("ul")).toHaveClass("flex", "flex-col");
+    expect(screen.getByRole("heading", { name: "AutoUp", hidden: true }).parentElement).toHaveClass(
+      "md:order-1",
+    );
   });
 });

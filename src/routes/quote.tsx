@@ -12,11 +12,11 @@ import {
   ShoppingBag,
   X,
 } from "lucide-react";
-import quoteImg from "@/assets/hero-3.webp";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS } from "@/lib/catalog";
 import { useCart } from "@/lib/cart";
 import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
+import { QUOTE_PAGE_MEDIA } from "@/lib/media";
 import { toast } from "sonner";
 import { useLocale, translateText } from "@/lib/i18n";
 import { isTwentyLitreVariant } from "@/lib/installments";
@@ -246,8 +246,20 @@ function QuotePage() {
   return (
     <main className="quote-page min-h-screen">
       <section className="quote-hero border-b">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 pb-10 pt-28 sm:px-6 sm:pb-12 sm:pt-32 lg:grid-cols-2 lg:gap-12 lg:px-8 lg:pb-14">
-          <div>
+        <div aria-hidden="true" className="quote-hero-image">
+          <img
+            src={QUOTE_PAGE_MEDIA.hero}
+            alt=""
+            width={380}
+            height={316}
+            fetchPriority="high"
+            decoding="async"
+          />
+          <div className="quote-hero-image-shade" />
+        </div>
+        <div aria-hidden="true" className="quote-hero-hover-light" />
+        <div className="quote-hero-content mx-auto max-w-7xl px-4 pb-10 pt-28 sm:px-6 sm:pb-12 sm:pt-32 lg:px-8 lg:pb-14">
+          <div className="quote-hero-copy">
             <Link
               to="/products"
               className="quote-back-link inline-flex items-center gap-2 text-sm transition-colors"
@@ -278,23 +290,6 @@ function QuotePage() {
               </div>
             </Reveal>
           </div>
-          <Reveal delay={120} direction="up">
-            <div className="quote-hero-image group relative overflow-hidden rounded-3xl border">
-              <img
-                src={quoteImg}
-                alt="A polished luxury vehicle in a professional detailing studio"
-                width={1920}
-                height={1080}
-                fetchPriority="high"
-                decoding="async"
-                className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.025]"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-slate-950/25 via-transparent to-white/10"
-              />
-            </div>
-          </Reveal>
         </div>
       </section>
 

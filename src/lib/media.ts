@@ -69,6 +69,10 @@ export function photo(name: string): string {
   return webpAssets[`../assets/${name}.webp`] ?? "";
 }
 
+export const QUOTE_PAGE_MEDIA = {
+  hero: photo("detail-p-microfiber"),
+};
+
 export function gallonProductPhoto(slug: string): string | undefined {
   return gallonCardPhotos[slug];
 }
