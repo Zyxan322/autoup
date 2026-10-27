@@ -5,10 +5,9 @@ import { isTwentyLitreVariant } from "@/lib/installments";
 export const SITE = {
   name: "AutoUp",
   tagline: "Care in Every Mile",
-  whatsappLocal: "0558604161",
-  // TODO: confirm the international country code with the business before launch.
-  whatsappCountryCode: "971",
-  phoneDisplay: "055 860 4161",
+  whatsappLocal: "548843368",
+  whatsappCountryCode: "966",
+  phoneDisplay: "+966 54 884 3368",
   email: "", // add a real email to show it on the site
   address: {
     ar: "حي الربيع، بريدة 52361",

@@ -1,0 +1,2 @@
+src/assets/payments[[:space:]]icons/Recordly-windows-x64.exe filter=lfs diff=lfs merge=lfs -text
+src/assets/payments[[:space:]]icons/scoped_dir2076_20337334/Recordly-windows-x64.exe filter=lfs diff=lfs merge=lfs -text

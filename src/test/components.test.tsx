@@ -247,7 +247,7 @@ describe("B2B Components Functionality Verification", () => {
 
     expect(openWhatsApp).toHaveBeenCalledOnce();
     const [url, target, features] = openWhatsApp.mock.calls[0]!;
-    expect(url).toContain("https://wa.me/971558604161?text=");
+    expect(url).toContain("https://wa.me/966548843368?text=");
     expect(target).toBe("_blank");
     expect(features).toBe("noopener,noreferrer");
     const message = decodeURIComponent(url!.split("?text=")[1]!);
@@ -476,7 +476,7 @@ describe("B2B Components Functionality Verification", () => {
     expect(button).toHaveAttribute("rel", "noopener noreferrer");
 
     const href = button.getAttribute("href") || "";
-    expect(href).toContain("https://wa.me/971558604161");
+    expect(href).toContain("https://wa.me/966548843368");
     expect(href).toContain(encodeURIComponent("automotive cleaning products for business use"));
   });
 
