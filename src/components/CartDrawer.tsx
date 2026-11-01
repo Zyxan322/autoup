@@ -223,7 +223,7 @@ export function CartDrawer() {
               );
             }}
           >
-            {locale === "ar" ? "المتابعة إلى واتساب" : "Proceed to Checkout"}
+            {locale === "ar" ? "اطلب عرض سعر عبر واتساب" : "Request Quote via WhatsApp"}
           </Button>
           {items.length > 0 && (
             <button

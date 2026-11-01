@@ -58,6 +58,9 @@ function ProductsPage() {
 
   const retailProducts = list.filter((product) => product.packageType === "retail");
   const gallonProducts = list.filter((product) => product.packageType === "gallon");
+  const otherCommercialProducts = list.filter(
+    (product) => product.packageType === "other-commercial",
+  );
   return (
     <>
       <PageHero
@@ -176,6 +179,31 @@ function ProductsPage() {
                   {gallonProducts.map((product, n) => (
                     <Reveal key={product.slug} delay={(n % 3) * 80}>
                       <ProfessionalGallonCard product={product} />
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {otherCommercialProducts.length > 0 && (
+              <section aria-labelledby="other-commercial-products-title">
+                <div className="mb-7 max-w-3xl">
+                  <p className="eyebrow">{locale === "ar" ? "توريد تجاري" : "COMMERCIAL SUPPLY"}</p>
+                  <h2 id="other-commercial-products-title" className="section-title mt-2">
+                    {locale === "ar"
+                      ? "عبوات احترافية بأحجام متنوعة"
+                      : "Professional Products in Commercial Sizes"}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {locale === "ar"
+                      ? "منظفات ومركزات للسيارات متوفرة بعبوات تجارية كبيرة."
+                      : "Automotive cleaners and concentrates available in large commercial containers."}
+                  </p>
+                </div>
+                <div className="card-grid-5">
+                  {otherCommercialProducts.map((product, n) => (
+                    <Reveal key={product.slug} delay={(n % 5) * 60}>
+                      <ProductCard p={product} />
                     </Reveal>
                   ))}
                 </div>

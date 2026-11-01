@@ -13,7 +13,13 @@ export const SITE = {
     ar: "حي الربيع، بريدة 52361",
     en: "Al Rabie District, Buraydah 52361",
   },
-  hours: "Business hours to be confirmed",
+  hours: [
+    "Monday to Sunday: 9:00 AM - 12:00 PM",
+    "12:00 PM - 4:00 PM (Break)",
+    "4:00 PM - 10:00 PM",
+    "Friday: 4:00 PM - 10:00 PM",
+    "Business hours to be confirmed",
+  ],
 };
 
 export function whatsappNumber() {

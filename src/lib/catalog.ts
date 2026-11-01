@@ -28,6 +28,7 @@ import pPreWashBottle from "@/assets/products/imgi_20_6c5faa3b-8ddb-464d-b3b2-92
 import pIronRemover from "@/assets/products/imgi_22_eb0c09eb-18c9-475e-a8e5-5723d8f937c2-500x500-Bxm4ILMLbzCpg0ZXqFjYrs9UERkf4sGuQOCr7EkN.webp";
 import pShampooWaxBottle from "@/assets/products/imgi_30_220e1edb-cfd6-43ba-8003-5813d686f78e-500x500-WVvvvjZ7GPmdgUBUwOPjSOeWmvEMiLGLNZngKVZm.webp";
 import pD2Bottle from "@/assets/products/imgi_35_38190e6b-4e92-439b-b543-9f91846c6d0a-500x500-MtQDKaypgVMaWVQcgLYzkOx6ta6zUpUkOb0OAySO.webp";
+import { NEW_PRODUCT_PHOTOS } from "@/lib/media";
 
 export type Service = { slug: string; title: string; description: string; image: string };
 
@@ -179,8 +180,22 @@ export const PRODUCTS: Product[] = [
     variants: ["25 L"],
     usage:
       "First, clean the engines, rims and liners. Dilute 1 litre of the product to 5 litres of water. Spray, leave for a maximum of two minutes, then rinse thoroughly. For interior seats, leather and floors: use appropriate special brushes for tough dirt. For velvet chairs, fabrics and floor mats: dilute 1 litre of product in 10 litres of water.",
-    image: pChemxC2,
+    image: NEW_PRODUCT_PHOTOS["lifelines-chemx-c2"],
     featured: 5,
+  },
+  {
+    slug: "lifelines-chemx-c6-25l",
+    name: "ChemX C6 Chemical Degreaser",
+    packageType: "other-commercial",
+    code: "ChemX C6",
+    category: "Cleaning Chemicals",
+    short: "Professional chemical degreaser in a 25 L commercial container.",
+    description:
+      "LifeLines ChemX C6 chemical degreaser in a 25 L commercial container. Follow the directions printed on the product label.",
+    variants: ["25 L"],
+    usage: "Follow the dilution and use directions printed on the product label.",
+    image: NEW_PRODUCT_PHOTOS["lifelines-chemx-c6-25l"],
+    featured: 19,
   },
   {
     slug: "lifelines-f55-wax",
@@ -194,7 +209,7 @@ export const PRODUCTS: Product[] = [
     variants: ["20 L"],
     usage:
       "After washing or during drying, spray an appropriate amount of product onto a clean, soft cloth. Wipe the car's surface in a circular motion for a perfect shine.",
-    image: pF55Wax,
+    image: NEW_PRODUCT_PHOTOS["lifelines-f55-wax"],
     featured: 6,
   },
   {
@@ -209,7 +224,7 @@ export const PRODUCTS: Product[] = [
     variants: ["20 KG"],
     usage:
       "Shake the container before each use. Dilute 1:1 or use as-is for best results. For optimal results, apply the product evenly with a sponge and allow it to dry.",
-    image: pChemxD2,
+    image: NEW_PRODUCT_PHOTOS["lifelines-chemx-d2"],
     featured: 7,
   },
   {
@@ -224,7 +239,7 @@ export const PRODUCTS: Product[] = [
     variants: ["20 KG"],
     usage:
       "For best results, apply to a dry and clean surface. Spray evenly at all surfaces and let the product dry away from dust.",
-    image: pChemxT1,
+    image: NEW_PRODUCT_PHOTOS["lifelines-chemx-t1"],
     featured: 8,
   },
   {
@@ -239,7 +254,7 @@ export const PRODUCTS: Product[] = [
     variants: ["20 L"],
     usage:
       "1. Clean the tires thoroughly and ensure they are completely dry. 2. Spray the product onto the tire. 3. Spread it evenly using a sponge. For external use only. Flammable — keep away from heat and sparks.",
-    image: pO2Solvent,
+    image: NEW_PRODUCT_PHOTOS["lifelines-o2-solvent"],
     featured: 9,
   },
   {
@@ -254,7 +269,7 @@ export const PRODUCTS: Product[] = [
     variants: ["20 L"],
     usage:
       "1. Spray the polish directly onto the glass. 2. Wipe the glass with a soft, dry cloth in circular motions. 3. For best results, avoid direct sunlight during application. Avoid contact with eyes and skin.",
-    image: pG4Glass,
+    image: NEW_PRODUCT_PHOTOS["lifelines-g4-glass"],
     featured: 10,
   },
   {

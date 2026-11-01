@@ -18,6 +18,24 @@ const polishSectionAssets = import.meta.glob<string>("../assets/polish/*.webp", 
   import: "default",
 });
 
+import newChemxC6 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.44 AM.jpeg";
+import newG4 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.45 AM (1).jpeg";
+import newChemxT1 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.45 AM (2).jpeg";
+import newChemxC2 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.45 AM.jpeg";
+import newO2 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.46 AM (1).jpeg";
+import newChemxD2 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.46 AM (2).jpeg";
+import newF55 from "@/assets/new products/WhatsApp Image 2026-11-01 at 12.00.46 AM.jpeg";
+
+export const NEW_PRODUCT_PHOTOS: Record<string, string> = {
+  "lifelines-chemx-c6-25l": newChemxC6,
+  "lifelines-g4-glass": newG4,
+  "lifelines-chemx-t1": newChemxT1,
+  "lifelines-chemx-c2": newChemxC2,
+  "lifelines-o2-solvent": newO2,
+  "lifelines-chemx-d2": newChemxD2,
+  "lifelines-f55-wax": newF55,
+};
+
 const gallonCardPhotos: Record<string, string | undefined> = {
   "lifelines-colour-wax-shampoo":
     gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.47.48 AM.webp"],
@@ -25,12 +43,9 @@ const gallonCardPhotos: Record<string, string | undefined> = {
     gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (1).webp"],
   "lifelines-waterless-car-wash":
     gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.57 AM (2).webp"],
-  "lifelines-f55-wax":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 11.58.58 AM (1).webp"],
-  "lifelines-o2-solvent":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.23 PM.webp"],
-  "lifelines-g4-glass":
-    gallonCardAssets["../assets/galon/WhatsApp Image 2026-10-21 at 12.19.24 PM (1).webp"],
+  "lifelines-f55-wax": newF55,
+  "lifelines-o2-solvent": newO2,
+  "lifelines-g4-glass": newG4,
 };
 
 export const POLISH_SECTION_MEDIA = [

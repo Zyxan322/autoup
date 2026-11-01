@@ -243,7 +243,7 @@ describe("B2B Components Functionality Verification", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add polish" }));
     fireEvent.click(screen.getByRole("button", { name: "Change gallon quantity" }));
     fireEvent.click(screen.getByRole("button", { name: "Open cart" }));
-    fireEvent.click(screen.getByRole("button", { name: "Proceed to Checkout" }));
+    fireEvent.click(screen.getByRole("button", { name: "Request Quote via WhatsApp" }));
 
     expect(openWhatsApp).toHaveBeenCalledOnce();
     const [url, target, features] = openWhatsApp.mock.calls[0]!;
@@ -300,7 +300,7 @@ describe("B2B Components Functionality Verification", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Add Arabic product" }));
     fireEvent.click(screen.getByRole("button", { name: "Open cart" }));
-    fireEvent.click(screen.getByRole("button", { name: "المتابعة إلى واتساب" }));
+    fireEvent.click(screen.getByRole("button", { name: "اطلب عرض سعر عبر واتساب" }));
 
     const url = openWhatsApp.mock.calls[0]![0]!;
     const message = decodeURIComponent(url.split("?text=")[1]!);
@@ -364,14 +364,14 @@ describe("B2B Components Functionality Verification", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add kept item" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove temporary item" }));
     fireEvent.click(screen.getByRole("button", { name: "Open cart" }));
-    fireEvent.click(screen.getByRole("button", { name: "Proceed to Checkout" }));
+    fireEvent.click(screen.getByRole("button", { name: "Request Quote via WhatsApp" }));
     const message = decodeURIComponent(openWhatsApp.mock.calls[0]![0]!.split("?text=")[1]!);
     expect(message).toContain("Kept Product");
     expect(message).not.toContain("Temporary Product");
 
     fireEvent.click(screen.getByRole("button", { name: "Remove kept item" }));
-    expect(screen.getByRole("button", { name: "Proceed to Checkout" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "Proceed to Checkout" }));
+    expect(screen.getByRole("button", { name: "Request Quote via WhatsApp" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Request Quote via WhatsApp" }));
     expect(openWhatsApp).toHaveBeenCalledOnce();
 
     openWhatsApp.mockRestore();

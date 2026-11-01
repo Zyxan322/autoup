@@ -172,7 +172,11 @@ function ContactPage() {
             </div>
             <div>
               <p className="font-semibold text-foreground">Business Hours</p>
-              <p className="text-sm text-muted-foreground">{SITE.hours}</p>
+              <div className="space-y-1 text-sm text-muted-foreground">
+                {SITE.hours.map((hours) => (
+                  <p key={hours}>{hours}</p>
+                ))}
+              </div>
             </div>
           </div>
 

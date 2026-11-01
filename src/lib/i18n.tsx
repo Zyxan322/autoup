@@ -28,6 +28,10 @@ const EN_TO_AR: Record<string, string> = {
   "Your quote list is empty — add a product first.": "قائمة عروض الأسعار فارغة — أضف منتجاً أولاً.",
   "Address to be confirmed": "سيُضاف العنوان بعد تأكيده",
   "Business hours to be confirmed": "سيتم تأكيد ساعات العمل",
+  "Monday to Sunday: 9:00 AM - 12:00 PM": "من الاثنين إلى الأحد: 9:00 صباحًا - 12:00 ظهرًا",
+  "12:00 PM - 4:00 PM (Break)": "12:00 ظهرًا - 4:00 مساءً (استراحة)",
+  "4:00 PM - 10:00 PM": "4:00 مساءً - 10:00 مساءً",
+  "Friday: 4:00 PM - 10:00 PM": "الجمعة: 4:00 مساءً - 10:00 مساءً",
   Explore: "تصفح",
   "Direct Contact": "تواصل مباشر",
   "Chat on WhatsApp": "تواصل عبر واتساب",
@@ -504,6 +508,7 @@ const EN_TO_AR: Record<string, string> = {
   "Pre Wash Car Shampoo": "شامبو ما قبل الغسيل",
   "Waterless Car Wash": "غسيل سيارات دون ماء",
   "ChemX C2": "ChemX C2",
+  "ChemX C6 Chemical Degreaser": "مزيل الشحوم الكيميائي ChemX C6",
   "F55 Final Touch Wax": "شمع اللمسة النهائية F55",
   "ChemX D2": "ChemX D2",
   "ChemX T1": "ChemX T1",
@@ -519,6 +524,10 @@ const EN_TO_AR: Record<string, string> = {
     "نظّف سيارتك دون ماء — تنظيف ولمعان وحماية في خطوة واحدة.",
   "Chemical all-purpose cleaner for engines, rims, interiors and more.":
     "منظف كيميائي متعدد الاستخدامات للمحركات والجنوط والمقصورة وغيرها.",
+  "Professional chemical degreaser in a 25 L commercial container.":
+    "مزيل شحوم كيميائي احترافي في عبوة تجارية سعة 25 لترًا.",
+  "LifeLines ChemX C6 chemical degreaser in a 25 L commercial container. Follow the directions printed on the product label.":
+    "مزيل الشحوم الكيميائي ChemX C6 من LifeLines في عبوة تجارية سعة 25 لترًا. اتبع التعليمات المدونة على ملصق المنتج.",
   "Post-wash shine wax — instant gloss, no residue, dust-resistant.":
     "شمع لمعان بعد الغسيل — بريق فوري دون بقايا ومقاوم للغبار.",
   "Dashboard polish for vinyl, leather and plastic — long-lasting shine.":

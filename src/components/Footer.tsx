@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Building2, Copy, Landmark, MapPin, Phone, ReceiptText } from "lucide-react";
+import { Building2, Copy, Landmark, MapPin, ReceiptText } from "lucide-react";
 import arabicLogo from "@/assets/autoup-final-logo.webp";
 import whatsappIcon from "@/assets/products/download (41).svg";
 import { PAYMENT_METHODS } from "@/components/PaymentPartners";
@@ -8,8 +8,6 @@ import { SITE } from "@/lib/site";
 import { useLocale } from "@/lib/i18n";
 
 const BUSINESS_PHONE = "+966548843368";
-const BUSINESS_PHONE_DISPLAY = "+966 54 884 3368";
-const BUSINESS_PHONE_LOCAL = "0548843368";
 const BUSINESS_WHATSAPP_URL = `https://wa.me/${BUSINESS_PHONE.replace("+", "")}`;
 const BUSINESS_IBAN = "SA1305000068207583708000";
 
@@ -84,17 +82,7 @@ export function Footer() {
                     className="size-4 object-contain"
                   />
                 </span>
-                <span dir="ltr">{BUSINESS_PHONE_DISPLAY}</span>
-              </a>
-
-              <a
-                href={`tel:${BUSINESS_PHONE}`}
-                className="autoup-footer__contact-link flex min-h-11 items-center justify-start gap-3 px-1 py-2 text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <span className="flex size-7 items-center justify-center rounded-full bg-white/5 text-primary">
-                  <Phone aria-hidden="true" className="size-4" />
-                </span>
-                <span dir="ltr">{BUSINESS_PHONE_LOCAL}</span>
+                <span>{isArabic ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
               </a>
 
               <div className="flex items-center justify-start gap-3 pt-1 text-sm leading-6 text-white/65">
