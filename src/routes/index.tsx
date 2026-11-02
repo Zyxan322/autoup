@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
 import {
   ArrowRight,
   Building,
@@ -16,9 +15,7 @@ import {
   Users,
   Warehouse,
 } from "lucide-react";
-import useEmblaCarousel from "embla-carousel-react";
-import hero from "@/assets/hero.webp";
-import heroVideo from "@/assets/hero section video/Untitled design (5).mp4";
+import heroVideo from "@/assets/hero section video/autoup-hero-faststart.mp4";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { GALLON_PRODUCTS, PRODUCTS, RETAIL_PRODUCTS } from "@/lib/catalog";
@@ -61,74 +58,13 @@ export const Route = createFileRoute("/")({
 });
 
 /* =========================================================================
-   1. HERO CAROUSEL COMPONENT
+   1. HERO VIDEO COMPONENT
    ========================================================================= */
-const HERO_SLIDES = [
-  {
-    tag: "B2B Automotive Cleaning Products",
-    headline: "Professional Automotive Cleaning Products for Your Business",
-    text: "Discover commercial-grade cleaning products and bulk concentrates engineered for professional vehicle care.",
-  },
-  {
-    tag: "Commercial Bulk Packaging (20L • 25L • 20KG)",
-    headline: "High-Yield Formulations for Wash Facilities",
-    text: "Concentrated shampoos, waxes, and specialized chemicals packaged for high-throughput commercial operations.",
-  },
-  {
-    tag: "Wholesale & Business Supply",
-    headline: "Reliable Chemical Supply for Detailing Studios & Dealerships",
-    text: "Supplying car washes, detailing centers, automotive workshops, and fleet operators with surface-safe cleaning solutions.",
-  },
-  {
-    tag: "Direct Commercial Procurement",
-    headline: "Equip Your Facility with Professional Auto-Care Products",
-    text: "Direct wholesale inquiries, flexible container volumes, and fast quotation confirmations via WhatsApp.",
-  },
-];
-
 function HeroSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    duration: 38,
-  });
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setActiveIdx(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-      emblaApi.off("reInit", onSelect);
-    };
-  }, [emblaApi, onSelect]);
-
-  useEffect(() => {
-    if (!emblaApi || paused) return;
-    const timer = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 6500);
-    return () => clearInterval(timer);
-  }, [emblaApi, paused]);
-
-  const slide = HERO_SLIDES[activeIdx] ?? HERO_SLIDES[0]!;
-
   return (
     <section
-      className="section-dark relative h-[92svh] min-h-[580px] max-h-[860px] overflow-hidden select-none"
-      aria-label="Professional automotive cleaning products hero"
-      onPointerDown={() => setPaused(true)}
-      style={{
-        backgroundImage: `url(${hero})`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-      }}
+      className="relative h-[92svh] min-h-[580px] max-h-[860px] overflow-hidden bg-black"
+      aria-label="AutoUp video hero"
     >
       <video
         aria-hidden="true"
@@ -136,105 +72,11 @@ function HeroSection() {
         loop
         muted
         playsInline
-        preload="metadata"
-        poster={hero}
-        className="hero-video absolute inset-0 size-full object-cover brightness-[0.88] contrast-[1.06] saturate-[1.08]"
+        preload="auto"
+        className="absolute inset-0 size-full object-cover"
       >
         <source src={heroVideo} type="video/mp4" />
       </video>
-
-      {/* Sliding Embla Viewport */}
-      <div ref={emblaRef} className="h-full w-full overflow-hidden">
-        <div className="flex h-full w-full">
-          {HERO_SLIDES.map((s, n) => (
-            <div
-              key={n}
-              className="relative h-full w-full flex-[0_0_100%] min-w-0 overflow-hidden"
-              aria-hidden={n !== activeIdx}
-            ></div>
-          ))}
-        </div>
-      </div>
-
-      {/* Lightened, Focused Hero Overlays — keeps the car / product image prominently visible */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 via-40% to-transparent pointer-events-none" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-fade-bottom pointer-events-none" />
-
-      {/* Editorial Content — Compact & Focused on Left */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex items-center pt-12">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-          <div
-            key={activeIdx}
-            className="pointer-events-auto flex max-w-xl flex-col items-start text-left animate-in fade-in slide-in-from-bottom-5 duration-500"
-          >
-            {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary backdrop-blur-md shadow-[0_0_15px_rgba(22,119,255,0.25)]">
-              <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-              {slide.tag}
-            </div>
-
-            {/* B2B Headline */}
-            <h1 className="mt-4 font-sans text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.1] drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]">
-              {slide.headline}
-            </h1>
-
-            {/* Concise Supporting Text */}
-            <p className="mt-4 max-w-lg text-sm sm:text-base text-white/90 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-              {slide.text}
-            </p>
-
-            {/* Primary & Secondary CTAs */}
-            <div className="mt-7 flex flex-wrap items-center gap-3.5">
-              <Button
-                asChild
-                variant="hero"
-                size="lg"
-                className="group relative overflow-hidden shadow-[0_0_25px_rgba(22,119,255,0.6)] hover:shadow-[0_0_32px_rgba(22,119,255,0.85)] transition-all font-semibold"
-              >
-                <Link to="/products">
-                  Explore Our Products
-                  <ArrowRight className="size-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-              </Button>
-
-              <Button
-                asChild
-                variant="glass"
-                size="lg"
-                className="backdrop-blur-xl bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 font-medium transition-all"
-              >
-                <Link to="/quote">Request a Wholesale Quote</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Pagination Indicators */}
-      <div className="absolute bottom-8 right-5 lg:right-8 flex items-center gap-2 z-20 bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-        {HERO_SLIDES.map((_, n) => (
-          <button
-            key={n}
-            type="button"
-            aria-label={`Go to slide ${n + 1}`}
-            aria-pressed={n === activeIdx}
-            onClick={() => {
-              setPaused(true);
-              emblaApi?.scrollTo(n);
-            }}
-            className="group p-1 cursor-pointer focus:outline-none"
-          >
-            <span
-              className={cn(
-                "block h-1.5 transition-all duration-500 rounded-full",
-                n === activeIdx
-                  ? "w-8 bg-primary shadow-[0_0_12px_var(--electric)]"
-                  : "w-2.5 bg-white/40 hover:bg-white/80",
-              )}
-            />
-          </button>
-        ))}
-      </div>
     </section>
   );
 }

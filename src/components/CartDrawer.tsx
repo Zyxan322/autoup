@@ -12,7 +12,7 @@ import { whatsappUrl } from "@/lib/site";
 function buildCartCheckoutMessage(items: ReturnType<typeof useCart>["items"], locale: "ar" | "en") {
   const arabic = locale === "ar";
   const formatAmount = (amount: number) =>
-    new Intl.NumberFormat(arabic ? "ar" : "en").format(amount);
+    new Intl.NumberFormat(arabic ? "ar" : "en", { useGrouping: false }).format(amount);
   const itemsWithPrices = items.map((item) => ({
     item,
     price: PRODUCTS.find((product) => product.slug === item.slug)?.price,
